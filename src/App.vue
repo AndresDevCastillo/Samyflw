@@ -14,6 +14,7 @@
       </form>
     </div>
     <canvas id="gameCanvas" v-show="!form"></canvas>
+    <button @click="actualizarPatos()" class="btn">Hola</button>
   </div>
 </template>
 <script >
@@ -24,6 +25,7 @@ export default {
     apitiktok: null,
     form: true,
     patitoImg: null,
+    game: null
   }),
   methods: {
     startGame() {
@@ -37,6 +39,35 @@ export default {
         height: 600
       }
 
+      // Clase para el pato
+      class Duck extends Phaser.GameObjects.Sprite {
+        constructor(scene, x, y) {
+          super(scene, x, y, 'duck');
+          scene.add.existing(this);
+          scene.physics.world.enable(this);
+          this.setScale(0.2);
+          //this.body.velocity.x = Phaser.Math.Between(50, 100); // Velocidad aleatoria
+        }
+
+        moveRightWithAnimation(mov) {
+          const distancia = this.x + mov;  // Posición final después de la animación
+          // Verificar si la posición final supera el límite de la pared (por ejemplo, 900)
+          if (distancia <= (size.width - 100)) {
+            // Solo aplica la animación si no supera el límite
+            this.scene.tweens.add({
+              targets: this,
+              x: distancia,
+              duration: 1000,
+              ease: 'Linear',
+            });
+          }
+        }
+
+        update() {
+          // Lógica de actualización del pato si es necesario
+        }
+      }
+
       // Aqui creo la escena de fondo en el juego
       class GameScene extends Phaser.Scene {
         constructor() {
@@ -45,12 +76,29 @@ export default {
 
         preload() {
           this.load.image("bg", "/assets/img/fondoPato.jpg");
+          this.load.image("duck", "/assets/img/patito.png");
         }
+
         create() {
+          const size = {
+            width: 1000,
+            height: 600
+          };
+
           const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
           background.setScale(size.width / background.width, size.height / background.height);
+
+          this.ducks = []
+          // Crear directamente los patos en la escena
+          for (let i = 0; i < 10; i++) {
+            const duck = new Duck(this, 0, size.height - (i + 1) * 30);
+            this.ducks.push(duck);
+          }
         }
-        update() { }
+
+        update() {
+          // Lógica de actualización de la escena si es necesario
+        }
       }
 
 
@@ -70,9 +118,16 @@ export default {
       }
 
       //constructor del juego
-      const game = new Phaser.Game(config);
+      this.$data.game = new Phaser.Game(config);
+    },
+    actualizarPatos() {
+      // Datos de la api Falsos xd
+      let datos = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1);
+      this.$data.game.scene.scenes[0].ducks.map((pato, index) => {
+        pato.moveRightWithAnimation(datos[index]);
+      })
     }
-  },
+  }
 }
 </script>
 
@@ -177,6 +232,16 @@ body {
 
 .form-container .link:hover {
   text-decoration: underline;
+}
+
+.btn {
+  border: 1px solid red;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  z-index: 3;
 }
 
 #gameCanvas {
