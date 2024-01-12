@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form-container">
+    <div class="form-container" v-show="form">
       <div class="logo-container">
         Usuario de TikTok
       </div>
@@ -10,50 +10,82 @@
           <input type="text" name="text" placeholder="Ingrese su Nickname" v-model="usuario">
         </div>
 
-        <button class="form-submit-btn" type="button" @click="DataApi">Ingresar</button>
+        <button class="form-submit-btn" type="button" @click="startGame()">Ingresar</button>
       </form>
     </div>
-    <p>{{ apitiktok }}</p>
+    <canvas id="gameCanvas" v-show="!form"></canvas>
   </div>
 </template>
 <script >
-import { WebcastPushConnection } from 'tiktok-live-connector';
+import Phaser from 'phaser';
 export default {
   data: () => ({
     usuario: null,
-    apitiktok: null
+    apitiktok: null,
+    form: true,
+    patitoImg: null,
   }),
   methods: {
-    DataApi() {
+    startGame() {
+      this.form = false;
 
-      console.log(this.usuario);
-      let tiktokUsername = this.usuario;
-      // Create a new wrapper object and pass the username
-      let tiktokLiveConnection = new WebcastPushConnection(tiktokUsername);
+      const gameCanvas = document.getElementById('gameCanvas');
 
-      // Connect to the chat (await can be used as well)
-      tiktokLiveConnection.connect().then(state => {
-        console.info(`Connected to roomId ${state.roomId}`);
-      }).catch(err => {
-        console.error('Failed to connect', err);
-      })
+      // Tamaño de la pantalla
+      const size = {
+        width: 1000,
+        height: 600
+      }
 
-      // Define the events that you want to handle
-      // In this case we listen to chat messages (comments)
-      tiktokLiveConnection.on('chat', data => {
-        console.log(`${data.uniqueId} (userId:${data.userId}) writes: ${data.comment}`);
-      })
+      // Aqui creo la escena de fondo en el juego
+      class GameScene extends Phaser.Scene {
+        constructor() {
+          super('scene-game')
+        }
 
-      // And here we receive gifts sent to the streamer
-      tiktokLiveConnection.on('gift', data => {
-        console.log(`${data.uniqueId} (userId:${data.userId}) sends ${data.giftId}`);
-      })
+        preload() {
+          this.load.image("bg", "/assets/img/fondoPato.jpg");
+        }
+        create() {
+          const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
+          background.setScale(size.width / background.width, size.height / background.height);
+        }
+        update() { }
+      }
+
+
+      // configuracion del canva-game
+      const config = {
+        type: Phaser.WEBGL,
+        width: size.width,
+        height: size.height,
+        canvas: gameCanvas,
+        scene: [GameScene],
+        physics: {
+          default: 'arcade',
+          arcade: {
+            debug: true
+          }
+        }
+      }
+
+      //constructor del juego
+      const game = new Phaser.Game(config);
     }
-  }
+  },
 }
 </script>
 
 <style>
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+}
+
 .form-container {
   max-width: 400px;
   background-color: #fff;
@@ -63,6 +95,10 @@ export default {
   color: #212121;
   display: flex;
   flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   gap: 20px;
   box-sizing: border-box;
   border-radius: 10px;
@@ -141,6 +177,16 @@ export default {
 
 .form-container .link:hover {
   text-decoration: underline;
+}
+
+#gameCanvas {
+  border: 1px solid red;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  z-index: 1;
 }
 </style>
 
