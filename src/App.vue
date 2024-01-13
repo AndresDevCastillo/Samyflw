@@ -129,7 +129,7 @@ export default {
           const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
           backgroundMusic.play();
           this.ducks = [];
-          this.socket = io("ws://localhost:3000", {
+          this.socket = io("https://patosgame.fly.dev", {
             query: {
               name: usuario,
             },
