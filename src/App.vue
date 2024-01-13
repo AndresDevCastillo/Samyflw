@@ -14,21 +14,21 @@
       </form>
     </div>
     <canvas id="gameCanvas" v-show="!form"></canvas>
-    <button @click="actualizarPatos()" class="btn">Hola</button>
   </div>
 </template>
 <script >
 import Phaser from 'phaser';
+import { io } from 'socket.io-client'
 export default {
   data: () => ({
     usuario: null,
     apitiktok: null,
     form: true,
     patitoImg: null,
-    game: null
   }),
   methods: {
     startGame() {
+      const usuario = this.usuario;
       this.form = false;
 
       const gameCanvas = document.getElementById('gameCanvas');
@@ -40,23 +40,55 @@ export default {
       }
 
       // Clase para el pato
-      class Duck extends Phaser.GameObjects.Sprite {
-        constructor(scene, x, y) {
-          super(scene, x, y, 'duck');
+      class Duck extends Phaser.GameObjects.Container {
+        constructor(scene, x, y, nombre, skin) {
+          super(scene, x, y);
+
+          // Agregar la imagen del pato al contenedor
+          const duckImage = scene.add.sprite(0, 0, skin).setOrigin(0.5, 0.5);
+          duckImage.setScale(0.2);
+          this.add(duckImage);
+
+          // Crear un gráfico para el fondo con esquinas redondeadas
+          const labelBackground = scene.add.graphics();
+          labelBackground.fillStyle(0xffffff, 1); // Color blanco, opacidad 1
+          labelBackground.fillRoundedRect(-30, -40, 60, 20, 10); // x, y, width, height, radius
+          this.add(labelBackground);
+
+          // Crear la etiqueta con el nombre
+          const label = scene.add.text(0, -40, nombre, {
+            fontFamily: 'Arial',
+            fontSize: '16px',
+            color: '#000000',
+          });
+          label.setOrigin(0.5, 0.5);
+          this.add(label);
+
+          // Ajustar el ancho del fondo al ancho del texto
+          const labelWidth = label.width + 20; // Puedes ajustar el valor del padding según tus necesidades
+          labelBackground.clear().fillStyle(0xffffff, 1).fillRoundedRect(-labelWidth / 2, -48, labelWidth, 20, 10);
+
+          // Configuración de la animación yoyo
+          const tweenConfig = {
+            targets: this,
+            y: y - 10,
+            duration: 2000,
+            ease: 'Linear',
+            yoyo: true,
+            repeat: -1,
+          };
+
+          scene.tweens.add(tweenConfig);
+
+          // Agregar el contenedor al escenario
           scene.add.existing(this);
-          scene.physics.world.enable(this);
-          this.setScale(0.2);
-          //this.body.velocity.x = Phaser.Math.Between(50, 100); // Velocidad aleatoria
         }
 
-        moveRightWithAnimation(mov) {
-          const distancia = this.x + mov;  // Posición final después de la animación
-          // Verificar si la posición final supera el límite de la pared (por ejemplo, 900)
-          if (distancia <= (size.width - 100)) {
-            // Solo aplica la animación si no supera el límite
+        move(mov) {
+          if (mov <= (size.width - 100)) {
             this.scene.tweens.add({
               targets: this,
-              x: distancia,
+              x: mov,
               duration: 1000,
               ease: 'Linear',
             });
@@ -68,6 +100,8 @@ export default {
         }
       }
 
+
+
       // Aqui creo la escena de fondo en el juego
       class GameScene extends Phaser.Scene {
         constructor() {
@@ -76,28 +110,63 @@ export default {
 
         preload() {
           this.load.image("bg", "/assets/img/fondoPato.jpg");
-          this.load.image("duck", "/assets/img/patito.png");
+          this.load.image("patitoceleste", "/assets/img/patitoceleste.png");
+          this.load.image("patitomorado", "/assets/img/patitomorado.png");
+          this.load.image("patitorojo", "/assets/img/patitorojo.png");
+          this.load.image("patitoblanco", "/assets/img/patitoblanco.png");
+          this.load.image("patitochicle", "/assets/img/patitochicle.png");
+          this.load.image("patitonegro", "/assets/img/patitonegro.png");
+          this.load.image("patitorosa", "/assets/img/patitorosa.png");
+          this.load.image("patitoblue", "/assets/img/patitoblue.png");
+          this.load.image("patitogris", "/assets/img/patitogris.png");
+          this.load.image("patito", "/assets/img/patito.png");
+          this.load.image("patitoverde", "/assets/img/patitoverde.png");
+          this.load.audio("quack", "/assets/audio/quack.mp3");
+          this.load.audio('backgroundMusic', "/assets/audio/bg.mp3");
         }
 
-        create() {
+        async create() {
+          const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
+          backgroundMusic.play();
+          this.ducks = [];
+          this.socket = io("ws://localhost:3000", {
+            query: {
+              name: usuario,
+            },
+          });
           const size = {
             width: 1000,
             height: 600
           };
+          let posicionY = 1;
+
+          this.socket.on('newPlayer', (duckApi) => {
+            const duck = new Duck(this, 200, size.height - (posicionY) * 30, duckApi[duckApi.length - 1].name, duckApi[duckApi.length - 1].skin);
+            this.sound.play("quack");
+            this.ducks.push(duck);
+            if (posicionY == 10) {
+              posicionY = 0;
+            }
+            posicionY++;
+            this.ducks.forEach((duck, index) => {
+              duck.move(duckApi[index].x);
+            })
+          });
+
+          this.socket.on('move', (duckApi) => {
+            const duck = new Duck(this, 0, size.height - (posicionY) * 30);
+            this.ducks.forEach((duck, index) => {
+              duck.move(duckApi[index].x);
+            })
+          });
+
 
           const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
           background.setScale(size.width / background.width, size.height / background.height);
 
-          this.ducks = []
-          // Crear directamente los patos en la escena
-          for (let i = 0; i < 10; i++) {
-            const duck = new Duck(this, 0, size.height - (i + 1) * 30);
-            this.ducks.push(duck);
-          }
         }
 
         update() {
-          // Lógica de actualización de la escena si es necesario
         }
       }
 
@@ -111,22 +180,13 @@ export default {
         scene: [GameScene],
         physics: {
           default: 'arcade',
-          arcade: {
-            debug: true
-          }
-        }
+        },
+        autoFocus: false,
       }
 
       //constructor del juego
-      this.$data.game = new Phaser.Game(config);
+      const GAME = new Phaser.Game(config);
     },
-    actualizarPatos() {
-      // Datos de la api Falsos xd
-      let datos = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1);
-      this.$data.game.scene.scenes[0].ducks.map((pato, index) => {
-        pato.moveRightWithAnimation(datos[index]);
-      })
-    }
   }
 }
 </script>
@@ -234,18 +294,8 @@ body {
   text-decoration: underline;
 }
 
-.btn {
-  border: 1px solid red;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  z-index: 3;
-}
 
 #gameCanvas {
-  border: 1px solid red;
   position: absolute;
   top: 50%;
   left: 50%;
