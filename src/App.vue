@@ -8,7 +8,19 @@
       <form class="form">
         <div class="form-group">
           <input type="text" name="text" placeholder="Ingrese su Nickname" v-model="usuario">
+          <select v-model="tiempo">
+            <option selected disabled>Seleccione una opción</option>
+            <option value="10000">10 segundos</option>
+            <option value="30000">30 segundos</option>
+            <option value="60000">1 Minuto</option>
+            <option value="120000">2 Minutos</option>
+            <option value="300000">5 Minutos</option>
+            <option value="600000">10 Minutos</option>
+            <option value="1200000">20 Minutos</option>
+            <option value="1800000">30 Minutos</option>
+          </select>
         </div>
+
 
         <button class="form-submit-btn" type="button" @click="startGame()">Ingresar</button>
       </form>
@@ -22,6 +34,7 @@ import { io } from 'socket.io-client'
 export default {
   data: () => ({
     usuario: null,
+    tiempo: null,
     apitiktok: null,
     form: true,
     patitoImg: null,
@@ -29,6 +42,8 @@ export default {
   methods: {
     startGame() {
       const usuario = this.usuario;
+      const tiempo = parseInt(this.tiempo);
+      const urlSocket = "https://patosgame.fly.dev";
       this.form = false;
 
       const gameCanvas = document.getElementById('gameCanvas');
@@ -41,9 +56,9 @@ export default {
 
       // Clase para el pato
       class Duck extends Phaser.GameObjects.Container {
-        constructor(scene, x, y, nombre, skin) {
+        constructor(scene, x, y, nombre, skin, id) {
           super(scene, x, y);
-
+          this.ID = id;
           // Agregar la imagen del pato al contenedor
           const duckImage = scene.add.sprite(0, 0, skin).setOrigin(0.5, 0.5);
           duckImage.setScale(0.2);
@@ -51,7 +66,7 @@ export default {
 
           // Crear un gráfico para el fondo con esquinas redondeadas
           const labelBackground = scene.add.graphics();
-          labelBackground.fillStyle(0xffffff, 1); // Color blanco, opacidad 1
+          labelBackground.fillStyle(0xFFFFFF, 1); // Color oro, opacidad 1
           labelBackground.fillRoundedRect(-30, -40, 60, 20, 10); // x, y, width, height, radius
           this.add(labelBackground);
 
@@ -65,8 +80,8 @@ export default {
           this.add(label);
 
           // Ajustar el ancho del fondo al ancho del texto
-          const labelWidth = label.width + 20; // Puedes ajustar el valor del padding según tus necesidades
-          labelBackground.clear().fillStyle(0xffffff, 1).fillRoundedRect(-labelWidth / 2, -48, labelWidth, 20, 10);
+          this.labelWidth = label.width + 20; // Puedes ajustar el valor del padding según tus necesidades
+          labelBackground.clear().fillStyle(0xffffff, 1).fillRoundedRect(-this.labelWidth / 2, -48, this.labelWidth, 20, 10);
 
           // Configuración de la animación yoyo
           const tweenConfig = {
@@ -95,12 +110,63 @@ export default {
           }
         }
 
+        cisne(id, skin) {
+          if (id == this.ID) {
+            // Cambiar la imagen del pato
+            this.getAt(0).setTexture('cisne');
+
+            // Cambiar el color del fondo del labelBackground
+            const labelBackground = this.getAt(1); // Asegúrate de que el índice sea el correcto
+            labelBackground.clear();
+            labelBackground.fillStyle(0xD4AF37, 1); // Color y opacidad
+            console.log(this.labelWidth);
+            labelBackground.fillRoundedRect(-this.labelWidth / 2, -48, this.labelWidth, 20, 10);
+
+            // Crear un temporizador para revertir la apariencia después de un tiempo
+            this.scene.time.delayedCall(60000, () => {
+              // Restaurar la imagen original del pato
+              this.getAt(0).setTexture(skin);
+              // Restaurar el color original del fondo del labelBackground
+              labelBackground.clear();
+              labelBackground.fillStyle(0xFFFFFF, 1); // Color y opacidad originales
+              labelBackground.fillRoundedRect(-this.labelWidth / 2, -48, this.labelWidth, 20, 10);
+            }, [], this);
+          }
+        }
+
+
+
         update() {
           // Lógica de actualización del pato si es necesario
         }
       }
 
+      class WinScena extends Phaser.Scene {
+        constructor() {
+          super('WinScena'); // Asegúrate de que el nombre coincida con el que usaste en scene.start
+        }
 
+        preload() {
+
+          this.load.image("bg", "/assets/img/fondoPato.jpg");
+          this.load.audio('win', "/assets/audio/win.mp3")
+
+        }
+
+        create() {
+          const backgroundMusic = this.sound.add('win');
+          backgroundMusic.play();
+          this.ducks = [];
+          // Configuración inicial de la otra escena
+          const texto = this.add.text(200, 200, '¡Escena del ganador!', { fontSize: '32px', fill: '#fff' });
+
+          // Aquí puedes agregar más elementos o lógica específica de la otra escena
+        }
+
+        update() {
+          // Lógica de actualización de la otra escena (si es necesario)
+        }
+      }
 
       // Aqui creo la escena de fondo en el juego
       class GameScene extends Phaser.Scene {
@@ -110,6 +176,7 @@ export default {
 
         preload() {
           this.load.image("bg", "/assets/img/fondoPato.jpg");
+          this.load.image("cisne", "/assets/img/cisne.png");
           this.load.image("patitoceleste", "/assets/img/patitoceleste.png");
           this.load.image("patitomorado", "/assets/img/patitomorado.png");
           this.load.image("patitorojo", "/assets/img/patitorojo.png");
@@ -121,15 +188,17 @@ export default {
           this.load.image("patitogris", "/assets/img/patitogris.png");
           this.load.image("patito", "/assets/img/patito.png");
           this.load.image("patitoverde", "/assets/img/patitoverde.png");
+          this.load.image("patitoturbo", "/assets/img/patito.gif");
           this.load.audio("quack", "/assets/audio/quack.mp3");
           this.load.audio('backgroundMusic', "/assets/audio/bg.mp3");
+          this.scene.add('WinScena', WinScena);
         }
 
         async create() {
           const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
           backgroundMusic.play();
           this.ducks = [];
-          this.socket = io("https://patosgame.fly.dev", {
+          this.socket = io(urlSocket, {
             query: {
               name: usuario,
             },
@@ -141,7 +210,7 @@ export default {
           let posicionY = 1;
 
           this.socket.on('newPlayer', (duckApi) => {
-            const duck = new Duck(this, 200, size.height - (posicionY) * 30, duckApi[duckApi.length - 1].name, duckApi[duckApi.length - 1].skin);
+            const duck = new Duck(this, 200, size.height - (posicionY) * 30, duckApi[duckApi.length - 1].name, duckApi[duckApi.length - 1].skin, duckApi[duckApi.length - 1].id);
             this.sound.play("quack");
             this.ducks.push(duck);
             if (posicionY == 10) {
@@ -153,6 +222,12 @@ export default {
             })
           });
 
+          this.socket.on('cisne', (OneduckApi) => {
+            this.ducks.forEach((duck, index) => {
+              duck.cisne(OneduckApi.id, OneduckApi.skin);
+            })
+          });
+
           this.socket.on('move', (duckApi) => {
             const duck = new Duck(this, 0, size.height - (posicionY) * 30);
             this.ducks.forEach((duck, index) => {
@@ -161,9 +236,15 @@ export default {
           });
 
 
+
           const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
           background.setScale(size.width / background.width, size.height / background.height);
 
+          setTimeout(() => {
+            backgroundMusic.stop();
+            this.socket.emit('final', "hola");
+            this.scene.start('WinScena'); // Reemplaza 'otra-escena' con el nombre de la escena siguiente
+          }, tiempo);
         }
 
         update() {
@@ -238,7 +319,7 @@ body {
 .form-container .form-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 20px;
 }
 
 .form-container .form-group label {
@@ -252,6 +333,15 @@ body {
   font-family: inherit;
   border: 1px solid #ccc;
 }
+
+.form-container .form-group select {
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+
 
 .form-container .form-group input::placeholder {
   opacity: 0.5;
@@ -284,15 +374,7 @@ body {
   background-color: #313131;
 }
 
-.form-container .link {
-  color: #1778f2;
-  text-decoration: none;
-}
 
-
-.form-container .link:hover {
-  text-decoration: underline;
-}
 
 
 #gameCanvas {
