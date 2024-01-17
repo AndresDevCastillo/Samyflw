@@ -57,13 +57,21 @@ export default {
     buttonStart: false,
     timerShow: false,
     socket: null,
+
   }),
   methods: {
     startGame() {
       const vueDataInstance = this;
+      const urlSocket = "https://patosgame.fly.dev";
       const usuario = this.usuario;
       const tiempo = parseInt(this.tiempo);
-      const urlSocket = "https://patosgame.fly.dev";
+      this.socket = io(urlSocket, {
+        query: {
+          name: usuario,
+          time: tiempo,
+        },
+      });
+
       this.form = false;
       this.buttonStart = true;
 
@@ -233,15 +241,10 @@ export default {
           const winMusic = this.sound.add("win", { loop: true });
           backgroundMusic.play();
           this.ducks = [];
-          this.socket = io(urlSocket, {
-            query: {
-              name: usuario,
-              time: tiempo,
-            },
-          });
+
           let posicionY = 1;
 
-          this.socket.on("newPlayer", (duckApi) => {
+          vueDataInstance.$data.socket.on("newPlayer", (duckApi) => {
             vueDataInstance.$data.patos += 1;
             const duck = new Duck(
               this,
@@ -262,20 +265,20 @@ export default {
             });
           });
 
-          this.socket.on("cisne", (OneduckApi) => {
+          vueDataInstance.$data.socket.on("cisne", (OneduckApi) => {
             this.ducks.forEach((duck) => {
               duck.cisne(OneduckApi.id, OneduckApi.skin);
             });
           });
 
-          this.socket.on("move", (duckApi) => {
+          vueDataInstance.$data.socket.on("move", (duckApi) => {
             this.ducks.forEach((duck, index) => {
               duck.move(duckApi[index].x);
             });
           });
 
-          this.socket.on("ganadores", (ducksWins) => {
-            this.socket.disconnect();
+          vueDataInstance.$data.socket.on("ganadores", (ducksWins) => {
+            vueDataInstance.$data.socket.disconnect();
             this.ducks.forEach((duck) => {
               duck.destruir(ducksWins);
             });
