@@ -63,7 +63,7 @@ export default {
       const vueDataInstance = this;
       const usuario = this.usuario;
       const tiempo = parseInt(this.tiempo);
-      const urlSocket = "ws://localhost:3000";
+      const urlSocket = "https://patosgame.fly.dev";
       this.form = false;
       this.buttonStart = true;
 
