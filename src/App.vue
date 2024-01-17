@@ -1,13 +1,11 @@
 <template>
   <div>
     <div class="form-container" v-show="form">
-      <div class="logo-container">
-        Usuario de TikTok
-      </div>
+      <div class="logo-container">Usuario de TikTok</div>
 
       <form class="form">
         <div class="form-group">
-          <input type="text" name="text" placeholder="Ingrese su Nickname" v-model="usuario">
+          <input type="text" name="text" placeholder="Ingrese su Nickname" v-model="usuario" />
           <select v-model="tiempo">
             <option selected disabled>Seleccione una opción</option>
             <option value="10000">10 segundos</option>
@@ -21,38 +19,61 @@
           </select>
         </div>
 
-
-        <button class="form-submit-btn" type="button" @click="startGame()">Ingresar</button>
+        <button class="form-submit-btn" type="button" @click="startGame()">
+          Ingresar
+        </button>
       </form>
     </div>
+    <button v-show="!form" @click="reiniciar()" class="reiniciar">
+      Volver
+    </button>
+    <button v-show="!form" class="reiniciar patosB">Patos: {{ patos }}</button>
+    <button v-show="buttonStart" @click="iniciarJuego()" class="reiniciar btnEmpezar">
+      Empezar
+    </button>
+    <button v-show="timerShow" class="reiniciar count">
+      <vue-countdown v-if="timerShow" :time="tiempo" v-slot="{ days, hours, minutes, seconds }">
+        {{ minutes }}:{{ seconds }}
+      </vue-countdown>
+    </button>
     <canvas id="gameCanvas" v-show="!form"></canvas>
   </div>
 </template>
-<script >
-import Phaser from 'phaser';
-import { io } from 'socket.io-client'
+<script>
+import Phaser from "phaser";
+import VueCountdown from "@chenfengyuan/vue-countdown";
+import { io } from "socket.io-client";
 export default {
+  components: {
+    VueCountdown,
+  },
   data: () => ({
     usuario: null,
     tiempo: null,
     apitiktok: null,
     form: true,
     patitoImg: null,
+    patos: 0,
+    buttonStart: false,
+    timerShow: false,
+    socket: null,
   }),
   methods: {
     startGame() {
+      const vueDataInstance = this;
       const usuario = this.usuario;
       const tiempo = parseInt(this.tiempo);
-      const urlSocket = "https://patosgame.fly.dev";
+      const urlSocket = "ws://localhost:3000";
       this.form = false;
+      this.buttonStart = true;
 
-      const gameCanvas = document.getElementById('gameCanvas');
+      const gameCanvas = document.getElementById("gameCanvas");
 
       // Tamaño de la pantalla
       const size = {
         width: 1000,
-        height: 600
-      }
+        height: 556,
+      };
 
       // Clase para el pato
       class Duck extends Phaser.GameObjects.Container {
@@ -66,29 +87,38 @@ export default {
 
           // Crear un gráfico para el fondo con esquinas redondeadas
           const labelBackground = scene.add.graphics();
-          labelBackground.fillStyle(0xFFFFFF, 1); // Color oro, opacidad 1
+          labelBackground.fillStyle(0xffffff, 1); // Color oro, opacidad 1
           labelBackground.fillRoundedRect(-30, -40, 60, 20, 10); // x, y, width, height, radius
           this.add(labelBackground);
 
           // Crear la etiqueta con el nombre
           const label = scene.add.text(0, -40, nombre, {
-            fontFamily: 'Arial',
-            fontSize: '16px',
-            color: '#000000',
+            fontFamily: "Arial",
+            fontSize: "16px",
+            color: "#000000",
           });
           label.setOrigin(0.5, 0.5);
           this.add(label);
 
           // Ajustar el ancho del fondo al ancho del texto
           this.labelWidth = label.width + 20; // Puedes ajustar el valor del padding según tus necesidades
-          labelBackground.clear().fillStyle(0xffffff, 1).fillRoundedRect(-this.labelWidth / 2, -48, this.labelWidth, 20, 10);
+          labelBackground
+            .clear()
+            .fillStyle(0xffffff, 1)
+            .fillRoundedRect(
+              -this.labelWidth / 2,
+              -48,
+              this.labelWidth,
+              20,
+              10
+            );
 
           // Configuración de la animación yoyo
           const tweenConfig = {
             targets: this,
             y: y - 10,
             duration: 2000,
-            ease: 'Linear',
+            ease: "Linear",
             yoyo: true,
             repeat: -1,
           };
@@ -100,12 +130,12 @@ export default {
         }
 
         move(mov) {
-          if (mov <= (size.width - 100)) {
+          if (mov <= size.width - 100) {
             this.scene.tweens.add({
               targets: this,
               x: mov,
               duration: 1000,
-              ease: 'Linear',
+              ease: "Linear",
             });
           }
         }
@@ -113,69 +143,65 @@ export default {
         cisne(id, skin) {
           if (id == this.ID) {
             // Cambiar la imagen del pato
-            this.getAt(0).setTexture('cisne');
+            this.getAt(0).setTexture("cisne");
 
             // Cambiar el color del fondo del labelBackground
             const labelBackground = this.getAt(1); // Asegúrate de que el índice sea el correcto
             labelBackground.clear();
-            labelBackground.fillStyle(0xD4AF37, 1); // Color y opacidad
+            labelBackground.fillStyle(0xd4af37, 1); // Color y opacidad
             console.log(this.labelWidth);
-            labelBackground.fillRoundedRect(-this.labelWidth / 2, -48, this.labelWidth, 20, 10);
+            labelBackground.fillRoundedRect(
+              -this.labelWidth / 2,
+              -48,
+              this.labelWidth,
+              20,
+              10
+            );
 
             // Crear un temporizador para revertir la apariencia después de un tiempo
-            this.scene.time.delayedCall(60000, () => {
-              // Restaurar la imagen original del pato
-              this.getAt(0).setTexture(skin);
-              // Restaurar el color original del fondo del labelBackground
-              labelBackground.clear();
-              labelBackground.fillStyle(0xFFFFFF, 1); // Color y opacidad originales
-              labelBackground.fillRoundedRect(-this.labelWidth / 2, -48, this.labelWidth, 20, 10);
-            }, [], this);
+            this.scene.time.delayedCall(
+              60000,
+              () => {
+                // Restaurar la imagen original del pato
+                this.getAt(0).setTexture(skin);
+                // Restaurar el color original del fondo del labelBackground
+                labelBackground.clear();
+                labelBackground.fillStyle(0xffffff, 1); // Color y opacidad originales
+                labelBackground.fillRoundedRect(
+                  -this.labelWidth / 2,
+                  -48,
+                  this.labelWidth,
+                  20,
+                  10
+                );
+              },
+              [],
+              this
+            );
           }
         }
 
-
+        destruir(ganadores) {
+          if (!ganadores.includes(this.ID)) {
+            this.destroy();
+          } else {
+            this.cisne(this.ID, "cisne");
+          }
+        }
 
         update() {
           // Lógica de actualización del pato si es necesario
         }
       }
 
-      class WinScena extends Phaser.Scene {
-        constructor() {
-          super('WinScena'); // Asegúrate de que el nombre coincida con el que usaste en scene.start
-        }
-
-        preload() {
-
-          this.load.image("bg", "/assets/img/fondoPato.jpg");
-          this.load.audio('win', "/assets/audio/win.mp3")
-
-        }
-
-        create() {
-          const backgroundMusic = this.sound.add('win');
-          backgroundMusic.play();
-          this.ducks = [];
-          // Configuración inicial de la otra escena
-          const texto = this.add.text(200, 200, '¡Escena del ganador!', { fontSize: '32px', fill: '#fff' });
-
-          // Aquí puedes agregar más elementos o lógica específica de la otra escena
-        }
-
-        update() {
-          // Lógica de actualización de la otra escena (si es necesario)
-        }
-      }
-
       // Aqui creo la escena de fondo en el juego
       class GameScene extends Phaser.Scene {
         constructor() {
-          super('scene-game')
+          super("scene-game");
         }
 
         preload() {
-          this.load.image("bg", "/assets/img/fondoPato.jpg");
+          // this.load.image("bg", "/assets/img/fondoPato.jpg");
           this.load.image("cisne", "/assets/img/cisne.png");
           this.load.image("patitoceleste", "/assets/img/patitoceleste.png");
           this.load.image("patitomorado", "/assets/img/patitomorado.png");
@@ -190,27 +216,41 @@ export default {
           this.load.image("patitoverde", "/assets/img/patitoverde.png");
           this.load.image("patitoturbo", "/assets/img/patito.gif");
           this.load.audio("quack", "/assets/audio/quack.mp3");
-          this.load.audio('backgroundMusic', "/assets/audio/bg.mp3");
-          this.scene.add('WinScena', WinScena);
+          this.load.audio("pop", "/assets/audio/pop.mp3");
+          this.load.audio("win", "/assets/audio/win.mp3");
+          this.load.audio("backgroundMusic", "/assets/audio/bg.mp3");
+          this.load.video("bg", "/assets/video/fondoPatoRz.mp4", true);
         }
 
         async create() {
-          const backgroundMusic = this.sound.add('backgroundMusic', { loop: true });
+          let video = this.add.video(500, 277, "bg");
+          video.play(true);
+          const backgroundMusic = this.sound.add("backgroundMusic", {
+            loop: true,
+          });
+
+          const popMusic = this.sound.add("pop");
+          const winMusic = this.sound.add("win", { loop: true });
           backgroundMusic.play();
           this.ducks = [];
-          this.socket = io(urlSocket, {
+          vueDataInstance.$data.socket = io(urlSocket, {
             query: {
               name: usuario,
+              time: tiempo,
             },
           });
-          const size = {
-            width: 1000,
-            height: 600
-          };
           let posicionY = 1;
 
-          this.socket.on('newPlayer', (duckApi) => {
-            const duck = new Duck(this, 200, size.height - (posicionY) * 30, duckApi[duckApi.length - 1].name, duckApi[duckApi.length - 1].skin, duckApi[duckApi.length - 1].id);
+          vueDataInstance.$data.socket.on("newPlayer", (duckApi) => {
+            vueDataInstance.$data.patos += 1;
+            const duck = new Duck(
+              this,
+              200,
+              size.height - posicionY * 30,
+              duckApi[duckApi.length - 1].name,
+              duckApi[duckApi.length - 1].skin,
+              duckApi[duckApi.length - 1].id
+            );
             this.sound.play("quack");
             this.ducks.push(duck);
             if (posicionY == 10) {
@@ -219,38 +259,37 @@ export default {
             posicionY++;
             this.ducks.forEach((duck, index) => {
               duck.move(duckApi[index].x);
-            })
+            });
           });
 
-          this.socket.on('cisne', (OneduckApi) => {
-            this.ducks.forEach((duck, index) => {
+          vueDataInstance.$data.socket.on("cisne", (OneduckApi) => {
+            this.ducks.forEach((duck) => {
               duck.cisne(OneduckApi.id, OneduckApi.skin);
-            })
+            });
           });
 
-          this.socket.on('move', (duckApi) => {
-            const duck = new Duck(this, 0, size.height - (posicionY) * 30);
+          vueDataInstance.$data.socket.on("move", (duckApi) => {
             this.ducks.forEach((duck, index) => {
               duck.move(duckApi[index].x);
-            })
+            });
           });
 
-
-
-          const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
-          background.setScale(size.width / background.width, size.height / background.height);
-
-          setTimeout(() => {
+          vueDataInstance.$data.socket.on("ganadores", (ducksWins) => {
+            vueDataInstance.$data.socket.disconnect();
+            this.ducks.forEach((duck) => {
+              duck.destruir(ducksWins);
+            });
+            popMusic.play();
             backgroundMusic.stop();
-            this.socket.emit('final', "hola");
-            this.scene.start('WinScena'); // Reemplaza 'otra-escena' con el nombre de la escena siguiente
-          }, tiempo);
+            setTimeout(winMusic.play(), 1000);
+          });
+
+          // const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
+          // background.setScale(size.width / background.width, size.height / background.height);
         }
 
-        update() {
-        }
+        update() { }
       }
-
 
       // configuracion del canva-game
       const config = {
@@ -260,16 +299,34 @@ export default {
         canvas: gameCanvas,
         scene: [GameScene],
         physics: {
-          default: 'arcade',
+          default: "arcade",
         },
         autoFocus: false,
-      }
+      };
 
       //constructor del juego
       const GAME = new Phaser.Game(config);
     },
-  }
-}
+    reiniciar() {
+      location.reload(true);
+    },
+    toggleMute() {
+      const audioElement = this.$refs.audioElement;
+
+      if (audioElement.muted) {
+        audioElement.muted = false; // Desmutear
+      } else {
+        audioElement.muted = true; // Mute
+      }
+    },
+    iniciarJuego() {
+      this.tiempo = parseInt(this.tiempo);
+      this.buttonStart = false;
+      this.timerShow = true;
+      this.socket.emit("empezar");
+    },
+  },
+};
 </script>
 
 <style>
@@ -279,7 +336,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-
 }
 
 .form-container {
@@ -341,8 +397,6 @@ body {
   background-color: #fff;
 }
 
-
-
 .form-container .form-group input::placeholder {
   opacity: 0.5;
 }
@@ -374,9 +428,6 @@ body {
   background-color: #313131;
 }
 
-
-
-
 #gameCanvas {
   position: absolute;
   top: 50%;
@@ -385,5 +436,41 @@ body {
   display: flex;
   z-index: 1;
 }
-</style>
 
+.reiniciar {
+  left: 40px;
+  top: 40px;
+  position: absolute;
+  background: #fbca1f;
+  font-family: inherit;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+}
+
+.patosB {
+  top: 100px;
+}
+
+.count {
+  top: 180px;
+}
+
+.reiniciar:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.15em 0.15em;
+}
+
+.reiniciar:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+}
+
+.btnEmpezar {
+  background-color: rgb(3, 194, 3);
+}
+</style>
