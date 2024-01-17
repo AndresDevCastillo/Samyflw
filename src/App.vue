@@ -233,7 +233,7 @@ export default {
           const winMusic = this.sound.add("win", { loop: true });
           backgroundMusic.play();
           this.ducks = [];
-          vueDataInstance.$data.socket = io(urlSocket, {
+          this.socket = io(urlSocket, {
             query: {
               name: usuario,
               time: tiempo,
@@ -241,7 +241,7 @@ export default {
           });
           let posicionY = 1;
 
-          vueDataInstance.$data.socket.on("newPlayer", (duckApi) => {
+          this.socket.on("newPlayer", (duckApi) => {
             vueDataInstance.$data.patos += 1;
             const duck = new Duck(
               this,
@@ -262,20 +262,20 @@ export default {
             });
           });
 
-          vueDataInstance.$data.socket.on("cisne", (OneduckApi) => {
+          this.socket.on("cisne", (OneduckApi) => {
             this.ducks.forEach((duck) => {
               duck.cisne(OneduckApi.id, OneduckApi.skin);
             });
           });
 
-          vueDataInstance.$data.socket.on("move", (duckApi) => {
+          this.socket.on("move", (duckApi) => {
             this.ducks.forEach((duck, index) => {
               duck.move(duckApi[index].x);
             });
           });
 
-          vueDataInstance.$data.socket.on("ganadores", (ducksWins) => {
-            vueDataInstance.$data.socket.disconnect();
+          this.socket.on("ganadores", (ducksWins) => {
+            this.socket.disconnect();
             this.ducks.forEach((duck) => {
               duck.destruir(ducksWins);
             });
