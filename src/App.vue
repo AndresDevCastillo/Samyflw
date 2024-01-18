@@ -31,11 +31,24 @@
     <button v-show="buttonStart" @click="iniciarJuego()" class="reiniciar btnEmpezar">
       Empezar
     </button>
+    <button v-show="!form" :class="classSonido" @click="toggleMute()">{{ btnSonido }}</button>
     <button v-show="timerShow" class="reiniciar count">
       <vue-countdown v-if="timerShow" :time="tiempo" v-slot="{ days, hours, minutes, seconds }">
-        {{ minutes }}:{{ seconds }}
-      </vue-countdown>
+        {{ minutes < 10 ? '0' + minutes : minutes }}:{{ seconds < 10 ? '0' + seconds : seconds }} </vue-countdown>
     </button>
+    <Button v-show="!form" class="puntos" label="Puntos" @click="dialogVisible = true" />
+    <Dialog v-model:visible="dialogVisible" :header="'Jugadores: ' + players.length" :style="{ width: '75vw' }"
+      maximizable modal :contentStyle="{ height: '300px' }">
+      <DataTable :value="players" sortField="point" :sortOrder="-1" stripedRows scrollable scrollHeight="flex"
+        tableStyle="min-width: 1rem">
+        <Column field="name" header="Nombres"></Column>
+        <Column field="point" header="Puntos"></Column>
+        <Column field="skin" header="Skin"></Column>
+      </DataTable>
+      <template #footer>
+        <Button label="Ok" @click="dialogVisible = false" />
+      </template>
+    </Dialog>
     <canvas id="gameCanvas" v-show="!form"></canvas>
   </div>
 </template>
@@ -43,11 +56,20 @@
 import Phaser from "phaser";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import { io } from "socket.io-client";
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Dialog from 'primevue/dialog';
+import Button from "primevue/button";
 export default {
   components: {
     VueCountdown,
+    DataTable,
+    Column,
+    Button,
+    Dialog
   },
   data: () => ({
+    game: null,
     usuario: null,
     tiempo: null,
     apitiktok: null,
@@ -57,12 +79,19 @@ export default {
     buttonStart: false,
     timerShow: false,
     socket: null,
-
+    btnSonido: 'Mute',
+    classSonido: 'btnRojo',
+    dialogVisible: false,
+    players: []
   }),
   methods: {
     startGame() {
+      if (this.usuario == null || this.usuario == '' || this.tiempo == null) {
+        return;
+      }
       const vueDataInstance = this;
-      const urlSocket = "https://patosgame.fly.dev";
+      // const urlSocket = "https://patosgame.fly.dev";
+      const urlSocket = "ws://localhost:3000";
       const usuario = this.usuario;
       const tiempo = parseInt(this.tiempo);
       this.socket = io(urlSocket, {
@@ -231,20 +260,22 @@ export default {
         }
 
         async create() {
+          this.muteNot = true;
           let video = this.add.video(500, 277, "bg");
           video.play(true);
-          const backgroundMusic = this.sound.add("backgroundMusic", {
+          this.backgroundMusic = this.sound.add("backgroundMusic", {
             loop: true,
           });
 
           const popMusic = this.sound.add("pop");
           const winMusic = this.sound.add("win", { loop: true });
-          backgroundMusic.play();
+          this.backgroundMusic.play();
           this.ducks = [];
 
           let posicionY = 1;
 
           vueDataInstance.$data.socket.on("newPlayer", (duckApi) => {
+            vueDataInstance.$data.players = duckApi;
             vueDataInstance.$data.patos += 1;
             const duck = new Duck(
               this,
@@ -254,7 +285,9 @@ export default {
               duckApi[duckApi.length - 1].skin,
               duckApi[duckApi.length - 1].id
             );
-            this.sound.play("quack");
+            if (this.muteNot) {
+              this.sound.play("quack");
+            }
             this.ducks.push(duck);
             if (posicionY == 10) {
               posicionY = 0;
@@ -272,6 +305,7 @@ export default {
           });
 
           vueDataInstance.$data.socket.on("move", (duckApi) => {
+            vueDataInstance.$data.players = duckApi;
             this.ducks.forEach((duck, index) => {
               duck.move(duckApi[index].x);
             });
@@ -292,6 +326,16 @@ export default {
         }
 
         update() { }
+
+        mutear() {
+          this.muteNot = !this.muteNot;
+          if (this.muteNot) {
+            this.backgroundMusic.play();
+          }
+          else {
+            this.backgroundMusic.stop();
+          }
+        }
       }
 
       // configuracion del canva-game
@@ -308,19 +352,23 @@ export default {
       };
 
       //constructor del juego
-      const GAME = new Phaser.Game(config);
+      this.game = new Phaser.Game(config);
     },
     reiniciar() {
+      this.game.destroy(true);
       location.reload(true);
     },
     toggleMute() {
-      const audioElement = this.$refs.audioElement;
-
-      if (audioElement.muted) {
-        audioElement.muted = false; // Desmutear
-      } else {
-        audioElement.muted = true; // Mute
+      if (this.classSonido == "btnRojo") {
+        this.classSonido = 'btnVerde';
+        this.btnSonido = 'Escuchar';
       }
+      else {
+        this.classSonido = 'btnRojo';
+        this.btnSonido = 'Mute';
+      }
+      let instanciaPhaser = this.game.scene.getScene('scene-game');
+      instanciaPhaser.mutear();
     },
     iniciarJuego() {
       this.tiempo = parseInt(this.tiempo);
@@ -455,12 +503,57 @@ body {
   cursor: pointer;
 }
 
+.btnRojo {
+  right: 40px;
+  top: 40px;
+  position: absolute;
+  background: #fb1f1f;
+  font-family: inherit;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+}
+
+.btnVerde {
+  right: 40px;
+  top: 40px;
+  position: absolute;
+  background: #1fc8fb;
+  font-family: inherit;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+}
+
+.puntos {
+  left: 40px;
+  top: 220px;
+  position: absolute;
+  background: #fbca1f;
+  font-family: inherit;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+}
+
 .patosB {
   top: 100px;
 }
 
 .count {
-  top: 180px;
+  top: 160px;
 }
 
 .reiniciar:hover {
