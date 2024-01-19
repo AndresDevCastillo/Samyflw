@@ -120,9 +120,9 @@ export default {
           super(scene, x, y);
           this.ID = id;
           // Agregar la imagen del pato al contenedor
-          const duckImage = scene.add.sprite(0, 0, skin).setOrigin(0.5, 0.5);
-          duckImage.setScale(0.2);
-          this.add(duckImage);
+          this.duckImage = scene.add.sprite(0, 0, skin).setOrigin(0.5, 0.5);
+          this.duckImage.setScale(0.2);
+          this.add(this.duckImage);
 
           // Crear un gráfico para el fondo con esquinas redondeadas
           const labelBackground = scene.add.graphics();
@@ -195,7 +195,7 @@ export default {
         cisne(id, skin) {
           if (id == this.ID) {
             // Cambiar la imagen del pato
-            this.getAt(0).setTexture("cisne");
+            this.getAt(0).setTexture("cisne").setScale(0.3);
 
             // Cambiar el color del fondo del labelBackground
             const labelBackground = this.getAt(1); // Asegúrate de que el índice sea el correcto
@@ -214,7 +214,7 @@ export default {
               60000,
               () => {
                 // Restaurar la imagen original del pato
-                this.getAt(0).setTexture(skin);
+                this.getAt(0).setTexture(skin).setScale(0.2);
                 // Restaurar el color original del fondo del labelBackground
                 labelBackground.clear();
                 labelBackground.fillStyle(0xffffff, 1); // Color y opacidad originales
@@ -283,7 +283,7 @@ export default {
           });
 
           const popMusic = this.sound.add("pop");
-          const winMusic = this.sound.add("win", { loop: true });
+          this.winMusic = this.sound.add("win", { loop: true });
           this.backgroundMusic.play();
           this.ducks = [];
 
@@ -337,7 +337,7 @@ export default {
 
             popMusic.play();
             this.backgroundMusic.stop();
-            setTimeout(winMusic.play(), 1000);
+            setTimeout(this.winMusic.play(), 1000);
           });
 
           // const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
@@ -353,6 +353,8 @@ export default {
           }
           else {
             this.backgroundMusic.stop();
+            this.winMusic.stop();
+
           }
         }
       }
