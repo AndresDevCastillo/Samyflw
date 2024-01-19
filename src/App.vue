@@ -32,10 +32,6 @@
       Empezar
     </button>
     <button v-show="!form" :class="classSonido" @click="toggleMute()">{{ btnSonido }}</button>
-    <button v-show="timerShow" class="reiniciar count">
-      <vue-countdown v-if="timerShow" :time="tiempo" v-slot="{ days, hours, minutes, seconds }">
-        {{ minutes < 10 ? '0' + minutes : minutes }}:{{ seconds < 10 ? '0' + seconds : seconds }} </vue-countdown>
-    </button>
     <Button v-show="!form" class="puntos" label="Puntos" @click="dialogVisible = true" />
     <Dialog v-model:visible="dialogVisible" :header="'Jugadores: ' + players.length" :style="{ width: '75vw' }"
       maximizable modal :contentStyle="{ height: '300px' }">
@@ -49,7 +45,13 @@
         <Button label="Ok" @click="dialogVisible = false" />
       </template>
     </Dialog>
-    <canvas id="gameCanvas" v-show="!form"></canvas>
+    <div class="gameContainer">
+      <button v-show="timerShow" class="count">
+        <vue-countdown v-if="timerShow" :time="tiempo" v-slot="{ days, hours, minutes, seconds }">
+          {{ minutes < 10 ? '0' + minutes : minutes }}:{{ seconds < 10 ? '0' + seconds : seconds }} </vue-countdown>
+      </button>
+      <canvas id="gameCanvas" v-show="!form"></canvas>
+    </div>
   </div>
 </template>
 <script>
@@ -90,8 +92,8 @@ export default {
         return;
       }
       const vueDataInstance = this;
-      const urlSocket = "https://patosgame.fly.dev";
-      //const urlSocket = "ws://localhost:3000";
+      //const urlSocket = "https://patosgame.fly.dev";
+      const urlSocket = "ws://localhost:3000";
       const usuario = this.usuario;
       const tiempo = parseInt(this.tiempo);
       this.socket = io(urlSocket, {
@@ -176,6 +178,19 @@ export default {
             });
           }
         }
+        alinear(ducksWin) {
+          const movimientosX = [800, 700, 600, 500, 400, 300];
+          ducksWin.forEach((duck, index) => {
+            if (duck.id == this.ID) {
+              this.scene.tweens.add({
+                targets: this,
+                x: movimientosX[index],
+                duration: 1000,
+                ease: "Linear",
+              });
+            }
+          });
+        }
 
         cisne(id, skin) {
           if (id == this.ID) {
@@ -186,7 +201,6 @@ export default {
             const labelBackground = this.getAt(1); // Asegúrate de que el índice sea el correcto
             labelBackground.clear();
             labelBackground.fillStyle(0xd4af37, 1); // Color y opacidad
-            console.log(this.labelWidth);
             labelBackground.fillRoundedRect(
               -this.labelWidth / 2,
               -48,
@@ -218,11 +232,12 @@ export default {
           }
         }
 
-        destruir(ganadores) {
-          if (!ganadores.includes(this.ID)) {
-            this.destroy();
-          } else {
+        destruir(ducks) {
+          const ducksWin = ducks.some(duck => duck.id === this.ID);
+          if (ducksWin) {
             this.cisne(this.ID, "cisne");
+          } else {
+            this.destroy();
           }
         }
 
@@ -256,7 +271,7 @@ export default {
           this.load.audio("pop", "/assets/audio/pop.mp3");
           this.load.audio("win", "/assets/audio/win.mp3");
           this.load.audio("backgroundMusic", "/assets/audio/bg.mp3");
-          this.load.video("bg", "/assets/video/fondoPatoRz.mp4", true);
+          this.load.video("bg", "/assets/video/fondo.mp4", true);
         }
 
         async create() {
@@ -316,8 +331,12 @@ export default {
             this.ducks.forEach((duck) => {
               duck.destruir(ducksWins);
             });
+            this.ducks.forEach((duck) => {
+              duck.alinear(ducksWins);
+            });
+
             popMusic.play();
-            backgroundMusic.stop();
+            this.backgroundMusic.stop();
             setTimeout(winMusic.play(), 1000);
           });
 
@@ -479,7 +498,7 @@ body {
   background-color: #313131;
 }
 
-#gameCanvas {
+.gameContainer {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -552,9 +571,7 @@ body {
   top: 100px;
 }
 
-.count {
-  top: 160px;
-}
+
 
 .reiniciar:hover {
   transform: translate(-0.05em, -0.05em);
@@ -568,5 +585,23 @@ body {
 
 .btnEmpezar {
   background-color: rgb(3, 194, 3);
+}
+
+
+.count {
+  position: absolute;
+  top: 10%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  background: #fbca1f;
+  font-family: inherit;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+  z-index: 2;
 }
 </style>
