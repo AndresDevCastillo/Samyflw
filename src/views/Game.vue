@@ -5,11 +5,7 @@
       <div class="form">
         <div class="input-group">
           <label for="username">Usuario</label>
-          <input
-            name="TikTok"
-            placeholder="Ingrese su TikTok"
-            v-model="usuario"
-          />
+          <input name="TikTok" placeholder="Ingrese su TikTok" v-model="usuario" />
         </div>
         <div class="input-group">
           <select v-model="tiempo">
@@ -34,39 +30,17 @@
       Volver
     </button>
     <button v-show="!form" class="reiniciar patosB">Patos: {{ patos }}</button>
-    <button
-      v-show="buttonStart"
-      @click="iniciarJuego()"
-      class="reiniciar btnEmpezar"
-    >
+    <button v-show="buttonStart" @click="iniciarJuego()" class="reiniciar btnEmpezar">
       Empezar
     </button>
     <button v-show="!form" :class="classSonido" @click="toggleMute()">
       {{ btnSonido }}
     </button>
-    <Button
-      v-show="!form"
-      class="puntos"
-      label="Puntos"
-      @click="dialogVisible = true"
-    />
-    <Dialog
-      v-model:visible="dialogVisible"
-      :header="'Jugadores: ' + players.length"
-      :style="{ width: '75vw' }"
-      maximizable
-      modal
-      :contentStyle="{ height: '300px' }"
-    >
-      <DataTable
-        :value="players"
-        sortField="point"
-        :sortOrder="-1"
-        stripedRows
-        scrollable
-        scrollHeight="flex"
-        tableStyle="min-width: 1rem"
-      >
+    <Button v-show="!form" class="puntos" label="Puntos" @click="dialogVisible = true" />
+    <Dialog v-model:visible="dialogVisible" :header="'Jugadores: ' + players.length" :style="{ width: '75vw' }"
+      maximizable modal :contentStyle="{ height: '300px' }">
+      <DataTable :value="players" sortField="point" :sortOrder="-1" stripedRows scrollable scrollHeight="flex"
+        tableStyle="min-width: 1rem">
         <Column field="name" header="Nombres"></Column>
         <Column field="point" header="Puntos"></Column>
         <Column field="skin" header="Skin"></Column>
@@ -77,15 +51,8 @@
     </Dialog>
     <div class="gameContainer">
       <button v-show="timerShow" class="count">
-        <vue-countdown
-          v-if="timerShow"
-          :time="tiempo"
-          v-slot="{ days, hours, minutes, seconds }"
-        >
-          {{ minutes < 10 ? "0" + minutes : minutes }}:{{
-            seconds < 10 ? "0" + seconds : seconds
-          }}
-        </vue-countdown>
+        <vue-countdown v-if="timerShow" :time="tiempo" v-slot="{ days, hours, minutes, seconds }">
+          {{ minutes < 10 ? "0" + minutes : minutes }}:{{ seconds < 10 ? "0" + seconds : seconds }} </vue-countdown>
       </button>
       <canvas id="gameCanvas" v-show="!form"></canvas>
     </div>
@@ -209,23 +176,10 @@ export default {
             this.scene.tweens.add({
               targets: this,
               x: mov,
-              duration: 1000,
+              duration: 5000,
               ease: "Linear",
             });
           }
-        }
-        alinear(ducksWin) {
-          const movimientosX = [800, 700, 600, 500, 400, 300];
-          ducksWin.forEach((duck, index) => {
-            if (duck.id == this.ID) {
-              this.scene.tweens.add({
-                targets: this,
-                x: movimientosX[index],
-                duration: 1000,
-                ease: "Linear",
-              });
-            }
-          });
         }
 
         cisne(id, skin) {
@@ -380,7 +334,7 @@ export default {
           // background.setScale(size.width / background.width, size.height / background.height);
         }
 
-        update() {}
+        update() { }
 
         mutear() {
           this.muteNot = !this.muteNot;
