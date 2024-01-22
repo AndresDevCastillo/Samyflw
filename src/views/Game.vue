@@ -182,6 +182,20 @@ export default {
           }
         }
 
+        alinear(ducksWin) {
+          const movimientosX = [800, 700, 600, 500, 400, 300];
+          ducksWin.forEach((duck, index) => {
+            if (duck.id == this.ID) {
+              this.scene.tweens.add({
+                targets: this,
+                x: movimientosX[index],
+                duration: 1000,
+                ease: "Linear",
+              });
+            }
+          });
+        }
+
         cisne(id, skin) {
           if (id == this.ID) {
             // Cambiar la imagen del pato
