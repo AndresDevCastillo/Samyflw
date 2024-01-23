@@ -29,6 +29,9 @@
     <button v-show="!form" @click="reiniciar()" class="reiniciar">
       Volver
     </button>
+    <div class="volumen" v-show="!form">
+      <Slider v-model="volumen" orientation="vertical" v-on:slideend="changeVolumen()" :step="5" class="w-14rem" />
+    </div>
     <button v-show="!form" class="reiniciar patosB">Patos: {{ patos }}</button>
     <button v-show="buttonStart" @click="iniciarJuego()" class="reiniciar btnEmpezar">
       Empezar
@@ -66,6 +69,7 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
+import Slider from "primevue/slider";
 export default {
   components: {
     VueCountdown,
@@ -73,6 +77,7 @@ export default {
     Column,
     Button,
     Dialog,
+    Slider
   },
   data: () => ({
     game: null,
@@ -89,17 +94,18 @@ export default {
     classSonido: "btnRojo",
     dialogVisible: false,
     players: [],
+    volumen: 100
   }),
   methods: {
     startGame() {
-      this.form = false;
-      this.buttonStart = true;
       if (this.usuario == null || this.usuario == "" || this.tiempo == null) {
         return;
       }
+      this.form = false;
+      this.buttonStart = true;
       const vueDataInstance = this;
-      const urlSocket = "https://patosgame.fly.dev";
-      //const urlSocket = "ws://localhost:3000";
+      //const urlSocket = "https://patosgame.fly.dev";
+      const urlSocket = "ws://localhost:3000";
       const usuario = this.usuario;
       const tiempo = parseInt(this.tiempo);
       this.socket = io(urlSocket, {
@@ -189,7 +195,7 @@ export default {
               this.scene.tweens.add({
                 targets: this,
                 x: movimientosX[index],
-                duration: 1000,
+                duration: 5500,
                 ease: "Linear",
               });
             }
@@ -257,7 +263,7 @@ export default {
         }
 
         preload() {
-          // this.load.image("bg", "/assets/img/fondoPato.jpg");
+          const bgN = Math.floor(Math.random() * 10) + 1;
           this.load.image("cisne", "/assets/img/cisne.png");
           this.load.image("patitoceleste", "/assets/img/patitoceleste.png");
           this.load.image("patitomorado", "/assets/img/patitomorado.png");
@@ -270,11 +276,9 @@ export default {
           this.load.image("patitogris", "/assets/img/patitogris.png");
           this.load.image("patito", "/assets/img/patito.png");
           this.load.image("patitoverde", "/assets/img/patitoverde.png");
-          this.load.image("patitoturbo", "/assets/img/patito.gif");
           this.load.audio("quack", "/assets/audio/quack.mp3");
-          this.load.audio("pop", "/assets/audio/pop.mp3");
           this.load.audio("win", "/assets/audio/win.mp3");
-          this.load.audio("backgroundMusic", "/assets/audio/bg.mp3");
+          this.load.audio("backgroundMusic", `/assets/audio/bg${bgN}.mp3`);
           this.load.video("bg", "/assets/video/fondo.mp4", true);
         }
 
@@ -285,13 +289,14 @@ export default {
           this.backgroundMusic = this.sound.add("backgroundMusic", {
             loop: true,
           });
-
-          const popMusic = this.sound.add("pop");
+          this.quackMusic = this.sound.add("quack");
           this.winMusic = this.sound.add("win", { loop: true });
           this.backgroundMusic.play();
           this.ducks = [];
 
           let posicionY = 1;
+
+
 
           vueDataInstance.$data.socket.on("newPlayer", (duckApi) => {
             vueDataInstance.$data.players = duckApi;
@@ -305,7 +310,7 @@ export default {
               duckApi[duckApi.length - 1].id
             );
             if (this.muteNot) {
-              this.sound.play("quack");
+              this.quackMusic.play();
             }
             this.ducks.push(duck);
             if (posicionY == 10) {
@@ -338,14 +343,17 @@ export default {
             this.ducks.forEach((duck) => {
               duck.alinear(ducksWins);
             });
-
-            popMusic.play();
             this.backgroundMusic.stop();
             setTimeout(this.winMusic.play(), 1000);
           });
 
           // const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
           // background.setScale(size.width / background.width, size.height / background.height);
+        }
+        changeVolumen(volumen) {
+          this.backgroundMusic.setVolume(volumen);
+          this.quackMusic.setVolume(volumen);
+          this.winMusic.setVolume(volumen);
         }
 
         update() { }
@@ -391,6 +399,10 @@ export default {
       }
       let instanciaPhaser = this.game.scene.getScene("scene-game");
       instanciaPhaser.mutear();
+    },
+    changeVolumen() {
+      let instanciaPhaser = this.game.scene.getScene("scene-game");
+      instanciaPhaser.changeVolumen(this.volumen / 100);
     },
     iniciarJuego() {
       this.tiempo = parseInt(this.tiempo);
@@ -606,5 +618,11 @@ export default {
   box-shadow: 0.1em 0.1em;
   cursor: pointer;
   z-index: 2;
+}
+
+.volumen {
+  position: absolute;
+  right: 85px;
+  top: 110px;
 }
 </style>
