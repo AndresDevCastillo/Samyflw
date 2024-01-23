@@ -24,6 +24,11 @@
           Ingresar
         </button>
       </div>
+      <div class="social-message">
+        <div class="line"></div>
+        <p class="message">Agencia Latam</p>
+        <div class="line"></div>
+      </div>
     </div>
 
     <button v-show="!form" @click="reiniciar()" class="reiniciar">
@@ -514,6 +519,26 @@ export default {
   border: none;
   border-radius: 0.375rem;
   font-weight: 600;
+}
+
+.social-message {
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;
+}
+
+.line {
+  height: 1px;
+  flex: 1 1 0%;
+  background-color: rgba(55, 65, 81, 1);
+}
+
+.social-message .message {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgba(156, 163, 175, 1);
 }
 
 .gameContainer {
