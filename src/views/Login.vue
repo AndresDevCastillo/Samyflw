@@ -5,24 +5,39 @@
             <div class="form">
                 <div class="input-group">
                     <label for="username">Usuario</label>
-                    <input type="text" name="username" id="username" placeholder="">
+                    <input v-model="user" type="text" name="username" id="username" placeholder="">
                 </div>
                 <div class="input-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" name="password" id="password" placeholder="">
+                    <input v-model="password" type="password" name="password" id="password" placeholder="">
                 </div>
-                <button class="sign">Iniciar Sesión</button>
+                <button type="button" @click="signSAMYFLW()" class="sign">Iniciar Sesión</button>
             </div>
             <div class="social-message">
                 <div class="line"></div>
                 <p class="message">Agencia Latam</p>
                 <div class="line"></div>
             </div>
-
         </div>
     </div>
 </template>
 <script>
+import { useSessionStore } from '../store';
+export default {
+    data: () => ({
+        API: "http://localhost:3000",
+        user: null,
+        password: null
+    }),
+    methods: {
+        async signSAMYFLW() {
+
+        }
+    },
+    created() {
+
+    }
+}
 </script>
 <style scoped>
 .form-container {
