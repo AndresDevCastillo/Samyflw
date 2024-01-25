@@ -134,7 +134,7 @@ export default {
     dialogVisible: false,
     players: [],
     volumen: 100,
-    API: "ws://localhost:3000" //"https://patosgame.fly.dev"
+    API: "https://patosgame.fly.dev"
   }),
   methods: {
     startGame() {
@@ -685,7 +685,7 @@ export default {
   top: 110px;
 }
 
-ial-icons {
+.social-icons {
   display: flex;
   justify-content: center;
 }

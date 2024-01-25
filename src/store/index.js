@@ -2,19 +2,24 @@ import { defineStore } from 'pinia';
 
 export const useSessionStore = defineStore('session', {
     state: () => ({
-        user: "hola",
+        user: null,
         sessionTime: null,
     }),
 
     actions: {
-        returnUser() {
-            return ({
-                user: this.user
-            })
+        isActive() {
+            console.log(this.user);
+            if (this.user) {
+                return true;
+            }
+            return false;
         },
         saveUser(user) {
+            console.log("guardando")
             this.user = user;
             this.sessionTime = new Date();
+            console.log(this.user);
+
         },
         clearUser() {
             this.user = null;
