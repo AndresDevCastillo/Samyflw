@@ -1,14 +1,17 @@
-import { createApp } from 'vue'
-import './style.css'
-import '../node_modules/primeflex/primeflex.css'
-import 'primeicons/primeicons.css'
-import 'primevue/resources/themes/lara-dark-purple/theme.css'
+import { createApp } from 'vue';
+import './style.css';
+import '../node_modules/primeflex/primeflex.css';
+import 'primeicons/primeicons.css';
+import 'primevue/resources/themes/lara-dark-purple/theme.css';
 
-import App from './App.vue'
-import PrimeVue from 'primevue/config'
-import router from './router'
-import { createPinia } from 'pinia'
+import App from './App.vue';
+import PrimeVue from 'primevue/config';
+import router from './router';
+import { createPinia } from 'pinia';
 
+// Componentes Principales
+import AppBar from './components/AppBar.vue';
+import NavBar from './components/NavBar.vue';
 
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';
@@ -116,6 +119,8 @@ app.use(createPinia());
 app.use(router);
 app.use(PrimeVue);
 
+app.component('AppBar', AppBar);
+app.component('NavBar', NavBar);
 
 app.use(ConfirmationService);
 app.use(ToastService);
@@ -127,6 +132,7 @@ app.directive('ripple', Ripple);
 app.directive('styleclass', StyleClass);
 app.directive('focustrap', FocusTrap);
 app.directive('animateonscroll', AnimateOnScroll);
+
 
 app.component('Accordion', Accordion);
 app.component('AccordionTab', AccordionTab);

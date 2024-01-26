@@ -58,8 +58,9 @@
 <script>
 import { useToast } from "primevue/usetoast";
 import axios from 'axios';
-import { useSessionStore } from '../store';
+import { useSessionStore } from '../../store';
 export default {
+    name: "Logingame",
     data: () => ({
         API: "https://patosgame.fly.dev",
         user: null,

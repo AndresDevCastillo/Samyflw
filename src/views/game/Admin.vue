@@ -93,11 +93,12 @@
     </div>
 </template>
 <script>
-import { useSessionStore } from '../store';
+import { useSessionStore } from '../../store';
 import { useToast } from "primevue/usetoast";
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import axios from 'axios';
 export default {
+    name: "Admingame",
     data: () => ({
         API: "https://patosgame.fly.dev",
         data: null,
@@ -194,7 +195,7 @@ export default {
         this.store = useSessionStore();
         this.toast = useToast();
         if (!this.store.isActive()) {
-            this.$router.push('/login');
+            this.$router.push('/duckracer/login');
         } else {
             this.token = {
                 headers: { Authorization: `Bearer ${this.store.token()}` }
