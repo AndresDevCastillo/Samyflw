@@ -80,7 +80,7 @@ export default {
                 console.log(resp.data);
                 if (resp.data) {
                     this.store.saveUser(resp.data);
-                    this.$router.push('/admin');
+                    this.$router.push('/duckracer/admin');
                 }
             }).catch(error => {
                 console.log(error);
@@ -95,7 +95,7 @@ export default {
         this.store = useSessionStore();
         this.toast = useToast();
         if (this.store.isActive()) {
-            this.$router.push('/admin');
+            this.$router.push('/duckracer/admin');
         }
     }
 }
