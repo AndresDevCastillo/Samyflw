@@ -94,26 +94,10 @@
 </template>
 <script>
 import { useSessionStore } from '../store';
-import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
-import Badge from 'primevue/badge';
-import Dialog from 'primevue/dialog';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import axios from 'axios';
 export default {
-    components: {
-        DataTable,
-        Column,
-        InputText,
-        Button,
-        Badge,
-        Dialog,
-        Toast
-    },
     data: () => ({
         API: "https://patosgame.fly.dev",
         data: null,

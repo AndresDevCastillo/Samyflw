@@ -104,19 +104,9 @@
 import Phaser from "phaser";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import { io } from "socket.io-client";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
-import Dialog from "primevue/dialog";
-import Button from "primevue/button";
-import Slider from "primevue/slider";
 export default {
   components: {
     VueCountdown,
-    DataTable,
-    Column,
-    Button,
-    Dialog,
-    Slider
   },
   data: () => ({
     game: null,

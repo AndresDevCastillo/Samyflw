@@ -56,14 +56,10 @@
     </div>
 </template>
 <script>
-import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import axios from 'axios';
 import { useSessionStore } from '../store';
 export default {
-    components: {
-        Toast
-    },
     data: () => ({
         API: "https://patosgame.fly.dev",
         user: null,
