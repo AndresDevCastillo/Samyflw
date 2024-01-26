@@ -21,6 +21,9 @@ export const useSessionStore = defineStore('session', {
             console.log(this.user);
 
         },
+        token() {
+            return this.user.access_token;
+        },
         clearUser() {
             this.user = null;
             this.sessionTime = null;

@@ -1,27 +1,48 @@
 <template>
     <div class="admin">
-        <h1>Admin</h1>
-
-        <DataTable paginator :rows="10" :rowsPerPageOptions="[10, 20, 50]" :value="data" dataKey="_id" filterDisplay="row"
-            v-model:filters="filters" tableStyle="min-width: 60rem" sortField="coinTotal" :sortOrder="-1" stripedRows
+        <Toast />
+        <DataTable paginator :rows="10" :filters="filters" :rowsPerPageOptions="[10, 20, 50]" :value="data" dataKey="_id"
+            filterDisplay="row" tableStyle="min-width: 40rem" sortField="coinTotal" :sortOrder="-1" stripedRows
             :expandedRows="[1]" :globalFilterFields="['name']">
             <template #header>
-                <div class="flex justify-content-end">
+                <div class="flex justify-content-between">
+                    <Button label="Añadir" icon="pi pi-plus" severity="success" class="mr-2"
+                        @click="newAcountDialog = true" />
+                    <Button label="Jugar" icon="pi pi-play  " severity="warning" class="mr-2" @click="jugar()" />
                     <span class="p-input-icon-left">
                         <i class="pi pi-search" />
+                        <InputText v-model="filters['global'].value" placeholder="Buscar.." />
                     </span>
                 </div>
             </template>
             <Column expander style="width: 5rem" />
-            <Column field="name" header="Nombre"></Column>
-            <Column field="coinTotal" header="Monedas"></Column>
-            <Column field="gameTotal" header="Partidas"></Column>
+            <Column field="name" header="Nombre" sortable></Column>
+            <Column field="coinTotal" header="Monedas" sortable>
+                <template #body="slotProps">
+                    <Badge :value="slotProps.data.coinTotal" severity="warning"></Badge>
+                </template>
+            </Column>
+            <Column field=" gameTotal" header="Partidas" sortable>
+                <template #body="slotProps">
+                    <Badge :value="slotProps.data.gameTotal" severity="info"></Badge>
+                </template>
+            </Column>
             <Column field="timeTotal" header="Tiempo jugado">
                 <template #body="slotProps">
                     {{ convertirMilisegundos(slotProps.data.timeTotal) }}
                 </template>
             </Column>
-            <Column field="jugadoresMax" header="Max. Jugadores"></Column>
+            <Column field="jugadoresMax" header="Max. Jugadores" sortable>
+                <template #body="slotProps">
+                    <Badge :value="slotProps.data.jugadoresMax" severity="danger"></Badge>
+                </template>
+            </Column>
+            <Column style="max-width:5rem">
+                <template #body="slotProps">
+                    <Button icon="pi pi-trash" outlined rounded severity="danger"
+                        @click="comfirmDialog(slotProps.data._id, slotProps.data.name)" />
+                </template>
+            </Column>
             <template #expansion="slotProps">
                 <div class="p-3">
                     <DataTable :value="slotProps.data.history">
@@ -30,215 +51,88 @@
                                 {{ parsearFecha(slotProps.data.date) }}
                             </template>
                         </Column>
-                        <Column field="coinTotal" header="Monedas"></Column>
+                        <Column field="coinTotal" header="Monedas">
+                            <template #body="slotProps">
+                                <Badge :value="slotProps.data.coinTotal" severity="warning"></Badge>
+                            </template>
+                        </Column>
                         <Column field="timeTotal" header="Tiempo Jugado">
                             <template #body="slotProps">
                                 {{ convertirMilisegundos(slotProps.data.timeTotal) }}
                             </template>
                         </Column>
-                        <Column field="playerTotal" header="N° Jugadores"></Column>
+                        <Column field="playerTotal" header="N° Jugadores">
+                            <template #body="slotProps">
+                                <Badge :value="slotProps.data.playerTotal" severity="danger"></Badge>
+                            </template>
+                        </Column>
                     </DataTable>
                 </div>
             </template>
         </DataTable>
+        <Dialog v-model:visible="newAcountDialog" :style="{ width: '450px' }" header="Crear usuario" :modal="true"
+            class="p-fluid">
+            <div class="field">
+                <label for="name">Name</label>
+                <InputText id="name" v-model.trim="acount.name" required="true" autofocus />
+            </div>
+
+            <template #footer>
+                <Button label="Cancelar" severity="warning" icon="pi pi-times" text @click="newAcountDialog = false" />
+                <Button label="Guardar" severity="success" icon="pi pi-check" text @click="crearAcount()" />
+            </template>
+        </Dialog>
+        <Dialog v-model:visible="deleteAcountDialog" :style="{ width: '450px' }" :header="nameAcountDelete" :modal="true"
+            class="p-fluid ">
+
+            <div class="d-flex">
+                <Button label="Cancelar" severity="info" icon="pi pi-times" text @click="deleteAcountDialog = false" />
+                <Button label="Eliminar" severity="danger" icon="pi pi-check" text @click="deleteAcountBd()" />
+            </div>
+        </Dialog>
     </div>
 </template>
 <script>
 import { useSessionStore } from '../store';
+import Toast from 'primevue/toast';
+import { useToast } from "primevue/usetoast";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import Badge from 'primevue/badge';
+import Dialog from 'primevue/dialog';
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import axios from 'axios';
 export default {
     components: {
         DataTable,
         Column,
-        InputText
+        InputText,
+        Button,
+        Badge,
+        Dialog,
+        Toast
     },
     data: () => ({
-        data: [
-            {
-                "_id": "65b1856bffa6a535e8e33f17",
-                "name": "susanita_1964",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b1857fffa6a535e8e33f19",
-                "name": "onoquevihotmail.com",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b18586ffa6a535e8e33f1b",
-                "name": "ridddleess",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b1858cffa6a535e8e33f1d",
-                "name": "jomenboy1",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b18592ffa6a535e8e33f1f",
-                "name": "dalixmar2",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b18599ffa6a535e8e33f21",
-                "name": "morenoyuder2508",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b1859fffa6a535e8e33f23",
-                "name": "kary_urdaneta",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b185a4ffa6a535e8e33f25",
-                "name": "isabelyelkar",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [],
-                "__v": 0
-            },
-            {
-                "_id": "65b1c6e6e49cdb7b5acdd913",
-                "name": "shatsosky",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [
-                    {
-                        "date": "2024-01-25T02:30:45.941Z",
-                        "playerTotal": 0,
-                        "coinTotal": 0,
-                        "timeTotal": "10000"
-                    }
-                ],
-                "__v": 1
-            },
-            {
-                "_id": "65b1d09e9d5562fa0e6490b8",
-                "name": "king_sylvester02",
-                "coinTotal": 0,
-                "active": true,
-                "timeTotal": 0,
-                "gameTotal": 0,
-                "jugadoresMax": 0,
-                "history": [
-                    {
-                        "date": "2024-01-25T03:13:20.221Z",
-                        "playerTotal": 28,
-                        "coinTotal": 0,
-                        "timeTotal": "10000"
-                    },
-                    {
-                        "date": "2024-01-25T03:09:05.966Z",
-                        "playerTotal": 37,
-                        "coinTotal": 3,
-                        "timeTotal": "10000"
-                    }
-                ],
-                "__v": 2
-            },
-            {
-                "_id": "65b1d3db82f36368d2755e1a",
-                "name": "fahddxb80",
-                "coinTotal": 37,
-                "active": true,
-                "timeTotal": 50000,
-                "gameTotal": 5,
-                "jugadoresMax": 58,
-                "history": [
-                    {
-                        "date": "2024-01-25T03:35:16.785Z",
-                        "playerTotal": 55,
-                        "coinTotal": 14,
-                        "timeTotal": "10000"
-                    },
-                    {
-                        "date": "2024-01-25T03:33:37.394Z",
-                        "playerTotal": 52,
-                        "coinTotal": 1,
-                        "timeTotal": "10000"
-                    },
-                    {
-                        "date": "2024-01-25T03:31:16.514Z",
-                        "playerTotal": 58,
-                        "coinTotal": 6,
-                        "timeTotal": "10000"
-                    },
-                    {
-                        "date": "2024-01-25T03:24:21.958Z",
-                        "playerTotal": 58,
-                        "coinTotal": 6,
-                        "timeTotal": "10000"
-                    },
-                    {
-                        "date": "2024-01-25T03:22:34.432Z",
-                        "playerTotal": 52,
-                        "coinTotal": 10,
-                        "timeTotal": "10000"
-                    }
-                ],
-                "__v": 5
-            }
-        ],
+        API: "https://patosgame.fly.dev",
+        data: null,
+        token: null,
         store: null,
+        toast: null,
         user: null,
-        filters: null
-    }),
-    created() {
-        this.store = useSessionStore();
-        if (!this.store.isActive()) {
-            this.$router.push('/login');
+        newAcountDialog: false,
+        idDeleteAcount: null,
+        deleteAcountDialog: false,
+        nameAcountDelete: '',
+        filters: {
+            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
+        },
+        acount: {
+            name: null
         }
-    },
+    }),
     methods: {
         convertirMilisegundos(milisegundos) {
             // Calcula los segundos, minutos, horas y días
@@ -275,8 +169,55 @@ export default {
         parsearFecha(fechaString) {
             const fecha = new Date(fechaString);
             return fecha.toLocaleString("es-CO", { timeZone: "America/Bogota" });
+        },
+        async obtenerUsuarios() {
+            await axios.get(`${this.API}/user/acount`, this.token).then(resp => {
+                this.data = resp.data;
+            });
+        },
+        async crearAcount() {
+            this.newAcountDialog = false;
+            await axios.post(`${this.API}/user/acount/${this.acount.name}`, null, this.token).then(resp => {
+                this.toast.add({ severity: 'success', summary: 'Información', detail: 'Creado correctamente', life: 3000 });
+                this.acount.name = null;
+                this.obtenerUsuarios();
+            }).catch(error => {
+                this.toast.add({ severity: 'error', summary: 'Autorización', detail: "ocurrio un error!", life: 3000 });
+            })
+        },
+        comfirmDialog(id, name) {
+            this.idDeleteAcount = id;
+            this.nameAcountDelete = `Desea eliminar a ${name}?`;
+            this.deleteAcountDialog = true;
+        },
+        async deleteAcountBd() {
+            this.deleteAcountDialog = false;
+            axios.delete(`${this.API}/user/acount/${this.idDeleteAcount}`, this.token).then(async (resp) => {
+                await this.obtenerUsuarios();
+                this.toast.add({ severity: 'success', summary: 'Información', detail: 'Eliminado correctamente', life: 3000 });
+                this.idDeleteAcount = null;
+                this.nameAcountDelete = ``;
+            }).catch(error => {
+                this.toast.add({ severity: 'error', summary: 'Autorización', detail: "ocurrio un error!", life: 3000 });
+            })
+        },
+        jugar() {
+            this.$router.push('/');
         }
 
-    }
+    },
+    created() {
+        this.store = useSessionStore();
+        this.toast = useToast();
+        if (!this.store.isActive()) {
+            this.$router.push('/login');
+        } else {
+            this.token = {
+                headers: { Authorization: `Bearer ${this.store.token()}` }
+            };
+            this.obtenerUsuarios();
+        }
+
+    },
 }
 </script>

@@ -69,7 +69,7 @@
       Volver
     </button>
     <div class="volumen" v-show="!form">
-      <Slider v-model="volumen" orientation="vertical" v-on:slideend="changeVolumen()" :step="5" class="w-14rem" />
+      <Slider v-model="volumen" orientation="vertical" v-on:slideend="changeVolumen()" :step="5" />
     </div>
     <button v-show="!form" class="reiniciar patosB">Patos: {{ patos }}</button>
     <button v-show="buttonStart" @click="iniciarJuego()" class="reiniciar btnEmpezar">
@@ -585,7 +585,7 @@ export default {
 }
 
 .reiniciar {
-  left: 40px;
+  left: 20px;
   top: 40px;
   position: absolute;
   background: #fbca1f;
@@ -600,7 +600,7 @@ export default {
 }
 
 .btnRojo {
-  right: 40px;
+  right: 20px;
   top: 40px;
   position: absolute;
   background: #fb1f1f;
@@ -615,7 +615,7 @@ export default {
 }
 
 .btnVerde {
-  right: 40px;
+  right: 20px;
   top: 40px;
   position: absolute;
   background: #1fc8fb;
@@ -630,7 +630,7 @@ export default {
 }
 
 .puntos {
-  left: 40px;
+  left: 20px;
   top: 220px;
   position: absolute;
   background: #fbca1f;
@@ -681,7 +681,7 @@ export default {
 
 .volumen {
   position: absolute;
-  right: 85px;
+  right: 65px;
   top: 110px;
 }
 

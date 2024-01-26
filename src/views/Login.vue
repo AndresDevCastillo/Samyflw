@@ -65,7 +65,7 @@ export default {
         Toast
     },
     data: () => ({
-        API: "http://localhost:3000",
+        API: "https://patosgame.fly.dev",
         user: null,
         password: null,
         store: null,
@@ -104,6 +104,16 @@ export default {
 }
 </script>
 <style scoped>
+.login {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+}
+
 .form-container {
     width: 320px;
     border-radius: 0.75rem;
