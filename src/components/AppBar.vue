@@ -19,7 +19,9 @@
 
 <script>
 export default {
+    name: 'AppBar',
     data: () => ({
+
         items: [
             {
                 label: 'Router',

@@ -6,6 +6,9 @@
             :expandedRows="[1]" :globalFilterFields="['name']">
             <template #header>
                 <div class="flex justify-content-between">
+
+                    <ToggleButton v-model="switchGame" onLabel="Usuarios" offLabel="Todos" onIcon="pi pi-lock"
+                        offIcon="pi pi-lock-open" class="w-9rem" aria-label="Do you confirm" />
                     <Button label="Añadir" icon="pi pi-plus" severity="success" class="mr-2"
                         @click="newAcountDialog = true" />
                     <Button label="Jugar" icon="pi pi-play  " severity="warning" class="mr-2" @click="jugar()" />
@@ -13,6 +16,7 @@
                         <i class="pi pi-search" />
                         <InputText v-model="filters['global'].value" placeholder="Buscar.." />
                     </span>
+
                 </div>
             </template>
             <Column expander style="width: 5rem" />
@@ -45,7 +49,8 @@
             </Column>
             <template #expansion="slotProps">
                 <div class="p-3">
-                    <DataTable :value="slotProps.data.history">
+                    <DataTable :value="slotProps.data.history" paginator :rows="5" :filters="filters"
+                        :rowsPerPageOptions="[5, 10, 20, 50]">
                         <Column field="date" header="Fecha">
                             <template #body="slotProps">
                                 {{ parsearFecha(slotProps.data.date) }}
@@ -116,7 +121,9 @@ export default {
         },
         acount: {
             name: null
-        }
+        },
+        switchGame: null,
+        letSwitch: false,
     }),
     methods: {
         convertirMilisegundos(milisegundos) {
@@ -187,11 +194,25 @@ export default {
             })
         },
         jugar() {
-            this.$router.push('/');
+            this.$router.push('/duckracer');
+        },
+        async getStatusGame() {
+            await axios.get(`${this.API}/user/statusGame`, this.token).then(resp => {
+                this.switchGame = resp.data;
+            })
+        },
+        async changeStatusGame() {
+            if (!this.letSwitch) {
+                this.letSwitch = true;
+                return;
+            }
+            await axios.put(`${this.API}/user/statusGame`, null, this.token).then(resp => {
+                this.toast.add({ severity: 'success', summary: 'Información', detail: 'La privacidad del juego cambio!', life: 3000 });
+            })
         }
 
     },
-    created() {
+    mounted() {
         this.store = useSessionStore();
         this.toast = useToast();
         if (!this.store.isActive()) {
@@ -201,8 +222,14 @@ export default {
                 headers: { Authorization: `Bearer ${this.store.token()}` }
             };
             this.obtenerUsuarios();
-        }
+            this.getStatusGame();
 
+        }
     },
+    watch: {
+        async switchGame(newName, oldName) {
+            await this.changeStatusGame();
+        }
+    }
 }
 </script>
