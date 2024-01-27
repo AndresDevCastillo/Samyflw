@@ -150,9 +150,14 @@ export default {
       const urlSocket = this.API;
       const usuario = this.usuario;
       const tiempo = parseInt(this.tiempo);
+      const fechaActual = new Date();
+      const timestamp = fechaActual.getTime();
+      const id = usuario + '_' + timestamp;
+      console.log(id);
       this.socket = io(urlSocket, {
         query: {
           name: usuario,
+          id: id,
           time: tiempo,
         },
       });
