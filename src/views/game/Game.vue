@@ -1,5 +1,6 @@
 <template>
   <div class="game">
+    <Toast />
     <div class="form-container" v-show="form">
       <p class="title">SAMYFLW</p>
       <div class="form">
@@ -104,6 +105,9 @@
 import Phaser from "phaser";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import { io } from "socket.io-client";
+import { useToast } from "primevue/usetoast";
+import axios from "axios";
+
 export default {
   components: {
     VueCountdown,
@@ -124,11 +128,20 @@ export default {
     dialogVisible: false,
     players: [],
     volumen: 100,
+    toast: null,
     API: "https://patosgame.fly.dev"
   }),
   methods: {
-    startGame() {
+    async startGame() {
       if (this.usuario == null || this.usuario == "" || this.tiempo == null) {
+        return;
+      }
+      let exist = false;
+      await axios.get(`${this.API}/user/acount/${this.usuario}`).then(resp => {
+        exist = resp.data;
+      })
+      if (!exist) {
+        this.toast.add({ severity: 'error', summary: 'Usuario No Registrado!', detail: 'Comuniquese con la agencia samyflw', life: 5000 });
         return;
       }
       this.form = false;
@@ -440,6 +453,9 @@ export default {
       this.socket.emit("empezar");
     },
   },
+  mounted() {
+    this.toast = useToast();
+  }
 };
 </script>
 <style scoped>

@@ -117,7 +117,27 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
-app.use(PrimeVue);
+app.use(PrimeVue, {
+    locale: {
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ag', 'Sep', 'Oct', 'Nov', 'Dic'],
+        chooseYear: 'Elegir año',
+        chooseMonth: 'Elegir mes',
+        chooseDate: 'Elegir día',
+        prevYear: 'Año anterior',
+        nextYear: 'Año siguiente',
+        prevMonth: 'Mes anterior',
+        nextMonth: 'Mes siguiente',
+        today: 'Hoy',
+        weekHeader: 'Semana',
+        firstDayOfWeek: 1,
+        dateFormat: 'yy-mm-dd',
+        weak: 'Semana'
+    }
+});
 
 app.component('AppBar', AppBar);
 app.component('NavBar', NavBar);
