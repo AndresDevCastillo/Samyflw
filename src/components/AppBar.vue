@@ -19,44 +19,18 @@
 
 <script>
 export default {
-    name: 'AppBar',
     data: () => ({
 
         items: [
             {
-                label: 'Router',
-                icon: 'pi pi-palette',
-                items: [
-                    {
-                        label: 'Builder',
-                        route: '/builder'
-                    },
-                    {
-                        label: 'Gallery',
-                        route: '/gallery'
-                    }
-                ]
+                label: 'Eventos',
+                icon: 'pi pi-calendar-plus',
+                route: '/panel/evento',
             },
             {
-                label: 'Programmatic',
-                icon: 'pi pi-link',
-                command: () => {
-                    this.$router.push('/overview');
-                }
-            },
-            {
-                label: 'External',
-                icon: 'pi pi-home',
-                items: [
-                    {
-                        label: 'Vue.js',
-                        url: 'https://vuejs.org/'
-                    },
-                    {
-                        label: 'Vite.js',
-                        url: 'https://vuejs.org/'
-                    }
-                ]
+                label: 'Usuarios',
+                icon: 'pi pi-user',
+                route: '/panel/usuarios',
             }
         ]
     })

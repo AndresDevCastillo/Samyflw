@@ -2,7 +2,7 @@
     <div class="Panel">
         <appBar />
         <main class="main">
-            <h1>hello</h1>
+            <router-view/>
         </main>
     </div>
 </template>
