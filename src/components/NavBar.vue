@@ -1,46 +1,55 @@
 <template>
-    <header class="header nav">
-        <Menubar :model="items" class="navBarInicio">
-            <template #start>
-                <img src="../assets/img/tinder.png" alt="Logo" srcset="../assets/img/tinder.png">
-            </template>
-            <template #end>
-                <router-link v-slot="{ href, navigate }" to="/panel/evento" custom>
-                    <a v-ripple :href="href" @click="navigate">
-                        <svg router id="escudo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000" width="32px"
-                            height="32px">
-                            <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z" />
-                        </svg>
+    <div class="navbar">
+        <Menubar :model="items">
+            <template #item="{ item, props, hasSubmenu }">
+                <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                    <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                        <span :class="item.icon" />
+                        <span class="ml-2">{{ item.label }}</span>
                     </a>
                 </router-link>
-
+                <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+                    <span :class="item.icon" />
+                    <span class="ml-2">{{ item.label }}</span>
+                    <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
+                </a>
+            </template>
+            <template #end>
+                <div class="flex align-items-center gap-2">
+                    <Button icon="pi pi-verified" label="TikTok" severity="danger" />
+                    <Button icon="pi pi-instagram" severity="danger" />
+                    <Button icon="pi pi-whatsapp" severity="danger" />
+                </div>
             </template>
         </Menubar>
-    </header>
+    </div>
 </template>
 <script>
 
 export default {
     data: () => ({
         items: [
-            /*  {
-                 label: 'Home',
-                 icon: 'pi pi-home'
-             }, */
 
+            {
+                label: 'Duck Racer',
+                icon: 'pi pi-bolt',
+                route: '/duckracer'
+            },
         ]
     })
 
 }
 </script>
 <style>
-#escudo path {
-    fill: #000;
-    transition: fill .3s ease;
-    cursor: pointer;
+.p-menubar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    border-radius: 0px !important;
+    z-index: 10000;
 }
 
-#escudo:hover path {
-    fill: #F64F72;
+.navbar {
+    margin-bottom: 50px;
 }
 </style>

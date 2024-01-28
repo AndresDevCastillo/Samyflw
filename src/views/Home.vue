@@ -1,28 +1,40 @@
 <template>
+    <NavBar></NavBar>
     <div class="inicio">
-        <navBar />
-        <main class="container mx-auto mt-6">
-
-            <div class="mx-auto">
-                <div class="perfil mx-auto flex">
-                    <div class="informacion flex align-center">
-                        <a href="#"><i class="pi pi-home"></i></a>
-                        <div class="media rounded-circle">
-                            <img src="../assets/img/logo_samy.jpeg" alt="profile-image" class="rounded-circle">
-                            <div class="data-fill style-2 name"><span>SamiFlw</span></div>
+        <div class="fondo">
+            <section id="hero">
+                <div class="hero-container">
+                    <h1 class="mb-4 pb-0">The TikTok<br><span>LIVE</span> Ascendente <span>1</span></h1>
+                    <p class="mb-4 pb-0">10-12 December, Downtown Conference Center, New York</p>
+                    <a href="#about" class="about-btn">Contactar</a>
+                </div>
+            </section>
+            <!-- ======= About Section ======= -->
+            <section id="about">
+                <div class="container position-relative">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h2>Sobre el evento</h2>
+                            <p>Sed nam ut dolor qui repellendus iusto odit. Possimus inventore eveniet accusamus error amet
+                                eius aut
+                                accusantium et. Non odit consequatur repudiandae sequi ea odio molestiae. Enim possimus sunt
+                                inventore in
+                                est ut optio sequi unde.</p>
                         </div>
-                        <a href="#"><i class="pi pi-trash"></i></a>
+                        <div class="col-lg-3">
+                            <h3>Reglas</h3>
+                            <p>los premios son entregados al siguiente mes, la clasificación de grupo depende de su cantidad
+                                de puntos ganados. GRUPO A (Fuerte) GRUPO B (Medio) GRUPO C (Novato)</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <h3>When</h3>
+                            <p>Monday to Wednesday<br>10-12 December</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <h1 class="font-bold bc-pink">TikTok LIVE Ascendente 1</h1>
+            </section>
 
-            <Accordion :multiple="true" :activeIndex="[0, 1, 2]" class="tabs">
-                <AccordionTab v-for="(tab, index) in tabs" :key="index" :header="tab.title">
-                    <p class="m-0">{{ tab.description }}</p>
-                </AccordionTab>
-            </Accordion>
-        </main>
+        </div>
     </div>
 </template>
 <script>
@@ -42,129 +54,224 @@ export default {
                 title: 'Grupos',
                 description: ' Grupos A'
             }
-        ]
+        ],
+
     })
 }
 </script>
 <style scoped>
-:root {
-    --btn-gradient: linear-gradient(94deg, #E93E84 14.36%, #F46D8F 42.6%, #FE854E 80.39%)
-}
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Raleway&display=swap');
 
-.inicio {
-    margin-bottom: 20px !important;
-}
-
-.perfil {
-    width: 690px;
-    height: 400px;
-    max-width: 100%;
-    background-image: url('../assets/img/tiktok.webp');
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin-bottom: 40px;
-    justify-content: center;
-}
-
-.perfil>.informacion {
-    color: white !important;
-    align-items: center !important;
-    gap: 20px;
-}
-
-.rounded-circle {
-    border-radius: 50% !important;
-}
-
-.media {
-    position: relative;
-    margin: 0 auto 15px;
-    width: 100%;
-    height: 100%;
+.fondo {
+    position: absolute;
     top: 0;
     left: 0;
-    padding: 11px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-}
-
-
-.media>img {
-    border-style: none;
-    max-width: 130px;
-    vertical-align: middle;
-    width: 130px;
-    min-width: 130px;
-    height: 130px;
-    object-fit: cover;
-}
-
-svg.radial-progress {
-    height: auto;
-    position: absolute;
-    overflow: visible;
     height: 100%;
-    top: 0;
-    transform: rotate(-265deg);
     width: 100%;
+    background-image: url('../assets/img/hero-bg.jpg');
+    background-size: cover;
 }
 
-.media>.data-fill {
-    background: var(--btn-gradient);
-    padding: 3px 10px;
-    width: 130px;
+#hero {
+    width: 100%;
+    height: 100vh;
+    background: url(../img/hero-bg.jpg) top center;
+    background-size: cover;
+    overflow: hidden;
+    position: relative;
+}
+
+@media (min-width: 1024px) {
+    #hero {
+        background-attachment: fixed;
+    }
+}
+
+#hero:before {
+    content: "";
+    background: rgba(6, 12, 34, 0.8);
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#hero .hero-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    top: 90px;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 0 15px;
+}
+
+@media (max-width: 991px) {
+    #hero .hero-container {
+        top: 70px;
+    }
+}
+
+#hero h1 {
+    color: #fff;
+    font-family: "Raleway", sans-serif;
+    font-size: 56px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+#hero h1 span {
+    color: #f82249;
+}
+
+@media (max-width: 991px) {
+    #hero h1 {
+        font-size: 34px;
+    }
+}
+
+#hero p {
+    color: #ebebeb;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+@media (max-width: 991px) {
+    #hero p {
+        font-size: 16px;
+    }
+}
+
+
+
+
+#hero .about-btn {
+    font-family: "Raleway", sans-serif;
+    font-weight: 500;
     font-size: 14px;
-    border: 0;
-    transform: translateY(-10px);
-    border-radius: 20px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 12px 32px;
+    border-radius: 50px;
+    transition: 0.5s;
+    line-height: 1;
+    margin: 10px;
+    color: #fff;
+    animation-delay: 0.8s;
+    border: 2px solid #f82249;
+    text-decoration: none;
 }
 
-.m-b20 {
+#hero .about-btn:hover {
+    background: #f82249;
+    color: #fff;
+}
+
+@keyframes pulsate-btn {
+    0% {
+        transform: scale(0.6, 0.6);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1, 1);
+        opacity: 0;
+    }
+}
+
+#about {
+    background: url("../img/about-bg.jpg");
+    background-size: cover;
+    overflow: hidden;
+    position: relative;
+    color: #fff;
+    padding: 60px 0 40px 0;
+}
+
+@media (min-width: 1024px) {
+    #about {
+        background-attachment: fixed;
+    }
+}
+
+#about:before {
+    content: "";
+    background: rgba(13, 20, 41, 0.8);
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#about h2 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+#about h3 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+#about p {
+    font-size: 14px;
     margin-bottom: 20px;
+    color: #fff;
 }
 
-a {
-    color: #000000;
-    cursor: pointer;
+.container {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-right: auto;
+    margin-left: auto
 }
 
-.header.nav>.navBarInicio {
-    background-color: #2c2f39 !important;
-    border-width: 0 !important;
+.position-relative {
+    position: relative !important
 }
 
-.appBar,
-[data-pc-section="submenu"] {
-    background-color: #2c2f39 !important;
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
 }
 
-.tabs>* {
-    margin-bottom: 40px !important;
-    border-radius: 12px !important;
+.row>* {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    margin-top: var(--bs-gutter-y);
 }
 
-.tabs>div>div:first-child {
-    background-color: #F64F72 !important;
-}
+@media (min-width: 992px) {
+    .col-lg-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
 
-.tabs>div>div:last-child {
-    background-color: #2c2f39 !important;
-    border-bottom-left-radius: 8px !important;
-    border-bottom-right-radius: 8px !important;
-}
-
-.tabs>div>div:first-child>a,
-.tabs>div>div:last-child>div {
-    border-width: 0 !important;
-}
-
-h1 {
-    font-size: 2.5rem !important;
-}
-
-.bc-pink {
-    color: #F64F72 !important;
+    .col-lg-3 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
 }
 </style>
