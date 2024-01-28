@@ -1,4 +1,3 @@
-
 <template>
     <Menubar class="appBar" :model="items">
         <template #item="{ item, props, hasSubmenu }">

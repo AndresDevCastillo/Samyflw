@@ -7,19 +7,29 @@
                 <Button label="Excel" icon="pi pi-plus" @click="modalExcel = true" />
             </div>
         </template>
-        <DataTable :value="creadores" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 100%">
+        <DataTable :value="creadores" sortField="diamantes_mes_actual" :sortOrder="-1" paginator :rows="5"
+            :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 100%">
             <Column field="usuario" header="Usuario" sortable></Column>
-            <Column field="grupo" header="Grupo" sortable></Column>
+            <Column field="grupo" header="Grupo" sortable>
+                <template #body="slotProps">
+                    <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success"></Badge>
+                    <Badge v-if="slotProps.data.grupo == 'B'" :value="slotProps.data.grupo" severity="info"></Badge>
+                    <Badge v-if="slotProps.data.grupo == 'C'" :value="slotProps.data.grupo" severity="danger"></Badge>
+                </template>
+            </Column>
             <Column field="diamantes_mes_actual" header="Diamantes en el mes" sortable />
             <Column field="diamantes_mes_anterior" header="Diamantes del mes anterior" sortable />
         </DataTable>
         <!-- Modal agregar evento -->
-        <Dialog v-model:visible="modalExcel" header="Subir excel" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+        <Dialog v-model:visible="modalExcel" header="Subir excel" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
 
             <form ref="formExcel" enctype="multipart/form-data">
                 <div class="flex flex-column gap-1 mb-2">
                     <label for="excel" class="font-bold block">Excel</label>
-                    <InputText type="file" id="excel" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" @change="asignarExcel" required aria-describedby="excel-help" />
+                    <InputText type="file" id="excel"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        @change="asignarExcel" required aria-describedby="excel-help" />
                     <small id="excel-help">El archivo debe ser .xlsx, .xls.</small>
                 </div>
             </form>

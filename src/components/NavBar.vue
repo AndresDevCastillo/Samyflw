@@ -40,7 +40,7 @@ export default {
 
 }
 </script>
-<style>
+<style scoped>
 .p-menubar {
     position: absolute;
     top: 0;
