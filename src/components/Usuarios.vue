@@ -13,27 +13,28 @@
         </DataTable>
         <!-- Modal agregar evento -->
         <Dialog v-model:visible="modalUsuario" header="Nuevo usuario" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
-            <form ref="formEvento">
+            <Toast position="top" group="t" />
+            <form ref="formUsuario">
                 <div class="flex flex-column gap-1 mb-2">
                     <label for="usuario" class="font-bold block">Usuario</label>
-                    <InputText type="text" id="usuario" v-model="paquete.usuario" />
+                    <InputText type="text" id="usuario" v-model="paquete.usuario" required />
                 </div>
                 <div class="flex flex-column gap-1 mb-2">
                     <label for="correo" class="font-bold block">Correo</label>
-                    <InputText type="email" id="correo" v-model="paquete.correo" />
+                    <InputText type="email" id="correo" v-model="paquete.correo" required />
                 </div>
                 <div class="flex flex-column gap-1 mb-3">
                     <label for="telefono" class="font-bold block">Teléfono</label>
-                    <InputText type="tel" id="telefono" v-model="paquete.telefono" />
+                    <InputText type="tel" id="telefono" v-model="paquete.telefono" required />
                 </div>
                 <div class="flex flex-column gap-1 mb-2">
                     <label for="contrasena">Contraseña</label>
-                    <InputText type="text" id="contrasena" v-model="paquete.contrasena" />
+                    <InputText type="text" id="contrasena" v-model="paquete.contrasena" required />
                 </div>
             </form>
             <template #footer>
                 <Button label="Cancelar" @click="modalUsuario = false" text severity="danger" autofocus />
-                <Button label="Crear" @click="modalUsuario = false" severity="success" />
+                <Button label="Crear" @click="crearUsuario" :disabled="btnCrearUsuario" severity="success" />
             </template>
         </Dialog>
     </Panel>
@@ -42,7 +43,9 @@
 export default {
     name: 'Usuarios',
     data: () => ({
+        API: 'http://localhost:3000',
         modalUsuario: false,
+        btnCrearUsuario: false,
         usuarios: [
             {
                 usuario: 'Samyflw',
@@ -56,6 +59,16 @@ export default {
             telefono: null,
             contrasena: null,
         }
-    })
+    }),
+    methods: {
+        async crearUsuario() {
+
+            this.$toast.add({ severity: 'info', summary: 'Nuevo usuario', detail: 'Debes llenar todos los campos', group: 'tl', life: 3000 });
+
+            this.btnCrearUsuario = true;
+            console.log('valido');
+
+        }
+    }
 }
 </script>

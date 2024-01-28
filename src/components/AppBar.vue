@@ -28,9 +28,9 @@ export default {
                 route: '/panel/evento',
             },
             {
-                label: 'Usuarios',
-                icon: 'pi pi-user',
-                route: '/panel/usuarios',
+                label: 'Creadores',
+                icon: 'pi pi-users',
+                route: '/panel/creadores',
             }
         ]
     })
