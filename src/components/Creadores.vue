@@ -44,7 +44,7 @@
 import axios from 'axios';
 export default {
     data: () => ({
-        API: 'http://localhost:3000',
+        API: 'https://samyflw.fly.dev',
         modalExcel: false,
         btnSubirExcel: false,
         creadores: [],

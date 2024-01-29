@@ -18,7 +18,8 @@
             <Column field="premios.top3.descripcion" header="Top 3" sortable />
         </DataTable>
         <!-- Modal agregar evento -->
-        <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+        <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
             <form ref="formEvento">
                 <div class="flex flex-column gap-1 mb-2">
                     <label for="titulo" class="font-bold block">Título</label>
@@ -34,11 +35,13 @@
                 </div>
                 <div class="flex flex-column gap-1 mb-2">
                     <label for="fecha_inicio">Fecha de inicio</label>
-                    <Calendar id="fecha_inicio" v-model="paquete.fecha_inicio" :minDate="new Date()" :manualInput="false" dateFormat="yy-mm-dd" />
+                    <Calendar id="fecha_inicio" v-model="paquete.fecha_inicio" :minDate="new Date()" :manualInput="false"
+                        dateFormat="yy-mm-dd" />
                 </div>
                 <div class="flex flex-column gap-1 mb-2">
                     <label for="fecha_fin">Fecha fin</label>
-                    <Calendar id="fecha_fin" v-model="paquete.fecha_fin" :minDate="new Date()" :manualInput="false" dateFormat="yy-mm-dd" />
+                    <Calendar id="fecha_fin" v-model="paquete.fecha_fin" :minDate="new Date()" :manualInput="false"
+                        dateFormat="yy-mm-dd" />
                 </div>
                 <Divider />
                 <h1 class="mb-3">Premios</h1>
@@ -88,7 +91,7 @@ import axios from 'axios'
 export default {
     name: 'Evento',
     data: () => ({
-        API: 'http://localhost:3000',
+        API: 'https://samyflw.fly.dev',
         modalEvento: false,
         btnEvento: false,
         eventos: [

@@ -12,7 +12,8 @@
             <Column field="telefono" header="Teléfono" sortable />
         </DataTable>
         <!-- Modal agregar evento -->
-        <Dialog v-model:visible="modalUsuario" header="Nuevo usuario" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+        <Dialog v-model:visible="modalUsuario" header="Nuevo usuario" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
             <Toast position="top" group="t" />
             <form ref="formUsuario">
                 <div class="flex flex-column gap-1 mb-2">
@@ -43,7 +44,7 @@
 export default {
     name: 'Usuarios',
     data: () => ({
-        API: 'http://localhost:3000',
+        API: 'https://samyflw.fly.dev',
         modalUsuario: false,
         btnCrearUsuario: false,
         usuarios: [
