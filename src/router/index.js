@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from '../views/Home.vue';
+import LoginEvento from '../views/Login.vue'
 import Panel from '../views/Panel.vue'
 import Evento from '../components/Evento.vue'
 import Usuarios from '../components/Usuarios.vue'
@@ -11,6 +12,7 @@ import Admingame from '../views/game/Admin.vue'
 
 const routes = [
     { path: '/', name: 'Home', component: Home },
+    { path: '/login', name: 'LoginEvento', component: LoginEvento },
     {
         path: '/panel',
         name: 'Panel',
