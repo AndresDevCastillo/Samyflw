@@ -21,42 +21,68 @@
                                 inventore in
                                 est ut optio sequi unde.</p>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-6">
                             <h3>Reglas</h3>
                             <p>los premios son entregados al siguiente mes, la clasificación de grupo depende de su cantidad
                                 de puntos ganados. GRUPO A (Fuerte) GRUPO B (Medio) GRUPO C (Novato)</p>
                         </div>
-                        <div class="col-lg-3">
-                            <h3>When</h3>
-                            <p>Monday to Wednesday<br>10-12 December</p>
-                        </div>
                     </div>
                 </div>
             </section>
-
+            <div class="table">
+                <DataTable :value="creadores" tableStyle="min-width: 27rem" sortField="diamantes_mes_actual" :sortOrder="-1"
+                    paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+                    <template #header>
+                        <div class="flex flex-wrap align-items-center justify-content-between gap-2">
+                            <span class="text-xl text-900 font-bold">Creadores de contenido</span>
+                            <div class="flex gap-2">
+                                <Button @click="changeCreador('A')" label="A" severity="success" />
+                                <Button @click="changeCreador('B')" label="B" severity="info" />
+                                <Button @click="changeCreador('C')" label="C" severity="danger" />
+                            </div>
+                        </div>
+                    </template>
+                    <Column field="usuario" header="Creador"></Column>
+                    <Column field="diamantes_mes_actual" header="Diamantes 💎"></Column>
+                    <Column field="diamantes_mes_anterior" header="Mes Anterior 💎"></Column>
+                    <Column field="grupo" header="Grupo">
+                        <template #body="slotProps">
+                            <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success">
+                            </Badge>
+                            <Badge v-if="slotProps.data.grupo == 'B'" :value="slotProps.data.grupo" severity="info"></Badge>
+                            <Badge v-if="slotProps.data.grupo == 'C'" :value="slotProps.data.grupo" severity="danger">
+                            </Badge>
+                        </template>
+                    </Column>
+                </DataTable>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
     data: () => ({
-        msg: 'Hola  mundo',
-        tabs: [
-            {
-                title: 'Reglas',
-                description: 'los premios son entregados al siguiente mes, la clasificación de grupo depende de su cantidad de puntos ganados. GRUPO A (Fuerte) GRUPO B (Medio) GRUPO C (Novato)'
-            }, {
-                title: 'Recompensas',
-                description: ' Gran premio '
-            },
-
-            {
-                title: 'Grupos',
-                description: ' Grupos A'
+        API: 'https://samyflw.fly.dev',
+        arrayCreadores: [],
+        creadores: []
+    }),
+    methods: {
+        changeCreador(grupo) {
+            for (let i = 0; i < this.arrayCreadores.length; i++) {
+                if (this.arrayCreadores[i]._id === grupo) {
+                    this.creadores = [];
+                    this.creadores = this.arrayCreadores[i].creadores;
+                }
             }
-        ],
-
-    })
+        },
+    },
+    async mounted() {
+        await axios.get(`${this.API}/creador/agrupados`).then(resp => {
+            this.arrayCreadores = resp.data;
+            this.creadores = this.arrayCreadores[0].creadores;
+        })
+    }
 }
 </script>
 <style scoped>
@@ -70,6 +96,12 @@ export default {
     width: 100%;
     background-image: url('../assets/img/hero-bg.jpg');
     background-size: cover;
+}
+
+.table {
+    width: 95%;
+    margin: 0 auto;
+    padding: 70px;
 }
 
 #hero {
