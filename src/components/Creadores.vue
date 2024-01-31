@@ -44,7 +44,7 @@
 import axios from 'axios';
 export default {
     data: () => ({
-        API: 'https://samyflw.fly.dev',
+        API: import.meta.env.VITE_APP_API,
         modalExcel: false,
         btnSubirExcel: false,
         creadores: [],
@@ -59,19 +59,19 @@ export default {
         async subirExcel() {
             this.btnSubirExcel = true;
             if (this.paquete.excel != null) {
-                await axios.post(`${this.API}/creador/subirExcel`, this.paquete, {
+                await axios.post(`${this.API}/usuario/subirExcel`, this.paquete, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
                 }).then(response => {
-                    if (response.data) {
+                    if (response.data.procesado) {
                         this.getCreadores();
                         this.modalExcel = false;
                         this.$refs.formExcel.reset();
-                        this.$toast.add({ severity: 'success', summary: 'Subir excel', detail: 'Creadores creados correctamente', life: 1500 });
+                        this.$toast.add({ severity: 'success', summary: 'Subir excel', detail: response.data.message, life: 1500 });
 
                     } else {
-                        this.$toast.add({ severity: 'error', summary: 'Subir excel', detail: 'No se pudieron crear los creadores', life: 1500 });
+                        this.$toast.add({ severity: 'error', summary: 'Subir excel', detail: response.data.message, life: 1500 });
 
                     }
                 }).catch(error => {
@@ -88,7 +88,7 @@ export default {
 
         },
         async getCreadores() {
-            await axios.get(`${this.API}/creador`).then(response => {
+            await axios.get(`${this.API}/usuario`).then(response => {
                 this.creadores = response.data;
             }).catch(error => {
                 console.log(error);

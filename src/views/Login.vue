@@ -61,7 +61,7 @@ import { useSessionStore } from '../store';
 export default {
     name: "LoginEvento",
     data: () => ({
-        API: "https://patosgame.fly.dev",
+        API: import.meta.env.VITE_APP_API,
         user: null,
         password: null,
         store: null,

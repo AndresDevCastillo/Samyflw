@@ -3,7 +3,6 @@ import Home from '../views/Home.vue';
 import LoginEvento from '../views/Login.vue'
 import Panel from '../views/Panel.vue'
 import Evento from '../components/Evento.vue'
-import Usuarios from '../components/Usuarios.vue'
 import Creadores from '../components/Creadores.vue'
 import Game from '../views/game/Game.vue'
 import Logingame from '../views/game/Login.vue'
@@ -21,10 +20,6 @@ const routes = [
                 path: '/panel/evento',
                 name: 'Evento',
                 component: Evento
-            }, {
-                path: '/panel/usuarios',
-                name: 'Usuarios',
-                component: Usuarios
             },
             {
                 path: '/panel/creadores',

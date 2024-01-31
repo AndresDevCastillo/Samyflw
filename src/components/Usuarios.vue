@@ -44,7 +44,7 @@
 export default {
     name: 'Usuarios',
     data: () => ({
-        API: 'https://samyflw.fly.dev',
+        API: import.meta.env.VITE_APP_URI,
         modalUsuario: false,
         btnCrearUsuario: false,
         usuarios: [

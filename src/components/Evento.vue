@@ -91,7 +91,7 @@ import axios from 'axios'
 export default {
     name: 'Evento',
     data: () => ({
-        API: 'https://samyflw.fly.dev',
+        API: import.meta.env.VITE_APP_API,
         modalEvento: false,
         btnEvento: false,
         eventos: [
