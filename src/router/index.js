@@ -4,6 +4,7 @@ import LoginEvento from '../views/Login.vue'
 import Panel from '../views/Panel.vue'
 import Evento from '../components/Evento.vue'
 import Creadores from '../components/Creadores.vue'
+import Bonus from '../components/Bonus.vue'
 import Game from '../views/game/Game.vue'
 import Logingame from '../views/game/Login.vue'
 import Admingame from '../views/game/Admin.vue'
@@ -17,15 +18,20 @@ const routes = [
         name: 'Panel',
         component: Panel,
         children: [{
-                path: '/panel/evento',
-                name: 'Evento',
-                component: Evento
-            },
-            {
-                path: '/panel/creadores',
-                name: 'Creadores',
-                component: Creadores
-            }
+            path: '/panel/evento',
+            name: 'Evento',
+            component: Evento
+        },
+        {
+            path: '/panel/creadores',
+            name: 'Creadores',
+            component: Creadores
+        },
+        {
+            path: '/panel/bonus',
+            name: 'Bonus',
+            component: Bonus
+        }
         ]
     },
     { path: '/duckracer', name: 'Game', component: Game },

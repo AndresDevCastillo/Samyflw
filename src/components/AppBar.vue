@@ -19,10 +19,13 @@
                     <a href="#" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
                         <Avatar icon="pi pi-user" size="xlarge" shape="circle" />
                     </a>
-                    <Menu ref="menu" id="overlay_menu" :model="itemsUsuario" :popup="true" :focusedOptionId="null" :aria-activedescendant="false">
+                    <Menu ref="menu" id="overlay_menu" :model="itemsUsuario" :popup="true" :focusedOptionId="null"
+                        :aria-activedescendant="false">
                         <template #start>
-                            <button v-ripple class="relative overflow-hidden w-full p-link flex items-center p-2 pl-3 text-surface-700 dark:text-surface-0/80 hover:bg-surface-200 dark:hover:bg-surface-600 rounded-none">
-                                <Avatar v-if="store.isAdmin() || store.getFoto().length == 0" icon="pi pi-user" class="mr-2" shape="circle" />
+                            <button v-ripple
+                                class="relative overflow-hidden w-full p-link flex items-center p-2 pl-3 text-surface-700 dark:text-surface-0/80 hover:bg-surface-200 dark:hover:bg-surface-600 rounded-none">
+                                <Avatar v-if="store.isAdmin() || store.getFoto().length == 0" icon="pi pi-user" class="mr-2"
+                                    shape="circle" />
                                 <Avatar v-else :image="store.getFoto()" class="mr-2" shape="circle" />
 
                                 <span class="inline-flex flex-column justify-start">
@@ -42,7 +45,8 @@
             </template>
         </Menubar>
         <dialogMiPerfil :mostrarMiPerfil="mostrarPerfil" @dialogPerfilOculto="mostrarPerfil = false" />
-        <dialogEditarPerfil :mostrarEditar="mostrarEditar" @dialogEditarOculto="mostrarEditar = false" @perfilActualizado="getNewDatos" />
+        <dialogEditarPerfil :mostrarEditar="mostrarEditar" @dialogEditarOculto="mostrarEditar = false"
+            @perfilActualizado="getNewDatos" />
     </div>
 </template>
 
@@ -69,6 +73,11 @@ export default {
                 label: 'Creadores',
                 icon: 'pi pi-users',
                 route: '/panel/creadores',
+            },
+            {
+                label: 'Bonus',
+                icon: 'pi pi-money-bill',
+                route: '/panel/bonus',
             }
         ],
         itemsUsuario: [

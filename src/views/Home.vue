@@ -154,7 +154,12 @@ export default {
     async mounted() {
         await axios.get(`${this.API}/creador/agrupados`).then(resp => {
             this.arrayCreadores = resp.data;
-            this.creadores = this.arrayCreadores[0].creadores;
+            for (let i = 0; i < this.arrayCreadores.length; i++) {
+                if (this.arrayCreadores[i]._id === 'A') {
+                    this.creadores = [];
+                    this.creadores = this.arrayCreadores[i].creadores;
+                }
+            }
         })
     }
 }
