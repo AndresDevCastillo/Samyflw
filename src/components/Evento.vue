@@ -88,10 +88,15 @@
 </template>
 <script>
 import axios from 'axios'
+import { useStoreEvento } from '../store';
 export default {
     name: 'Evento',
     data: () => ({
-        API: 'https://samyflw.fly.dev',
+        API: import.meta.env.VITE_APP_API,
+        store: null,
+        headers: {
+            Authorization: 'Bearer ',
+        },
         modalEvento: false,
         btnEvento: false,
         eventos: [
@@ -207,7 +212,12 @@ export default {
         }
     },
     created() {
+        this.store = useStoreEvento();
+        if (!this.store.isActive()) {
+            this.$router.push('/login');
+        }
         this.getEventos();
+        this.headers.Authorization += this.store.token();
     }
 
 }
