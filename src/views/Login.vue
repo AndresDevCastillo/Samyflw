@@ -57,7 +57,7 @@
 </template>
 <script>
 import axios from 'axios';
-import { useSessionStore } from '../store';
+import { useStoreEvento } from '../store';
 export default {
     name: "LoginEvento",
     data: () => ({
@@ -65,7 +65,6 @@ export default {
         user: null,
         password: null,
         store: null,
-        toast: null,
         loginTxt: "Iniciar Sesión"
     }),
     methods: {
@@ -79,19 +78,19 @@ export default {
                 console.log(resp.data);
                 if (resp.data) {
                     this.store.saveUser(resp.data);
-                    this.$router.push('/duckracer/admin');
+                    this.$router.push('/panel/evento');
                 }
             }).catch(error => {
                 console.log(error);
                 if (error.response.status == 401) {
-                    this.toast.add({ severity: 'error', summary: 'Autorización', detail: error.response.data.message, life: 3000 });
+                    this.$toast.add({ severity: 'error', summary: 'Autorización', detail: error.response.data.message, life: 3000 });
                 }
             });
             this.loginTxt = "Iniciar Sesión";
         }
     },
     mounted() {
-        this.store = useSessionStore();
+        this.store = useStoreEvento();
         if (this.store.isActive()) {
             this.$router.push('/panel/evento');
         }
@@ -186,6 +185,7 @@ export default {
     border: none;
     border-radius: 0.375rem;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .social-message {

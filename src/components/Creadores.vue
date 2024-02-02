@@ -42,9 +42,11 @@
 </template>
 <script>
 import axios from 'axios';
+import { useStoreEvento } from '../store';
 export default {
     data: () => ({
         API: import.meta.env.VITE_APP_API,
+        store: null,
         modalExcel: false,
         btnSubirExcel: false,
         creadores: [],
@@ -96,6 +98,10 @@ export default {
         }
     },
     created() {
+        this.store = useStoreEvento();
+        if (!this.store.isActive()) {
+            this.$router.push('/login');
+        }
         this.getCreadores();
     }
 }
