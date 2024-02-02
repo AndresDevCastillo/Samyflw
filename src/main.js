@@ -12,6 +12,7 @@ import { createPinia } from 'pinia';
 // Componentes Principales
 import AppBar from './components/AppBar.vue';
 import NavBar from './components/NavBar.vue';
+import Clasificacion from './components/Clasificacion.vue';
 
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';
@@ -141,6 +142,7 @@ app.use(PrimeVue, {
 
 app.component('AppBar', AppBar);
 app.component('NavBar', NavBar);
+app.component('Clasificacion', Clasificacion);
 
 app.use(ConfirmationService);
 app.use(ToastService);

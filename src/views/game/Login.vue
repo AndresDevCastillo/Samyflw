@@ -109,6 +109,7 @@ export default {
     display: flex;
     place-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .form-container {

@@ -12,26 +12,52 @@
             <!-- ======= About Section ======= -->
             <section id="about">
                 <div class="container position-relative">
+                    <div class="row" style="padding: 0 50px">
+                        <div class="col-lg-6" style="margin-bottom: 40px;;">
+                            <Fieldset legend="Evento" :toggleable="true">
+                                <p class="m-0">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                                    eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                                    qui officia deserunt mollit anim id est laborum.
+                                </p>
+                            </Fieldset>
+                        </div>
+                        <div class="col-lg-6">
+                            <Fieldset legend="Reglas" :toggleable="true">
+                                <p class="m-0">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+                                </p>
+                            </Fieldset>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-lg-6">
-                            <h2>Sobre el evento</h2>
-                            <p>Sed nam ut dolor qui repellendus iusto odit. Possimus inventore eveniet accusamus error amet
-                                eius aut
-                                accusantium et. Non odit consequatur repudiandae sequi ea odio molestiae. Enim possimus sunt
-                                inventore in
-                                est ut optio sequi unde.</p>
-                        </div>
-                        <div class="col-lg-6">
-                            <h3>Reglas</h3>
-                            <p>los premios son entregados al siguiente mes, la clasificación de grupo depende de su cantidad
-                                de puntos ganados. GRUPO A (Fuerte) GRUPO B (Medio) GRUPO C (Novato)</p>
-                        </div>
+                        <Carousel :value="premios" :numVisible="3" :numScroll="3" :responsiveOptions="responsiveOptions">
+                            <template #item="slotProps">
+                                <div class="border-1 surface-border border-round m-2  p-3">
+                                    <div class="mb-3">
+                                        <div class="relative mx-auto">
+                                            <img width="100%" height="350px" :src="slotProps.data.image"
+                                                :alt="slotProps.data.name" class="border-round" />
+                                            <Tag :value="'Puesto ' + (slotProps.index + 1)" class="absolute"
+                                                style="left:5px; top: 5px" severity="danger" />
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 font-medium">{{ slotProps.data.name }}</div>
+
+                                </div>
+                            </template>
+                        </Carousel>
                     </div>
                 </div>
             </section>
-            <div class="table">
-                <DataTable :value="creadores" tableStyle="min-width: 27rem" sortField="diamantes_mes_actual" :sortOrder="-1"
-                    paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+
+            <div>
+                <DataTable :value="creadores" tableStyle="min-width: 8rem" sortField="diamantes_mes_actual" :sortOrder="-1">
                     <template #header>
                         <div class="flex flex-wrap align-items-center justify-content-between gap-2">
                             <span class="text-xl text-900 font-bold">Creadores de contenido</span>
@@ -41,10 +67,24 @@
                                 <Button @click="changeCreador('C')" label="C" severity="danger" />
                             </div>
                         </div>
+                        <div class="containerC">
+                            <Clasificacion nombre="Luis Devs" top="2" tipo="Platino"
+                                foto="https://kinemasterkingpro.com/wp-content/uploads/2023/11/fotos-de-perfil-de-anime-1024x1024.jpg" />
+                            <Clasificacion top="1" tipo="Oro" nombre="Armando Ortega"
+                                foto="https://i.pinimg.com/236x/70/71/71/707171e258b8e7a4f875d19aa8ca31ea.jpg" />
+                            <Clasificacion nombre="Daniela UWU" top="3" tipo="Cobre"
+                                foto="https://frasesparami.com/wp-content/uploads/2023/09/Fotos-de-Perfil-para-Whatsapp-Para-Mujer.jpg" />
+                        </div>
+
                     </template>
+                    <Column header="#" headerStyle="width:3rem">
+                        <template #body="slotProps">
+                            {{ slotProps.index + 1 }}
+                        </template>
+                    </Column>
                     <Column field="usuario" header="Creador"></Column>
-                    <Column field="diamantes_mes_actual" header="Diamantes 💎"></Column>
-                    <Column field="diamantes_mes_anterior" header="Mes Anterior 💎"></Column>
+                    <Column field="diamantes_mes_actual" header="Puntos"></Column>
+                    <Column field="diamantes_mes_anterior" header="Puntos Mes Anterior"></Column>
                     <Column field="grupo" header="Grupo">
                         <template #body="slotProps">
                             <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success">
@@ -65,7 +105,41 @@ export default {
     data: () => ({
         API: 'https://samyflw.fly.dev',
         arrayCreadores: [],
-        creadores: []
+        creadores: [],
+        premios: [
+            {
+                name: 'Silla Gamer',
+                image: 'https://i.linio.com/p/c3786e7c22a6664d487c3b0c47ee67a3-product.jpg',
+
+            },
+            {
+                name: 'Aro de luz',
+                image: 'https://static.foto321.com/2021/09/aro-de-luz-321-sirve.jpg',
+
+            },
+            {
+                name: 'Box Ramdon',
+                image: 'https://toogeek.co/wp-content/uploads/2021/11/D_NQ_NP_864337-MCO45705901406_042021-O.jpg',
+
+            }
+        ],
+        responsiveOptions: [
+            {
+                breakpoint: '1199px',
+                numVisible: 3,
+                numScroll: 1
+            },
+            {
+                breakpoint: '1000px',
+                numVisible: 2,
+                numScroll: 1
+            },
+            {
+                breakpoint: '750px',
+                numVisible: 1,
+                numScroll: 1
+            }
+        ]
     }),
     methods: {
         changeCreador(grupo) {
@@ -98,11 +172,13 @@ export default {
     background-size: cover;
 }
 
-.table {
-    width: 95%;
-    margin: 0 auto;
-    padding: 70px;
+.containerC {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
 }
+
 
 #hero {
     width: 100%;

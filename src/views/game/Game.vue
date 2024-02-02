@@ -470,6 +470,7 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  text-align: center;
 }
 
 .form-container {
