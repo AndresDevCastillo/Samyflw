@@ -9,20 +9,23 @@
             <Column field="nivel" header="Nivel 👑"></Column>
             <Column field="dias" header="Dias">
                 <template #body="slotProps">
-                    <Knob v-model="estadisticas.dias" :valueTemplate="slotProps.data.dias.toString()" readonly
+                    <Knob :valueColor="validarCompletoColor(estadisticas.dias, slotProps.data.dias)"
+                        v-model="estadisticas.dias" :valueTemplate="slotProps.data.dias.toString()" readonly
                         :max="validarKnob(estadisticas.dias, slotProps.data.dias)" :size="70" />
                 </template>
             </Column>
             <Column field="horas" header="Horas">
                 <template #body="slotProps">
-                    <Knob v-model="estadisticas.horas" :valueTemplate="slotProps.data.horas.toString()" readonly
+                    <Knob :valueColor="validarCompletoColor(estadisticas.horas, slotProps.data.horas)"
+                        v-model="estadisticas.horas" :valueTemplate="slotProps.data.horas.toString()" readonly
                         :max="validarKnob(estadisticas.horas, slotProps.data.horas)" :size="70" />
                 </template>
             </Column>
             <Column field="meta" header="Diamantes">
                 <template #body="slotProps">
                     {{ slotProps.data.meta.toLocaleString() }}
-                    <ProgressBar :value="calcularProgresoDiamantes(slotProps.data.meta, estadisticas.diamantes)">
+                    <ProgressBar :pt="validarCompletoColorBar(slotProps.data.meta, estadisticas.diamantes)"
+                        :value="calcularProgresoDiamantes(slotProps.data.meta, estadisticas.diamantes)">
                     </ProgressBar>
                 </template>
             </Column>
@@ -41,7 +44,6 @@
     </Panel>
 </template>
 <script>
-import axios from 'axios';
 import { useStoreEvento } from '../store';
 export default {
     data() {
@@ -162,12 +164,39 @@ export default {
             }
             return progreso;
         },
-        validarKnob(n1, n2) {
-            if (n1 >= n2) {
-                return n1;
+        validarKnob(horas, horasMeta) {
+            if (horas >= horasMeta) {
+                return horas;
             }
-            return n2;
+            return horasMeta;
+        },
+        validarCompletoColor(horas, horasMeta) {
+            const progreso = Math.floor(((100 / horasMeta) * horas));
+            if (progreso < 50) {
+                return '#ff3d32';
+            }
+            if (progreso >= 50 && progreso < 99) {
+                return '#f97316'
+            }
+            return 'var(--primary-color)';
+        },
+        validarCompletoColorBar(meta, diamantes) {
+            const progreso = Math.floor(((100 / meta) * diamantes));
+            if (progreso < 50) {
+                return {
+                    value: { style: { background: '#ff3d32' } }
+                }
+            }
+            if (progreso >= 50 && progreso < 99) {
+                return {
+                    value: { style: { background: '#f97316' } }
+                }
+            }
+
+            return {};
+
         }
+
     },
     async created() {
         this.store = useStoreEvento();
@@ -178,3 +207,8 @@ export default {
     }
 }
 </script>
+<style>
+.nocompleto {
+    background-color: #ff3d32;
+}
+</style>
