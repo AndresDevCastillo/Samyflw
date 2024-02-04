@@ -16,9 +16,15 @@
             </template>
             <template #end>
                 <div class="flex align-items-center gap-2">
-                    <Button icon="pi pi-verified" label="TikTok" severity="danger" />
-                    <Button icon="pi pi-instagram" severity="danger" />
-                    <Button icon="pi pi-whatsapp" severity="danger" />
+                    <a href="https://www.tiktok.com/@samyflw" target="_blank">
+                        <Button icon="pi pi-verified" label="TikTok" severity="danger" />
+                    </a>
+                    <a href="https://www.instagram.com/samyflw1/" target="_blank">
+                        <Button icon="pi pi-instagram" severity="danger" />
+                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=573176205370" target="_blank">
+                        <Button icon="pi pi-whatsapp" severity="danger" />
+                    </a>
                 </div>
             </template>
         </Menubar>
