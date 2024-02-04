@@ -17,7 +17,7 @@
             <template #end>
                 <div class="flex items-center gap-2">
                     <a href="#" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
-                        <Avatar icon="pi pi-user" size="xlarge" shape="circle" />
+                        <Avatar icon="pi pi-user" shape="circle" />
                     </a>
                     <Menu ref="menu" id="overlay_menu" :model="itemsUsuario" :popup="true" :focusedOptionId="null"
                         :aria-activedescendant="false">
@@ -126,8 +126,11 @@ export default {
             }
         },
         async getDatosUsuario() {
-            await axios.get(`${this.API}/usuario/${this.store.getUsuario()._id}`).then(response => {
-                console.log(response.data);
+            await axios.get(`${this.API}/usuario/${this.store.getId()}`, {
+                headers: {
+                    Authorization: `Bearer ${this.store.getToken()}`
+                }
+            }).then(response => {
                 this.usuarioLog.usuario = response.data.usuario;
                 this.usuarioLog.rol = response.data.rol;
             }).catch(error => {
@@ -135,7 +138,11 @@ export default {
             });
         },
         async getNewDatos() {
-            await axios.get(`${this.API}/usuario/${this.store.getId()}`).then(response => {
+            await axios.get(`${this.API}/usuario/${this.store.getId()}`, {
+                headers: {
+                    Authorization: `Bearer ${this.store.getToken()}`,
+                }
+            }).then(response => {
                 this.store.saveUser(response.data);
             });
         },

@@ -64,6 +64,7 @@ export default {
                 await axios.post(`${this.API}/usuario/subirExcel`, this.paquete, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${this.store.getToken()}`
                     }
                 }).then(response => {
                     if (response.data.procesado) {
@@ -71,14 +72,11 @@ export default {
                         this.modalExcel = false;
                         this.$refs.formExcel.reset();
                         this.$toast.add({ severity: 'success', summary: 'Subir excel', detail: response.data.message, life: 1500 });
-
                     } else {
                         this.$toast.add({ severity: 'error', summary: 'Subir excel', detail: response.data.message, life: 1500 });
-
                     }
                 }).catch(error => {
                     this.$toast.add({ severity: 'error', summary: 'Subir excel', detail: 'Sucedió un error, no se pudo procesar el archivo', life: 1500 });
-
                     console.log('Error: ', error);
                 });
             } else {
@@ -90,7 +88,11 @@ export default {
 
         },
         async getCreadores() {
-            await axios.get(`${this.API}/usuario`).then(response => {
+            await axios.get(`${this.API}/usuario`, {
+                headers: {
+                    Authorization: `Bearer ${this.store.getToken()}`
+                }
+            }).then(response => {
                 this.creadores = response.data;
             }).catch(error => {
                 console.log(error);

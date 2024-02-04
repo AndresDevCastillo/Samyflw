@@ -7,7 +7,7 @@
                 <Button label="Evento" icon="pi pi-plus" @click="modalEvento = true" />
             </div>
         </template>
-        <DataTable :value="eventos" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 90rem">
+        <DataTable :value="eventos" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 90rem" sortField="finalizado" :sortOrder="1">
             <Column field="titulo" header="Título" sortable></Column>
             <Column field="descripcion" header="Descripción" sortable></Column>
             <Column field="reglas" header="Regla" sortable />
@@ -16,6 +16,11 @@
             <Column field="premios.top1.descripcion" header="Top 1" sortable />
             <Column field="premios.top2.descripcion" header="Top 2" sortable />
             <Column field="premios.top3.descripcion" header="Top 3" sortable />
+            <Column field="finalizado" header="Estado" sortable>
+                <template #body="slotProps">
+                    <Tag :value="slotProps.data.finalizado ? 'Finalizado' : 'En curso'" :severity="slotProps.data.finalizado ? 'danger' : 'success'" rounded />
+                </template>
+            </Column>
         </DataTable>
         <!-- Modal agregar evento -->
         <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '50rem' }"
@@ -94,23 +99,9 @@ export default {
     data: () => ({
         API: import.meta.env.VITE_APP_API,
         store: null,
-        headers: {
-            Authorization: 'Bearer ',
-        },
         modalEvento: false,
         btnEvento: false,
-        eventos: [
-            {
-                titulo: "Evento 1",
-                descripcion: "Es un evento",
-                fecha_inicio: "2024-01-01",
-                fecha_fin: "2024-01-30",
-                reglas: "Reglas 1",
-                top1_premio: "Silla gamer",
-                top2_premio: "Aro de luz",
-                top3_premio: "Celular"
-            }
-        ],
+        eventos: [],
         paquete: {
             titulo: null,
             descripcion: null,
@@ -154,7 +145,11 @@ export default {
             }
         },
         async getEventos() {
-            await axios.get(`${this.API}/evento`).then(response => {
+            await axios.get(`${this.API}/evento`, {
+                headers: {
+                    Authorization: `Bearer ${this.store.getToken()}`,
+                }
+            }).then(response => {
                 this.eventos = response.data;
             });
         },
@@ -170,6 +165,7 @@ export default {
                 await axios.post(`${this.API}/evento/crear`, this.paquete, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${this.store.getToken()}`
                     }
                 }).then(response => {
                     if (response.data.creado) {
@@ -217,7 +213,6 @@ export default {
             this.$router.push('/login');
         }
         this.getEventos();
-        this.headers.Authorization += this.store.token();
     }
 
 }

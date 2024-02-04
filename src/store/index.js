@@ -57,7 +57,7 @@ export const useStoreEvento = defineStore('evento', {
             this.user = user;
 
         },
-        token() {
+        getToken() {
             const u = JSON.parse(localStorage.user);
             return u.access_token;
         },

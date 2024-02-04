@@ -66,7 +66,11 @@ export default {
                 if (this.store.isAdmin()) {
                     delete this.paquete.foto;
                 }
-                await axios.putForm(`${this.API}/usuario/${this.store.getId()}`, this.paquete).then(response => {
+                await axios.putForm(`${this.API}/usuario/${this.store.getId()}`, this.paquete, {
+                    headers: {
+                        Authorization: `Bearer ${this.store.getToken()}`
+                    }
+                }).then(response => {
                     if (response.data.editado) {
                         this.$toast.add({ severity: 'success', summary: 'Editar datos', detail: response.data.message, life: 1500 });
                         this.mostrarEditarPerfil = false;
@@ -83,10 +87,15 @@ export default {
             } else {
                 this.$toast.add({ severity: 'info', summary: 'Editar datos', detail: 'Debe llenar por lo menos, el correo y el teléfono', life: 1500 });
             }
+        },
+        ponerDatosDef() {
+            this.paquete.correo = this.store.getUsuario().correo.length == 0 ? null : this.store.getUsuario().correo;
+            this.paquete.telefono = this.store.getUsuario().telefono.length == 0 ? null : this.store.getUsuario().telefono;
         }
     },
     created() {
         this.store = useStoreEvento();
+        this.ponerDatosDef();
     }
 }
 </script>
