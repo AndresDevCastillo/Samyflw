@@ -99,18 +99,7 @@ export default {
         },
         modalEvento: false,
         btnEvento: false,
-        eventos: [
-            {
-                titulo: "Evento 1",
-                descripcion: "Es un evento",
-                fecha_inicio: "2024-01-01",
-                fecha_fin: "2024-01-30",
-                reglas: "Reglas 1",
-                top1_premio: "Silla gamer",
-                top2_premio: "Aro de luz",
-                top3_premio: "Celular"
-            }
-        ],
+        eventos: [],
         paquete: {
             titulo: null,
             descripcion: null,

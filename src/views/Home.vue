@@ -4,58 +4,63 @@
         <div class="fondo">
             <section id="hero">
                 <div class="hero-container">
-                    <h1 class="mb-4 pb-0">The TikTok<br><span>LIVE</span> Ascendente <span>1</span></h1>
-                    <p class="mb-4 pb-0">10-12 December, Downtown Conference Center, New York</p>
+                    <h1 class="mb-4 pb-0">Samyflw<br>Agencia <span>TikTok </span></h1>
+                    <p class="mb-4 pb-0">Somos una agencia dedicada a crecer tu perfil y en ti mism@. <br> Ven y se parte
+                    </p>
                     <a href="#about" class="about-btn">Contactar</a>
                 </div>
             </section>
             <!-- ======= About Section ======= -->
             <section id="about">
                 <div class="container position-relative">
-                    <div class="row" style="padding: 0 50px">
-                        <div class="col-lg-6" style="margin-bottom: 40px;;">
-                            <Fieldset legend="Evento" :toggleable="true">
-                                <p class="m-0">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                                    eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                                    qui officia deserunt mollit anim id est laborum.
-                                </p>
-                            </Fieldset>
-                        </div>
-                        <div class="col-lg-6">
-                            <Fieldset legend="Reglas" :toggleable="true">
-                                <p class="m-0">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                                </p>
-                            </Fieldset>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <Carousel :value="premios" :numVisible="3" :numScroll="3" :responsiveOptions="responsiveOptions">
-                            <template #item="slotProps">
-                                <div class="border-1 surface-border border-round m-2  p-3">
-                                    <div class="mb-3">
-                                        <div class="relative mx-auto">
-                                            <img width="100%" height="350px" :src="slotProps.data.image"
-                                                :alt="slotProps.data.name" class="border-round" />
-                                            <Tag :value="'Puesto ' + (slotProps.index + 1)" class="absolute"
-                                                style="left:5px; top: 5px" severity="danger" />
+                    <Card>
+                        <template #content>
+                            <TabView>
+                                <TabPanel v-for="evento in eventos" :key="evento._id" :header="evento.titulo">
+                                    <div class="row">
+                                        <div class="col-lg-6" style="margin-bottom: 40px;;">
+                                            <Fieldset legend="Evento" :toggleable="true">
+                                                <p class="m-0">
+                                                    {{ evento.descripcion }}
+                                                </p>
+                                            </Fieldset>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <Fieldset legend="Reglas" :toggleable="true">
+                                                <p class="m-0">
+                                                    {{ evento.reglas }}
+                                                </p>
+                                            </Fieldset>
                                         </div>
                                     </div>
-                                    <div class="mb-3 font-medium">{{ slotProps.data.name }}</div>
+                                    <div class="row">
+                                        <Carousel :value="Object.values(evento.premios)" :numVisible="3" :numScroll="3"
+                                            :responsiveOptions="responsiveOptions">
+                                            <template #item="slotProps">
+                                                <div class="border-1 surface-border border-round m-2  p-3">
+                                                    <div class="mb-3">
+                                                        <div class="relative mx-auto">
+                                                            <img width="100%" style="min-width: 300px;" height="350px"
+                                                                :src="slotProps.data.imagen"
+                                                                :alt="slotProps.data.descripcion" class="border-round" />
+                                                            <Tag :value="'Puesto ' + (slotProps.index + 1)" class="absolute"
+                                                                style="left:5px; top: 5px" severity="danger" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3 font-medium">{{ slotProps.data.descripcion }}</div>
 
-                                </div>
-                            </template>
-                        </Carousel>
-                    </div>
+                                                </div>
+                                            </template>
+                                        </Carousel>
+                                    </div>
+                                </TabPanel>
+
+                            </TabView>
+                        </template>
+                    </Card>
+
                 </div>
             </section>
-
             <div>
                 <DataTable :value="creadores" tableStyle="min-width: 8rem" sortField="diamantes_mes_actual" :sortOrder="-1">
                     <template #header>
@@ -103,7 +108,9 @@
 import axios from 'axios';
 export default {
     data: () => ({
-        API: 'https://samyflw.fly.dev',
+        API: 'http://localhost:3000',
+        eventos: [],
+        eventosLabel: [],
         arrayCreadores: [],
         creadores: [],
         premios: [
@@ -139,28 +146,41 @@ export default {
                 numVisible: 1,
                 numScroll: 1
             }
-        ]
+        ],
+
     }),
     methods: {
         changeCreador(grupo) {
             for (let i = 0; i < this.arrayCreadores.length; i++) {
                 if (this.arrayCreadores[i]._id === grupo) {
                     this.creadores = [];
-                    this.creadores = this.arrayCreadores[i].creadores;
+                    this.creadores = this.arrayCreadores[i].usuarios;
                 }
             }
         },
     },
-    async mounted() {
-        await axios.get(`${this.API}/creador/agrupados`).then(resp => {
+    async created() {
+        await axios.get(`${this.API}/usuario/agrupados`).then(resp => {
             this.arrayCreadores = resp.data;
             for (let i = 0; i < this.arrayCreadores.length; i++) {
                 if (this.arrayCreadores[i]._id === 'A') {
                     this.creadores = [];
-                    this.creadores = this.arrayCreadores[i].creadores;
+                    this.creadores = this.arrayCreadores[i].usuarios;
                 }
             }
+        });
+        await axios.get(`${this.API}/evento/activo`).then(resp => {
+            this.eventos = resp.data;
+            resp.data.forEach(evento => {
+                this.eventosLabel.push({
+                    label: evento.titulo,
+                    icon: 'pi pi-calendar-times'
+                })
+            });
         })
+        this.eventos = [];
+
+
     }
 }
 </script>
