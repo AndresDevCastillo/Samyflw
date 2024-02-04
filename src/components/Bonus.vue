@@ -1,5 +1,5 @@
 <template>
-    <Panel class="Bonus">
+    <Panel class="Bonus" v-if="!admin">
         <template #header>
             <div class="flex items-center gap-2 flex-end w-full justify-content-between">
                 <h1 class="m-0">Bonus</h1>
@@ -48,6 +48,7 @@ import { useStoreEvento } from '../store';
 export default {
     data() {
         return {
+            admin: false,
             API: import.meta.env.VITE_APP_API,
             store: null,
             tablaBonus: [
@@ -200,10 +201,16 @@ export default {
     },
     async created() {
         this.store = useStoreEvento();
-        this.usuario = this.store.getUsuario();
-        this.estadisticas.dias = parseInt(this.usuario.dias_validos_mes_actual);
-        this.estadisticas.horas = parseInt(this.usuario.last_live_duration_mes_actual.split('h')[0]);
-        this.estadisticas.diamantes = parseInt(this.usuario.diamantes_mes_actual);
+        if (!this.store.isActive()) {
+            this.$router.push('/login');
+        }
+        this.admin = this.store.isAdmin();
+        if (!this.admin) {
+            this.usuario = this.store.getUsuario();
+            this.estadisticas.dias = parseInt(this.usuario.dias_validos_mes_actual);
+            this.estadisticas.horas = parseInt(this.usuario.last_live_duration_mes_actual.split('h')[0]);
+            this.estadisticas.diamantes = parseInt(this.usuario.diamantes_mes_actual);
+        }
     }
 }
 </script>
