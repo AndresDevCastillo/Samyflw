@@ -21,6 +21,12 @@
                     <Tag :value="slotProps.data.finalizado ? 'Finalizado' : 'En curso'" :severity="slotProps.data.finalizado ? 'danger' : 'success'" rounded />
                 </template>
             </Column>
+            <Column style="max-width:5rem" header="Acción">
+                <template #body="slotProps">
+                    <Button icon="pi pi-trash" outlined rounded severity="danger"
+                        @click="confirmDialog(slotProps.data._id)" />
+                </template>
+            </Column>
         </DataTable>
         <!-- Modal agregar evento -->
         <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '50rem' }"
@@ -89,6 +95,23 @@
                 <Button label="Crear" @click="crearEvento" :disabled="btnEvento" severity="success" />
             </template>
         </Dialog>
+
+        <!--Confirm para eliminar-->
+        <ConfirmDialog group="headless">
+            <template #container="{ message, acceptCallback, rejectCallback }">
+                <div class="flex flex-column items-center p-5 rounded-md" style="background-color: #171F28;">
+                    <div class="rounded-full bg-info-500 dark:bg-primary-400 text-surface-0 dark:text-surface-900 inline-flex justify-content-center items-center h-[6rem] w-[6rem] -mt-[3rem]">
+                        <i class="pi pi-question text-4xl"></i>
+                    </div>
+                    <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+                    <p class="mb-0">{{ message.message }}</p>
+                    <div class="flex justify-content-end items-center gap-2 mt-4">
+                        <Button label="Sí, eliminar" severity="danger" @click="acceptCallback" class="w-[8rem]" />
+                        <Button label="No, cancelar" outlined severity="success" @click="rejectCallback" class="w-[8rem]" />
+                    </div>
+                </div>
+            </template>
+        </ConfirmDialog>
     </Panel>
 </template>
 <script>
@@ -125,8 +148,8 @@ export default {
             imagen_top1: null,
             imagen_top2: null,
             imagen_top3: null
-
-        }
+        },
+        idEventoDel: null
     }),
     methods: {
         asignarImagen(event, top) {
@@ -205,6 +228,40 @@ export default {
                 this.$toast.add({ severity: 'error', summary: 'Nuevo evento', detail: 'Debes llenar todos los campos', life: 1600 });
             }
             return valid;
+        },
+        confirmDialog(id) {
+            if (id != null) {
+                this.idEventoDel = id;
+                this.$confirm.require({
+                    group: 'headless',
+                    header: '¿Seguro de qué quiere eliminar este evento?',
+                    message: 'Esta acción no se puede revertir',
+                    accept: () => {
+                        this.eliminarEvento();
+                    },
+                    reject: () => {
+                    }
+                });
+            }
+        },
+        async eliminarEvento() {
+            if (this.idEventoDel != null) {
+                await axios.delete(`${this.API}/evento/${this.idEventoDel}`, {
+                    headers: {
+                        Authorization: `Bearer ${this.store.getToken()}`
+                    }
+                }).then(response => {
+                    if (response.data) {
+                        this.idEventoDel = null;
+                        this.getEventos();
+                        this.$toast.add({ severity: 'success', summary: 'Eliminar evento', detail: 'Evento eliminado correctamente', life: 1500 });
+                    } else {
+                        this.$toast.add({ severity: 'danger', summary: 'Eliminar evento', detail: 'No se pudo eliminar el evento', life: 1500 });
+                    }
+                }).catch(() => {
+                    this.$toast.add({ severity: 'danger', summary: 'Eliminar evento', detail: 'Sucedió un error, no se pudo eliminar el evento', life: 1500 });
+                });
+            }
         }
     },
     created() {
