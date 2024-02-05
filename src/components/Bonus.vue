@@ -1,8 +1,10 @@
 <template>
+    <Toast />
     <Panel class="Bonus" v-if="!admin">
         <template #header>
             <div class="flex items-center gap-2 flex-end w-full justify-content-between">
                 <h1 class="m-0">Bonus</h1>
+
             </div>
         </template>
         <DataTable :value="tablaBonus" tableStyle="min-width: 100%">
@@ -42,8 +44,72 @@
 
         </DataTable>
     </Panel>
+    <Panel class="Bonus" v-else>
+        <template #header>
+            <div class="flex items-center gap-2 flex-end w-full justify-content-between">
+                <h1 class="m-0">Bonus</h1>
+                <Button icon="pi pi-plus" label="Añadir" @click="modalBonus = true"></Button>
+            </div>
+        </template>
+        <DataTable :value="tablaBonus" tableStyle="min-width: 100%" sortField="nivel" :sortOrder="1">
+            <Column field="nivel" header="Nivel 👑"></Column>
+            <Column field="dias" header="Dias"></Column>
+            <Column field="horas" header="Horas"> </Column>
+            <Column field="meta" header="Diamantes"></Column>
+            <Column field="ganancia" header="Ganancia"></Column>
+            <Column field="bonificacion" header="Bonificacion"></Column>
+            <Column style="max-width:5rem">
+                <template #body="slotProps">
+                    <Button icon="pi pi-trash" outlined rounded severity="danger"
+                        @click="comfirmDelete(slotProps.data._id, slotProps.data.nivel)" />
+                </template>
+            </Column>
+
+        </DataTable>
+    </Panel>
+    <Dialog v-model:visible="modalBonus" header="Crear Bonus" :style="{ width: '50rem' }"
+        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+        <form ref="formBonus">
+            <div class="flex flex-column gap-1 mb-2">
+                <label for="nivel" class="font-bold block">Nivel</label>
+                <InputText v-model="paqueteBonus.nivel" type="number" id="nivel" />
+            </div>
+            <div class="flex flex-column gap-1 mb-2">
+                <label for="dias" class="font-bold block">Días</label>
+                <InputText v-model="paqueteBonus.dias" type="number" id="dias" />
+            </div>
+            <div class="flex flex-column gap-1 mb-2">
+                <label for="horas" class="font-bold block">Horas</label>
+                <InputText v-model="paqueteBonus.horas" type="number" id="horas" />
+            </div>
+            <div class="flex flex-column gap-1 mb-2">
+                <label for="meta" class="font-bold block">Diamantes - Meta</label>
+                <InputText v-model="paqueteBonus.meta" type="number" id="meta" />
+            </div>
+            <div class="flex flex-column gap-1 mb-2">
+                <label for="ganancia" class="font-bold block">Ganancia</label>
+                <InputText v-model="paqueteBonus.ganancia" type="text" id="ganancia" />
+            </div>
+            <div class="flex flex-column gap-1 mb-2">
+                <label for="bonificacion" class="font-bold block">Bonificación</label>
+                <InputText v-model="paqueteBonus.bonificacion" type="text" id="bonificacion" />
+            </div>
+        </form>
+        <template #footer>
+            <Button label="Cancelar" @click="modalBonus = false" severity="danger" />
+            <Button label="Crear" @click="crearBonus()" :disabled="btnBonus" severity="success" />
+        </template>
+    </Dialog>
+    <Dialog v-model:visible="deleteBonusDialog" :style="{ width: '450px' }" :header="headerBonusDelete" :modal="true"
+        class="p-fluid ">
+        <div class="d-flex">
+            <Button label="Cancelar" severity="info" icon="pi pi-times" text @click="deleteBonusDialog = false" />
+            <Button label="Eliminar" severity="danger" icon="pi pi-check" text @click="deleteBonusBd()" />
+        </div>
+    </Dialog>
 </template>
 <script>
+import axios from 'axios';
 import { useStoreEvento } from '../store';
 export default {
     data() {
@@ -51,110 +117,26 @@ export default {
             admin: false,
             API: import.meta.env.VITE_APP_API,
             store: null,
-            tablaBonus: [
-                {
-                    "nivel": 1,
-                    "dias": 20,
-                    "horas": 60,
-                    "meta": 10000,
-                    "ganancia": "50USD",
-                    "bonificacion": "3USD"
-                },
-                {
-                    "nivel": 2,
-                    "dias": 20,
-                    "horas": 60,
-                    "meta": 30000,
-                    "ganancia": "75USD",
-                    "bonificacion": "5USD"
-                },
-                {
-                    "nivel": 3,
-                    "dias": 20,
-                    "horas": 60,
-                    "meta": 60000,
-                    "ganancia": "250USD",
-                    "bonificacion": "7USD"
-                },
-                {
-                    "nivel": 4,
-                    "dias": 20,
-                    "horas": 80,
-                    "meta": 100000,
-                    "ganancia": "500USD",
-                    "bonificacion": "10USD"
-                },
-                {
-                    "nivel": 5,
-                    "dias": 20,
-                    "horas": 80,
-                    "meta": 200000,
-                    "ganancia": "1000USD",
-                    "bonificacion": "15USD"
-                },
-                {
-                    "nivel": 6,
-                    "dias": 20,
-                    "horas": 100,
-                    "meta": 300000,
-                    "ganancia": "1500USD",
-                    "bonificacion": "20USD"
-                },
-                {
-                    "nivel": 7,
-                    "dias": 20,
-                    "horas": 100,
-                    "meta": 400000,
-                    "ganancia": "2000USD",
-                    "bonificacion": "30USD"
-                },
-                {
-                    "nivel": 8,
-                    "dias": 20,
-                    "horas": 100,
-                    "meta": 500000,
-                    "ganancia": "2500USD",
-                    "bonificacion": "80USD"
-                },
-                {
-                    "nivel": 9,
-                    "dias": 20,
-                    "horas": 100,
-                    "meta": 1000000,
-                    "ganancia": "5000USD",
-                    "bonificacion": "200USD"
-                },
-                {
-                    "nivel": 10,
-                    "dias": 20,
-                    "horas": 100,
-                    "meta": 1500000,
-                    "ganancia": "7500USD",
-                    "bonificacion": "300USD"
-                },
-                {
-                    "nivel": 11,
-                    "dias": 20,
-                    "horas": 100,
-                    "meta": 2000000,
-                    "ganancia": "10.000USD",
-                    "bonificacion": "400USD"
-                },
-                {
-                    "nivel": 12,
-                    "dias": 20,
-                    "horas": 100,
-                    "meta": 5000000,
-                    "ganancia": "25.000USD",
-                    "bonificacion": "800USD"
-                }
-            ],
+            paqueteBonus: {
+                nivel: null,
+                dias: null,
+                horas: null,
+                meta: null,
+                ganancia: null,
+                bonificacion: null,
+            },
+            btnBonus: false,
+            headerBonusDelete: null,
+            deleteBonusDialog: false,
+            deleteBonusID: null,
+            tablaBonus: [],
             usuario: null,
             estadisticas: {
                 dias: null,
                 diamantes: null,
                 horas: null
-            }
+            },
+            modalBonus: false,
         }
     },
     methods: {
@@ -196,6 +178,69 @@ export default {
 
             return {};
 
+        },
+        formValid() {
+            let valid = true;
+            const key = Object.keys(this.paqueteBonus);
+            for (const k of key) {
+                if (this.paqueteBonus[k] == null) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (!valid) {
+                this.$toast.add({ severity: 'error', summary: 'Nuevo evento', detail: 'Debes llenar todos los campos', life: 1600 });
+            }
+
+            return valid;
+        },
+        async crearBonus() {
+            const valid = this.formValid();
+            if (valid) {
+                this.btnBonus = true;
+                this.paqueteBonus.nivel = parseInt(this.paqueteBonus.nivel);
+                this.paqueteBonus.horas = parseInt(this.paqueteBonus.horas);
+                this.paqueteBonus.meta = parseInt(this.paqueteBonus.meta);
+                this.paqueteBonus.dias = parseInt(this.paqueteBonus.dias);
+                await axios.post(`${this.API}/bonus/crear`, this.paqueteBonus).then(resp => {
+                    this.obtenerBonus();
+                    this.paqueteBonus = {
+                        nivel: null,
+                        dias: null,
+                        horas: null,
+                        meta: null,
+                        ganancia: null,
+                        bonificacion: null,
+                    };
+                    this.$toast.add({ severity: 'success', summary: 'Nuevo Bonus', detail: 'Creado correctamente!', life: 1600 });
+                }).catch(error => {
+                    this.$toast.add({ severity: 'error', summary: 'Nuevo Bonus', detail: 'Ocurrio un problema inesperado!', life: 1600 });
+                })
+                this.btnBonus = false;
+            }
+        },
+        async obtenerBonus() {
+            axios.get(`${this.API}/bonus`).then((bonus) => {
+                this.tablaBonus = bonus.data;
+            }).catch((error) => {
+                this.$toast.add({ severity: 'error', summary: 'Nuevo Bonus', detail: 'Ocurrio un problema inesperado!', life: 1600 });
+            });
+        },
+        comfirmDelete(id, nivel) {
+            this.deleteBonusID = id;
+            this.headerBonusDelete = 'Desea eliminar el nivel: ' + nivel;
+            this.deleteBonusDialog = true;
+        },
+        deleteBonusBd() {
+            this.deleteBonusDialog = false;
+            axios.delete(`${this.API}/bonus/${this.deleteBonusID}`).then(async (resp) => {
+                await this.obtenerBonus();
+                this.$toast.add({ severity: 'success', summary: 'Información', detail: 'Eliminado correctamente', life: 3000 });
+                this.deleteBonusID = null;
+                this.headerBonusDelete = ``;
+            }).catch(error => {
+                this.toast.add({ severity: 'error', summary: 'Autorización', detail: "ocurrio un error!", life: 3000 });
+            })
         }
 
     },
@@ -211,6 +256,7 @@ export default {
             this.estadisticas.horas = parseInt(this.usuario.last_live_duration_mes_actual.split('h')[0]);
             this.estadisticas.diamantes = parseInt(this.usuario.diamantes_mes_actual);
         }
+        await this.obtenerBonus();
     }
 }
 </script>
