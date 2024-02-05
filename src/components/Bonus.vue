@@ -117,6 +117,7 @@ export default {
             admin: false,
             API: import.meta.env.VITE_APP_API,
             store: null,
+            token: null,
             paqueteBonus: {
                 nivel: null,
                 dias: null,
@@ -202,7 +203,7 @@ export default {
                 this.paqueteBonus.horas = parseInt(this.paqueteBonus.horas);
                 this.paqueteBonus.meta = parseInt(this.paqueteBonus.meta);
                 this.paqueteBonus.dias = parseInt(this.paqueteBonus.dias);
-                await axios.post(`${this.API}/bonus/crear`, this.paqueteBonus).then(resp => {
+                await axios.post(`${this.API}/bonus/crear`, this.paqueteBonus, this.token).then(resp => {
                     this.obtenerBonus();
                     this.paqueteBonus = {
                         nivel: null,
@@ -233,7 +234,7 @@ export default {
         },
         deleteBonusBd() {
             this.deleteBonusDialog = false;
-            axios.delete(`${this.API}/bonus/${this.deleteBonusID}`).then(async (resp) => {
+            axios.delete(`${this.API}/bonus/${this.deleteBonusID}`, this.token).then(async (resp) => {
                 await this.obtenerBonus();
                 this.$toast.add({ severity: 'success', summary: 'Información', detail: 'Eliminado correctamente', life: 3000 });
                 this.deleteBonusID = null;
@@ -246,6 +247,11 @@ export default {
     },
     async created() {
         this.store = useStoreEvento();
+        this.token = {
+            headers: {
+                Authorization: `Bearer ${this.store.getToken()}`,
+            }
+        }
         if (!this.store.isActive()) {
             this.$router.push('/login');
         }

@@ -16,7 +16,12 @@
       <section id="about">
         <div class="container position-relative">
           <Card>
-            <template #content>
+            <template v-if="eventos.length == 0" #content>
+              <div class="flex justify-content-center">
+                <h1>No hay eventos vigentes</h1>
+              </div>
+            </template>
+            <template #content v-else>
               <TabView>
                 <TabPanel v-for="evento in eventos" :key="evento._id" :header="evento.titulo">
                   <div class="row">

@@ -78,7 +78,7 @@ export default {
                 console.log(resp.data);
                 if (resp.data) {
                     this.store.saveUser(resp.data);
-                    this.$router.push('/panel/evento');
+                    this.$router.push('/panel/bonus');
                 }
             }).catch(error => {
                 console.log(error);
@@ -92,7 +92,7 @@ export default {
     mounted() {
         this.store = useStoreEvento();
         if (this.store.isActive()) {
-            this.$router.push('/panel/evento');
+            this.$router.push('/panel/bonus');
         }
     }
 }

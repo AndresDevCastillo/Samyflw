@@ -63,23 +63,7 @@ export default {
     data: () => ({
         API: import.meta.env.VITE_APP_API,
         store: null,
-        itemsMenu: [
-            {
-                label: 'Eventos',
-                icon: 'pi pi-calendar-plus',
-                route: '/panel/evento',
-            },
-            {
-                label: 'Creadores',
-                icon: 'pi pi-users',
-                route: '/panel/creadores',
-            },
-            {
-                label: 'Bonus',
-                icon: 'pi pi-money-bill',
-                route: '/panel/bonus',
-            }
-        ],
+        itemsMenu: [],
         itemsUsuario: [
             {
                 label: 'Mi perfil',
@@ -153,6 +137,35 @@ export default {
     },
     created() {
         this.store = useStoreEvento();
+        const admin = this.store.isAdmin();
+        if (admin) {
+            this.itemsMenu = [
+                {
+                    label: 'Eventos',
+                    icon: 'pi pi-calendar-plus',
+                    route: '/panel/evento',
+                },
+                {
+                    label: 'Creadores',
+                    icon: 'pi pi-users',
+                    route: '/panel/creadores',
+                },
+                {
+                    label: 'Bonus',
+                    icon: 'pi pi-money-bill',
+                    route: '/panel/bonus',
+                }
+            ]
+        }
+        else {
+            this.itemsMenu = [
+                {
+                    label: 'Bonus',
+                    icon: 'pi pi-money-bill',
+                    route: '/panel/bonus',
+                }
+            ]
+        }
         this.getDatosUsuario();
     }
 };
