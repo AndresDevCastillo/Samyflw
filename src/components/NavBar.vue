@@ -1,61 +1,65 @@
 <template>
     <div class="navbar">
-        <Menubar :model="items">
-            <template #item="{ item, props, hasSubmenu }">
-                <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-                    <a v-ripple :href="href" v-bind="props.action" @click="navigate">
-                        <span :class="item.icon" />
-                        <span class="ml-2">{{ item.label }}</span>
-                    </a>
-                </router-link>
-                <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
-                    <span :class="item.icon" />
-                    <span class="ml-2">{{ item.label }}</span>
-                    <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
-                </a>
-            </template>
-            <template #end>
-                <div class="flex align-items-center gap-2">
-                    <a href="https://www.tiktok.com/@samyflw" target="_blank">
-                        <Button icon="pi pi-verified" label="TikTok" severity="danger" />
-                    </a>
-                    <a href="https://www.instagram.com/samyflw1/" target="_blank">
-                        <Button icon="pi pi-instagram" severity="danger" />
-                    </a>
-                    <a href="https://api.whatsapp.com/send?phone=573176205370" target="_blank">
-                        <Button icon="pi pi-whatsapp" severity="danger" />
-                    </a>
-                </div>
-            </template>
-        </Menubar>
+        <header>
+            <a href="" class="logo"> <span>Samy</span>flw</a>
+            <nav>
+                <a href="">Juegos</a>
+                <a href="">Redes Sociales</a>
+
+            </nav>
+        </header>
     </div>
 </template>
 <script>
 
 export default {
     data: () => ({
-        items: [
 
-            {
-                label: 'Duck Racer',
-                icon: 'pi pi-bolt',
-                route: '/duckracer'
-            },
-        ]
     })
-
 }
 </script>
 <style scoped>
-.p-menubar {
+header {
     position: absolute;
     top: 0;
     width: 100%;
-    border-radius: 0px !important;
-    z-index: 10000;
+    height: 80px;
+    padding: 0 80px;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.navbar {
-    margin-bottom: 50px;
+header .logo {
+    color: #fff;
+    font-size: 2em;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+header .logo span {
+    color: #84DC16;
+}
+
+header nav {
+    display: flex;
+    gap: 25px;
+}
+
+@media (max-width: 539px) {
+
+    header nav {
+        display: none;
+        gap: 25px;
+    }
+}
+
+header nav a {
+    color: #fff;
+    font-size: 1.1em;
+    text-decoration: none;
 }
 </style>
