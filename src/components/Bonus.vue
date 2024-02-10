@@ -1,5 +1,6 @@
 <template>
     <Toast />
+    <PerfilUsuario v-if="!store.isAdmin()" />
     <Panel class="Bonus" v-if="!admin">
         <template #header>
             <div class="flex items-center gap-2 flex-end w-full justify-content-between">
@@ -111,7 +112,11 @@
 <script>
 import axios from 'axios';
 import { useStoreEvento } from '../store';
+import PerfilUsuario from './Perfil.vue';
 export default {
+    components: {
+        PerfilUsuario
+    },
     data() {
         return {
             admin: false,

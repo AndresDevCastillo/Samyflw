@@ -52,10 +52,13 @@ export const useStoreEvento = defineStore('evento', {
             return u.rol.toLowerCase() == "admin";
         },
         saveUser(user) {
-            console.log("guardando")
             localStorage.user = JSON.stringify(user);
             this.user = user;
 
+        },
+        newDatos(user) {
+            localStorage.user = JSON.stringify({...user, access_token: this.getToken() });
+            this.user = {...user, access_token: this.getToken() };
         },
         getToken() {
             const u = JSON.parse(localStorage.user);

@@ -29,34 +29,36 @@
             </Column>
         </DataTable>
         <!-- Modal agregar evento -->
-        <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '50rem' }"
+        <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '45rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
             <form ref="formEvento">
-                <div class="flex flex-column gap-1 mb-2">
-                    <label for="titulo" class="font-bold block">Título</label>
-                    <InputText type="text" id="titulo" v-model="paquete.titulo" />
+                <div class="flex flex-wrap gap-1 mb-2">
+                    <div class="titulo">
+                        <label for="titulo" class="font-bold block">Título</label>
+                        <InputText type="text" id="titulo" v-model="paquete.titulo" />
+                    </div>
+                    <div class="descripcion">
+                        <div class="flex flex-column">
+                            <label for="descripcion" class="font-bold block">Descripción</label>
+                            <Textarea id="descripcion" v-model="paquete.descripcion" rows="1" cols="30" />
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-column gap-1 mb-2">
-                    <label for="descripcion" class="font-bold block">Descripción</label>
-                    <Textarea id="descripcion" v-model="paquete.descripcion" rows="3" cols="30" />
-                </div>
-                <div class="flex flex-column gap-1 mb-3">
-                    <label for="reglas" class="font-bold block">Reglas</label>
-                    <Textarea id="reglas" v-model="paquete.reglas" rows="3" cols="30" />
-                </div>
-                <div class="flex flex-column gap-1 mb-2">
-                    <label for="fecha_inicio">Fecha de inicio</label>
-                    <Calendar id="fecha_inicio" v-model="paquete.fecha_inicio" :minDate="new Date()" :manualInput="false"
-                        dateFormat="yy-mm-dd" />
-                </div>
-                <div class="flex flex-column gap-1 mb-2">
-                    <label for="fecha_fin">Fecha fin</label>
-                    <Calendar id="fecha_fin" v-model="paquete.fecha_fin" :minDate="new Date()" :manualInput="false"
-                        dateFormat="yy-mm-dd" />
+
+                <div class="flex  gap-1 mb-2">
+                    <div class="reglas">
+                        <label for="reglas" class="font-bold block">Reglas</label>
+                        <Textarea id="reglas" v-model="paquete.reglas" rows="1" cols="20" />
+                    </div>
+                    <div class="disponibilidad">
+                        <label for="fecha_inicio" class="font-bold block">Disponibilidad</label>
+                        <Calendar id="fecha_inicio" selectionMode="range" :numberOfMonths="2" v-model="paquete.fecha_fin" :minDate="new Date()" :manualInput="false"
+                            dateFormat="yy-mm-dd" />
+                    </div>
                 </div>
                 <Divider />
-                <h1 class="mb-3">Premios</h1>
-                <div class="flex flex-column gap-1 mb-2">
+                <h1 class="mb-1">Premios</h1>
+                <div class="flex flex-column gap-1 mb-1">
                     <h3>Top 1</h3>
                     <div class="flex flex-column gap-2 mb-2">
                         <label for="descripcion_top1">Descripción</label>
@@ -149,7 +151,8 @@ export default {
             imagen_top2: null,
             imagen_top3: null
         },
-        idEventoDel: null
+        idEventoDel: null,
+        fechaEvento: []
     }),
     methods: {
         asignarImagen(event, top) {
@@ -174,6 +177,14 @@ export default {
                 }
             }).then(response => {
                 this.eventos = response.data;
+            }).catch(error => {
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                }
             });
         },
         async getEventoActivo() {
@@ -185,6 +196,8 @@ export default {
             const validF = await this.formValid();
             if (validF) {
                 this.btnEvento = true;
+                this.paquete.fecha_inicio = this.paquete.fecha_fin[0];
+                this.paquete.fecha_fin = this.paquete.fecha_fin[1];
                 await axios.post(`${this.API}/evento/crear`, this.paquete, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
