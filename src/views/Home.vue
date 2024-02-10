@@ -1,69 +1,240 @@
 <template>
   <NavBar></NavBar>
   <div class="inicio">
+    <div class="bg">
+      <div class="bubbles">
+        <span style="--i:11;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:23;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:26;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:23;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:26;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:26;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:26;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:28;"></span>
+      </div>
+      <div class="bubbles bubblesP">
+        <span style="--i:7;"></span>
+        <span style="--i:23;"></span>
+        <span style="--i:26;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:8;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:27;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:1;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:9;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:27;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:1;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:9;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:27;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:9;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:7;"></span>
+        <span style="--i:23;"></span>
+        <span style="--i:26;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:8;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:27;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:1;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:9;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:27;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:1;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:9;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:27;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:9;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:21;"></span>
+      </div>
+    </div>
     <div class="fondo">
       <section id="hero">
         <div class="hero-container">
-          <h1 class="mb-4 pb-0">Samyflw<br />Agencia <span>TikTok </span></h1>
-          <p class="mb-4 pb-0">
+          <h1 class="mb-4 pb-0  animation-duration-1000"
+            v-animateonscroll="{ enterClass: 'fadein', leaveClass: 'fadeout' }">Samyflw<br />Agencia
+            <span>TikTok </span>
+          </h1>
+          <p class="mb-4 pb-0 animation-duration-1000"
+            v-animateonscroll="{ enterClass: 'fadein', leaveClass: 'fadeout' }">
             Somos una agencia dedicada a crecer tu perfil y en ti mism@. <br />
             Ven y se parte
           </p>
-          <a href="#about" class="about-btn">Eventos</a>
-        </div>
-      </section>
-      <!-- ======= About Section ======= -->
-      <section id="about">
-        <div class="container position-relative">
-          <Card>
-            <template v-if="eventos.length == 0" #content>
-              <div class="flex justify-content-center">
-                <h1>No hay eventos vigentes</h1>
-              </div>
-            </template>
-            <template #content v-else>
-              <TabView>
-                <TabPanel v-for="evento in eventos" :key="evento._id" :header="evento.titulo">
-                  <div class="row">
-                    <div class="col-lg-6" style="margin-bottom: 40px">
-                      <Fieldset legend="Evento" :toggleable="true">
-                        <p class="m-0">
-                          {{ evento.descripcion }}
-                        </p>
-                      </Fieldset>
-                    </div>
-                    <div class="col-lg-6">
-                      <Fieldset legend="Reglas" :toggleable="true">
-                        <p class="m-0">
-                          {{ evento.reglas }}
-                        </p>
-                      </Fieldset>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <Carousel :value="Object.values(evento.premios)" :numVisible="3" :numScroll="3"
-                      :responsiveOptions="responsiveOptions">
-                      <template #item="slotProps">
-                        <div class="border-1 surface-border border-round m-2 p-3">
-                          <div class="mb-3">
-                            <div class="relative mx-auto">
-                              <img width="100%" style="min-width: 300px" height="350px" :src="slotProps.data.imagen"
-                                :alt="slotProps.data.descripcion" class="border-round" />
-                              <Tag :value="'Puesto ' + (slotProps.index + 1)" class="absolute" style="left: 5px; top: 5px"
-                                severity="danger" />
-                            </div>
-                          </div>
-                          <div class="mb-3 font-medium">
-                            {{ slotProps.data.descripcion }}
-                          </div>
-                        </div>
-                      </template>
-                    </Carousel>
-                  </div>
-                </TabPanel>
-              </TabView>
-            </template>
-          </Card>
+          <a href="#about" class="about-btn animation-duration-1000"
+            v-animateonscroll="{ enterClass: 'fadein', leaveClass: 'fadeout' }">Eventos</a>
         </div>
       </section>
       <div>
@@ -77,11 +248,11 @@
                 <Button @click="changeCreador('C')" label="C" severity="danger" />
               </div>
             </div>
-            <div class="containerC">
+            <!--  <div class="containerC">
               <Clasificacion :nombre="top3[1].usuario" top="2" tipo="Platino" :foto="top3[1].foto" />
               <Clasificacion top="1" tipo="Oro" :nombre="top3[0].usuario" :foto="top3[0].foto" />
               <Clasificacion :nombre="top3[2].usuario" top="3" tipo="Cobre" :foto="top3[2].foto" />
-            </div>
+            </div> -->
           </template>
           <Column header="#" headerStyle="width:3rem">
             <template #body="slotProps">
@@ -109,7 +280,7 @@
 import axios from "axios";
 export default {
   data: () => ({
-    API: "http://localhost:3000",
+    API: import.meta.env.VITE_APP_API,
     eventos: [],
     eventosLabel: [],
     arrayCreadores: [],
@@ -209,16 +380,70 @@ export default {
 </script>
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Raleway&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,900');
 
-.fondo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-image: url("../assets/img/hero-bg.jpg");
-  background-size: cover;
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: #0c192c;
+  box-sizing: border-box;
 }
+
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bubbles {
+  position: relative;
+  display: flex;
+}
+
+.bubbles span {
+  position: relative;
+  min-width: 15px;
+  height: 15px;
+  background: #4fc3dc;
+  border-radius: 50%;
+  box-shadow: 0 0 0 10px #4fc3dc44,
+    0 0 50px #4fc3dc,
+    0 0 100px #4fc3dc;
+  margin: 0 4px;
+  animation: animate 15s linear infinite;
+  animation-duration: calc(205s / var(--i));
+}
+
+.bubblesP span {
+  min-width: 2px;
+  height: 2px;
+  box-shadow: 0px;
+  border-radius: 100%;
+  animation: animate 15s linear infinite;
+  animation-duration: calc(45s / var(--i));
+}
+
+.bubbles span:nth-child(even) {
+  background: #84DC16;
+  box-shadow: 0 0 0 10px #84DC1644,
+    0 0 50px #84DC16,
+    0 0 100px #84DC16;
+}
+
+
+@keyframes animate {
+  0% {
+    transform: translateY(100vh) scale(0);
+  }
+
+  100% {
+    transform: translateY(-10vh) scale(0.5);
+  }
+}
+
+
 
 .containerC {
   display: flex;
@@ -230,8 +455,6 @@ export default {
 #hero {
   width: 100%;
   height: 100vh;
-  background: url(../img/hero-bg.jpg) top center;
-  background-size: cover;
   overflow: hidden;
   position: relative;
 }
@@ -244,7 +467,6 @@ export default {
 
 #hero:before {
   content: "";
-  background: rgba(6, 12, 34, 0.8);
   position: absolute;
   bottom: 0;
   top: 0;
@@ -281,7 +503,7 @@ export default {
 }
 
 #hero h1 span {
-  color: #f82249;
+  color: #84DC16;
 }
 
 @media (max-width: 991px) {
@@ -315,12 +537,12 @@ export default {
   margin: 10px;
   color: #fff;
   animation-delay: 0.8s;
-  border: 2px solid #f82249;
+  border: 2px solid #84DC16;
   text-decoration: none;
 }
 
 #hero .about-btn:hover {
-  background: #f82249;
+  background: #84DC16;
   color: #fff;
 }
 
