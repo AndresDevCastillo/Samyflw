@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="false">
+        <div>
             <DataTable :value="creadores" tableStyle="min-width: 8rem" sortField="diamantes_mes_actual" :sortOrder="-1">
                 <template #header>
                     <div class="flex flex-wrap align-items-center justify-content-between gap-2">
@@ -11,11 +11,11 @@
                             <Button @click="changeCreador('C')" label="C" severity="danger" />
                         </div>
                     </div>
-                    <!--  <div class="containerC">
-              <Clasificacion :nombre="top3[1].usuario" top="2" tipo="Platino" :foto="top3[1].foto" />
-              <Clasificacion top="1" tipo="Oro" :nombre="top3[0].usuario" :foto="top3[0].foto" />
-              <Clasificacion :nombre="top3[2].usuario" top="3" tipo="Cobre" :foto="top3[2].foto" />
-            </div> -->
+                    <div class="containerC">
+                        <Clasificacion :nombre="top3[1].usuario" top="2" tipo="Platino" :foto="top3[1].foto" />
+                        <Clasificacion top="1" tipo="Oro" :nombre="top3[0].usuario" :foto="top3[0].foto" />
+                        <Clasificacion :nombre="top3[2].usuario" top="3" tipo="Cobre" :foto="top3[2].foto" />
+                    </div>
                 </template>
                 <Column header="#" headerStyle="width:3rem">
                     <template #body="slotProps">
@@ -38,9 +38,18 @@
         </div>
     </div>
 </template>
+<style>
+.containerC {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+</style>
 <script>
 import axios from "axios";
 export default {
+    name: 'EventoView',
     data: () => ({
         API: import.meta.env.VITE_APP_API,
         eventos: [],
