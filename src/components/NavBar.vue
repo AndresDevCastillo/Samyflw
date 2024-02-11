@@ -3,9 +3,9 @@
         <header>
             <a href="" class="logo"> <span>Samy</span>flw</a>
             <nav>
-                <a href="">Juegos</a>
-                <a href="">Redes Sociales</a>
-
+                <a href="/duckracer">Juegos</a>
+                <a href="#footer">Redes Sociales</a>
+                <a href="">Eventos</a>
             </nav>
         </header>
     </div>
