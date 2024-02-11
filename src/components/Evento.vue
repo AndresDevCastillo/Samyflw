@@ -29,66 +29,70 @@
             </Column>
         </DataTable>
         <!-- Modal agregar evento -->
-        <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '45rem' }"
+        <Dialog v-model:visible="modalEvento" header="Nuevo evento" :style="{ width: '40rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
-            <form ref="formEvento">
-                <div class="flex flex-wrap gap-1 mb-2">
-                    <div class="titulo">
+            <form ref="formEvento" class="formEvento">
+                <div class="flex gap-1">
+                    <div class="titulo sm:w-full md:w-6">
                         <label for="titulo" class="font-bold block">Título</label>
                         <InputText type="text" id="titulo" v-model="paquete.titulo" />
                     </div>
-                    <div class="descripcion">
-                        <div class="flex flex-column">
-                            <label for="descripcion" class="font-bold block">Descripción</label>
-                            <Textarea id="descripcion" v-model="paquete.descripcion" rows="1" cols="30" />
-                        </div>
+                    <div class="descripcion sm:w-full md:w-6">
+                        <label for="descripcion" class="font-bold block">Descripción</label>
+                        <Textarea id="descripcion" v-model="paquete.descripcion" rows="1" cols="25" />
                     </div>
                 </div>
 
-                <div class="flex  gap-1 mb-2">
-                    <div class="reglas">
+                <div class="flex gap-1">
+                    <div class="reglas sm:w-6">
                         <label for="reglas" class="font-bold block">Reglas</label>
                         <Textarea id="reglas" v-model="paquete.reglas" rows="1" cols="20" />
                     </div>
-                    <div class="disponibilidad">
+                    <div class="disponibilidad sm:w-6">
                         <label for="fecha_inicio" class="font-bold block">Disponibilidad</label>
                         <Calendar id="fecha_inicio" selectionMode="range" :numberOfMonths="2" v-model="paquete.fecha_fin" :minDate="new Date()" :manualInput="false"
                             dateFormat="yy-mm-dd" />
                     </div>
                 </div>
-                <Divider />
-                <h1 class="mb-1">Premios</h1>
-                <div class="flex flex-column gap-1 mb-1">
-                    <h3>Top 1</h3>
-                    <div class="flex flex-column gap-2 mb-2">
-                        <label for="descripcion_top1">Descripción</label>
-                        <InputText type="text" id="descripcion_top1" v-model="paquete.premios.top1.descripcion" />
-                    </div>
-                    <div class="flex flex-column gap-2">
-                        <label for="imagen_top1">Imagen</label>
-                        <InputText type="file" id="imagen_top1" accept="image/*" @change="asignarImagen($event, 'top1')" />
-                    </div>
-                </div>
-                <div class="flex flex-column gap-1 mb-2">
-                    <h3>Top 2</h3>
-                    <div class="flex flex-column gap-2 mb-2">
-                        <label for="descripcion_top2">Descripción</label>
-                        <InputText type="text" id="descripcion_top2" v-model="paquete.premios.top2.descripcion" />
-                    </div>
-                    <div class="flex flex-column gap-2">
-                        <label for="imagen_top2">Imagen</label>
-                        <InputText type="file" id="imagen_top2" accept="image/*" @change="asignarImagen($event, 'top2')" />
+                <Divider class="m-1" />
+                <h4 class="m-0">Premios</h4>
+                <div class="flex flex-column gap-1">
+                    <h5 class="m-0">Top 1</h5>
+                    <div class="top1 flex gap-1">
+                        <div class="flex flex-column sm:w-6">
+                            <label for="descripcion_top1">Descripción</label>
+                            <InputText type="text" id="descripcion_top1" v-model="paquete.premios.top1.descripcion" />
+                        </div>
+                        <div class="flex flex-column sm:w-6">
+                            <label for="imagen_top1">Imagen</label>
+                            <InputText type="file" id="imagen_top1" accept="image/*" @change="asignarImagen($event, 'top1')" />
+                        </div>
                     </div>
                 </div>
-                <div class="flex flex-column gap-1 mb-2">
-                    <h3>Top 3</h3>
-                    <div class="flex flex-column gap-2 mb-2">
-                        <label for="descripcion_top3">Descripción</label>
-                        <InputText type="text" id="descripcion_top3" v-model="paquete.premios.top3.descripcion" />
+                <div class="flex flex-column gap-1">
+                    <h5 class="m-0">Top 2</h5>
+                    <div class="top2 flex gap-1">
+                        <div class="flex flex-column sm:w-6">
+                            <label for="descripcion_top2">Descripción</label>
+                            <InputText type="text" id="descripcion_top2" v-model="paquete.premios.top2.descripcion" />
+                        </div>
+                        <div class="flex flex-column sm:w-6">
+                            <label for="imagen_top2">Imagen</label>
+                            <InputText type="file" id="imagen_top2" accept="image/*" @change="asignarImagen($event, 'top2')" />
+                        </div>
                     </div>
-                    <div class="flex flex-column gap-2">
-                        <label for="imagen_top3">Imagen</label>
-                        <InputText type="file" id="imagen_top1" accept="image/*" @change="asignarImagen($event, 'top3')" />
+                </div>
+                <div class="flex flex-column gap-1">
+                    <h5 class="m-0">Top 3</h5>
+                    <div class="top3 flex gap-1">
+                        <div class="flex flex-column sm:w-6">
+                            <label for="descripcion_top3">Descripción</label>
+                            <InputText type="text" id="descripcion_top3" v-model="paquete.premios.top3.descripcion" />
+                        </div>
+                        <div class="flex flex-column sm:w-6">
+                            <label for="imagen_top3">Imagen</label>
+                            <InputText type="file" id="imagen_top1" accept="image/*" @change="asignarImagen($event, 'top3')" />
+                        </div>
                     </div>
                 </div>
             </form>
@@ -287,3 +291,19 @@ export default {
 
 }
 </script>
+<style>
+/* .formEvento>div.flex>* {
+    width: 50% !important;
+} */
+
+.formEvento>div.flex>div>input,
+.formEvento>div.flex>div>textarea,
+.formEvento>div.flex>div>select,
+.formEvento>div.flex>div>span.p-calendar {
+    width: 100% !important;
+}
+
+input[type=file] {
+    height: 46px !important;
+}
+</style>
