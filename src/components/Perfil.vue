@@ -6,9 +6,9 @@
                 <Button label="Editar perfil" icon="pi pi-user-edit" @click="mostrarEditar = true" />
             </div>
         </template>
-        <div class="flex gap-8 w-full">
+        <div class="flex gap-8 w-full sm:flex-wrap xs:flex-wrap xs:justify-content-center md:flex-wrap lg:flex-nowrap sm:justify-content-center">
             <div class="flex align-items-start md:ml-8 md:pl-4 mt-4">
-                <div v-if="isTop">
+                <div v-if="isTop" class="top">
                     <Avatar :image="`/src/assets/img/cinta_${cinta}.png`" class="w-full cinta" />
                     <p class="text-center w-full m-0 info-grupo"><strong>Grupo {{ store.getUsuario().grupo }}</strong></p>
                     <Clasificacion class="clasificacion" :nombre="store.getUsuario().usuario" :top="infoTop.top" :tipo="infoTop.tipo" :foto="store.getUsuario().foto" />
@@ -25,10 +25,10 @@
                 </div>
             </div>
             <div class="w-full">
-                <h2 class="mb-0">Actualización {{ fechaAct }}</h2>
-                <div class="flex gap-8">
+                <h2 class="mb-0 sm:text-center xs:text-center">Actualización {{ fechaAct }}</h2>
+                <div class="flex gap-8 xs:gap-3 sm:gap-3 md:gap-8 xs:flex-wrap md:justify-content-center">
                     <div class="flex flex-column">
-                        <div class="flex justify-content-between flex-wrap column-gap-4 row-gap-6">
+                        <div class="flex justify-content-between flex-wrap column-gap-3 row-gap-2">
                             <div class="seguidores flex flex-column">
                                 <span class="w-full word-break">Seguidores</span>
                                 <span class="font-bold text-lg">{{ parseInt(store.getUsuario().seguidores).toLocaleString() }}</span>
@@ -41,7 +41,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="flex justify-content-between gap-8 mt-4 flex-wrap">
+                        <div class="flex justify-content-between column-gap-3 row-gap-2 mt-4 flex-wrap">
                             <div class="diamante-actual flex flex-column">
                                 <span class="w-full word-break">Diamantes en {{ meses[iActual] }} 💎</span>
                                 <span class="font-bold text-lg">{{ parseInt(store.getUsuario().diamantes_mes_actual).toLocaleString() }}
@@ -55,7 +55,7 @@
                                 <span class="font-bold text-lg">{{ parseInt(store.getUsuario().diamantes_mes_anterior).toLocaleString() }}</span>
                             </div>
                         </div>
-                        <div class="flex justify-content-between gap-8 mt-3 flex-wrap">
+                        <div class="flex justify-content-between column-gap-3 row-gap-2 mt-3 flex-wrap">
                             <div class="live flex flex-column">
                                 <span class="w-full word-break flex gap-2 flex-wrap">Duración LIVE en {{ meses[iActual] }} <img src="../assets/img/live.png" alt="live" srcset="../assets/img/live.png"></span>
                                 <span class="font-bold text-lg">{{ formatHoras(store.getUsuario().last_live_duration_mes_actual) }}</span>
@@ -70,17 +70,18 @@
                                 <span class="font-bold text-lg">{{ store.getUsuario().last_live.slice(0, 19) }}</span>
                             </div>
                         </div>
-
                     </div>
-                    <div class="row flex align-items-center flex-column flex-wrap">
-                        <span class="w-full word-break">Días de incorporación</span>
-                        <span class="font-bold text-lg">{{ store.getUsuario().dias_since_joining_agency.slice(0, (store.getUsuario().dias_since_joining_agency.length) - 1) + (parseInt(store.getUsuario().dias_since_joining_agency.slice(0, (store.getUsuario().dias_since_joining_agency.length) - 1)) == 1 ? ' día' : ' días') }}</span>
-
-                        <span class="w-full word-break mt-2">Fecha de incorporación</span>
-                        <span class="font-bold text-lg">{{ store.getUsuario().joined_time.slice(0, 10) }}</span>
+                    <div class="row flex align-items-center flex-column  gap-3 flex-wrap">
+                        <div class="incorporacion flex flex-column">
+                            <span class="w-full word-break">Días de incorporación</span>
+                            <span class="font-bold text-lg">{{ store.getUsuario().dias_since_joining_agency.slice(0, (store.getUsuario().dias_since_joining_agency.length) - 1) + (parseInt(store.getUsuario().dias_since_joining_agency.slice(0, (store.getUsuario().dias_since_joining_agency.length) - 1)) == 1 ? ' día' : ' días') }}</span>
+                        </div>
+                        <div class="fecha_incorporacion flex flex-column md:mt-2 xl:mt-5">
+                            <span class="w-full word-break">Fecha de incorporación</span>
+                            <span class="font-bold text-lg">{{ store.getUsuario().joined_time.slice(0, 10) }}</span>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <dialogEditarPerfil :mostrarEditar="mostrarEditar" @dialogEditarOculto="mostrarEditar = false"
@@ -214,5 +215,50 @@ export default {
 
 .bajo {
     color: red !important;
+}
+</style>
+<style>
+@media screen and (min-width:576px) and (max-width: 768px) {
+
+    .clasificacion,
+    .top {
+        height: 270px !important;
+    }
+}
+
+@media screen and (min-width: 768px) {
+
+    .clasificacion,
+    .top {
+        height: 270px !important;
+    }
+}
+
+@media screen and (max-width: 575px) {
+
+    .clasificacion,
+    .top {
+        height: 270px !important;
+    }
+
+    .xs\:flex-column {
+        flex-direction: column !important;
+    }
+
+    .xs\:flex-wrap {
+        flex-wrap: wrap !important;
+    }
+
+    .xs\:text-center {
+        text-align: center !important;
+    }
+
+    .xs\:justify-content-center {
+        justify-content: center !important;
+    }
+
+    .xs\:gap-3 {
+        gap: 3rem !important;
+    }
 }
 </style>
