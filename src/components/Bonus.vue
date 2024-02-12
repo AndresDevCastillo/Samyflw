@@ -220,8 +220,18 @@ export default {
                     };
                     this.$toast.add({ severity: 'success', summary: 'Nuevo Bonus', detail: 'Creado correctamente!', life: 1600 });
                 }).catch(error => {
-                    this.$toast.add({ severity: 'error', summary: 'Nuevo Bonus', detail: 'Ocurrio un problema inesperado!', life: 1600 });
-                })
+                    switch (error.response.data.statusCode) {
+                        case 401:
+                            //Se le termino la sesión
+                            this.store.clearUser();
+                            this.$router.push('/login');
+                            break;
+                        default:
+                            this.$toast.add({ severity: 'error', summary: 'Nuevo Bonus', detail: 'Ocurrio un problema inesperado!', life: 1600 });
+                            console.log('Error: ', error);
+                            break;
+                    }
+                });
                 this.btnBonus = false;
             }
         },
@@ -229,7 +239,17 @@ export default {
             axios.get(`${this.API}/bonus`).then((bonus) => {
                 this.tablaBonus = bonus.data;
             }).catch((error) => {
-                this.$toast.add({ severity: 'error', summary: 'Nuevo Bonus', detail: 'Ocurrio un problema inesperado!', life: 1600 });
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                    default:
+                        this.$toast.add({ severity: 'error', summary: 'Nuevo Bonus', detail: 'Ocurrio un problema inesperado!', life: 1600 });
+                        console.log('Error: ', error);
+                        break;
+                }
             });
         },
         comfirmDelete(id, nivel) {
@@ -245,8 +265,18 @@ export default {
                 this.deleteBonusID = null;
                 this.headerBonusDelete = ``;
             }).catch(error => {
-                this.toast.add({ severity: 'error', summary: 'Autorización', detail: "ocurrio un error!", life: 3000 });
-            })
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                    default:
+                        this.toast.add({ severity: 'error', summary: 'Autorización', detail: "ocurrio un error!", life: 3000 });
+                        console.log('Error: ', error);
+                        break;
+                }
+            });
         }
 
     },

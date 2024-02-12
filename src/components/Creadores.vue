@@ -76,8 +76,17 @@ export default {
                         this.$toast.add({ severity: 'error', summary: 'Subir excel', detail: response.data.message, life: 1500 });
                     }
                 }).catch(error => {
-                    this.$toast.add({ severity: 'error', summary: 'Subir excel', detail: 'Sucedió un error, no se pudo procesar el archivo', life: 1500 });
-                    console.log('Error: ', error);
+                    switch (error.response.data.statusCode) {
+                        case 401:
+                            //Se le termino la sesión
+                            this.store.clearUser();
+                            this.$router.push('/login');
+                            break;
+                        default:
+                            this.$toast.add({ severity: 'error', summary: 'Subir excel', detail: 'Sucedió un error, no se pudo procesar el archivo', life: 1500 });
+                            console.log('Error: ', error);
+                            break;
+                    }
                 });
             } else {
                 this.$toast.add({ severity: 'info', summary: 'Subir excel', detail: 'Debes escoger un archivo', life: 1500 });
@@ -95,7 +104,16 @@ export default {
             }).then(response => {
                 this.creadores = response.data;
             }).catch(error => {
-                console.log(error);
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                    default:
+                        console.log('Error: ', error);
+                        break;
+                }
             });
         }
     },

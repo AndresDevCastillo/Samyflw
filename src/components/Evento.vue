@@ -217,8 +217,17 @@ export default {
                         this.$toast.add({ severity: 'error', summary: 'Nuevo evento', detail: 'No se pudo crear el evento', life: 1500 });
                     }
                 }).catch(error => {
-                    this.$toast.add({ severity: 'error', summary: 'Nuevo evento', detail: 'Sucedió un error, no se pudo crear el evento', life: 1500 });
-                    console.log('Error: ', error);
+                    switch (error.response.data.statusCode) {
+                        case 401:
+                            //Se le termino la sesión
+                            this.store.clearUser();
+                            this.$router.push('/login');
+                            break;
+                        default:
+                            this.$toast.add({ severity: 'error', summary: 'Nuevo evento', detail: 'Sucedió un error, no se pudo crear el evento', life: 1500 });
+                            console.log('Error: ', error);
+                            break;
+                    }
                 });
                 this.btnEvento = false;
             }
@@ -275,8 +284,18 @@ export default {
                     } else {
                         this.$toast.add({ severity: 'danger', summary: 'Eliminar evento', detail: 'No se pudo eliminar el evento', life: 1500 });
                     }
-                }).catch(() => {
-                    this.$toast.add({ severity: 'danger', summary: 'Eliminar evento', detail: 'Sucedió un error, no se pudo eliminar el evento', life: 1500 });
+                }).catch(error => {
+                    switch (error.response.data.statusCode) {
+                        case 401:
+                            //Se le termino la sesión
+                            this.store.clearUser();
+                            this.$router.push('/login');
+                            break;
+                        default:
+                            this.$toast.add({ severity: 'danger', summary: 'Eliminar evento', detail: 'Sucedió un error, no se pudo eliminar el evento', life: 1500 });
+                            console.log('Error: ', error);
+                            break;
+                    }
                 });
             }
         }

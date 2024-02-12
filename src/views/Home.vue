@@ -466,12 +466,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Raleway&display=swap");
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,900');
 
-body {
+body,
+html {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   background: #0c192c;
   box-sizing: border-box;
+  scroll-behavior: smooth !important;
 }
 
 .bg {
@@ -725,5 +727,11 @@ body {
     flex: 0 0 auto;
     width: 25%;
   }
+}
+</style>
+<style>
+body,
+html {
+  scroll-behavior: smooth !important;
 }
 </style>
