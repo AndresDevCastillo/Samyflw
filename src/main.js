@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import './style.css';
 import '../node_modules/primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
-import 'primevue/resources/themes/lara-dark-purple/theme.css';
+import 'primevue/resources/themes/lara-dark-green/theme.css';
 
 import App from './App.vue';
 import PrimeVue from 'primevue/config';
