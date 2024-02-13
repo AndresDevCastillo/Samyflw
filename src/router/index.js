@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import Home from '../views/Home.vue';
 import EventoView from '../views/Evento.vue';
 import LoginEvento from '../views/Login.vue'
@@ -10,7 +10,7 @@ import Bonus from '../components/Bonus.vue'
 import Game from '../views/game/Game.vue'
 import Logingame from '../views/game/Login.vue'
 import Admingame from '../views/game/Admin.vue'
-
+import { useStoreEvento } from '../store'
 
 const routes = [
     { path: '/', name: 'Home', component: Home },
@@ -22,20 +22,38 @@ const routes = [
         name: 'Panel',
         component: Panel,
         children: [{
-            path: '/panel/evento',
-            name: 'Evento',
-            component: Evento
-        },
-        {
-            path: '/panel/creadores',
-            name: 'Creadores',
-            component: Creadores
-        },
-        {
-            path: '/panel/bonus',
-            name: 'Bonus',
-            component: Bonus
-        }
+                path: '/panel/evento',
+                name: 'Evento',
+                component: Evento,
+                beforeEnter: (to, from, next) => {
+                    const store = useStoreEvento();
+                    if (store.isActive()) {
+                        return store.isAdmin() ? next() : next(from);
+                    }
+                    return next('/login');
+                }
+            },
+            {
+                path: '/panel/creadores',
+                name: 'Creadores',
+                component: Creadores,
+                beforeEnter: (to, from, next) => {
+                    const store = useStoreEvento();
+                    if (store.isActive()) {
+                        return store.isAdmin() ? next() : next(from);
+                    }
+                    return next('/login');
+                }
+            },
+            {
+                path: '/panel/bonus',
+                name: 'Bonus',
+                component: Bonus,
+                beforeEnter: (to, from, next) => {
+                    const store = useStoreEvento();
+                    return store.isActive() ? next() : next('/login');
+                }
+            }
         ]
     },
     { path: '/duckracer', name: 'Game', component: Game },
@@ -44,7 +62,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 });
 
