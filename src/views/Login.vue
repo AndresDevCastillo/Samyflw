@@ -223,7 +223,7 @@
         <Toast />
         <div class="form-container">
             <div class="w-full flex justify-content-center">
-                <Avatar image="/assets/img/logo-samyflw.png" size="xlarge" shape="circle" />
+                <Avatar :image="'/assets/img/logo-samyflw.png'" size="xlarge" shape="circle" />
             </div>
             <p class="title mt-0">SAMYFLW</p>
             <div class="form">
