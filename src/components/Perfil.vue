@@ -9,7 +9,7 @@
         <div class="flex gap-8 w-full sm:flex-wrap xs:flex-wrap xs:justify-content-center md:flex-wrap lg:flex-nowrap sm:justify-content-center">
             <div class="flex align-items-start md:ml-8 md:pl-4 mt-4">
                 <div v-if="isTop" class="top">
-                    <Avatar :image="`/src/assets/img/cinta_${cinta}.png`" class="w-full cinta" />
+                    <Avatar :image="`/assets/img/cinta_${cinta}.png`" class="w-full cinta" />
                     <p class="text-center w-full m-0 info-grupo"><strong>Grupo {{ store.getUsuario().grupo }}</strong></p>
                     <Clasificacion class="clasificacion" :nombre="store.getUsuario().usuario" :top="infoTop.top" :tipo="infoTop.tipo" :foto="store.getUsuario().foto" />
                 </div>
@@ -172,7 +172,7 @@ export default {
             return this.subioBajo(this.getSegundos(actual), this.getSegundos(anterior));
         },
         subioBajo(actual, anterior) {
-            return parseInt(actual) > parseInt(anterior) ? '/src/assets/img/up_arrow.svg' : '/src/assets/img/down_arrow.svg';
+            return parseInt(actual) > parseInt(anterior) ? '/assets/img/up_arrow.svg' : '/assets/img/down_arrow.svg';
         },
         async getNewDatos() {
             await axios.get(`${this.API}/usuario/${this.store.getId()}`, {
