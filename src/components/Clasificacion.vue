@@ -1,6 +1,6 @@
 <template>
     <div class="clasificacion">
-        <img class="imgFondo" :src="`/src/assets/img/fondo${tipo}.png`" alt="">
+        <img class="imgFondo" :src="`/assets/img/fondo${tipo}.png`" alt="">
         <img :src="foto" class="imgProfile" alt="" />
         <div class="labelTag">
             <Tag :class="tipo" :value="nombre">
