@@ -1,40 +1,103 @@
 <template>
     <div>
-        <div>
-            <DataTable :value="creadores" tableStyle="min-width: 8rem" sortField="diamantes_mes_actual" :sortOrder="-1">
-                <template #header>
-                    <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                        <span class="text-xl text-900 font-bold">Creadores de contenido</span>
-                        <div class="flex gap-2">
-                            <Button @click="changeCreador('A')" label="A" severity="success" />
-                            <Button @click="changeCreador('B')" label="B" severity="info" />
-                            <Button @click="changeCreador('C')" label="C" severity="danger" />
-                        </div>
-                    </div>
-                    <div class="containerC">
-                        <Clasificacion :nombre="top3[1].usuario" top="2" tipo="Platino" :foto="top3[1].foto" />
-                        <Clasificacion top="1" tipo="Oro" :nombre="top3[0].usuario" :foto="top3[0].foto" />
-                        <Clasificacion :nombre="top3[2].usuario" top="3" tipo="Cobre" :foto="top3[2].foto" />
-                    </div>
+        <NavBar></NavBar>
+        <div class="evento">
+            <div v-if="spiner" class="flex w-full justify-content-center align-items-center" style="min-height: 100vh;">
+                <ProgressSpinner />
+            </div>
+            <Card v-else>
+                <template #content>
+                    <TabView>
+                        <TabPanel v-for="evento in  eventos " :header="evento.titulo">
+                            <div class="flex justify-content-around m-3  flex-wrap gap-6">
+                                <Fieldset legend="Descripción" :toggleable="true">
+                                    <p class="m-0">
+                                        {{ evento.descripcion }}
+                                    </p>
+                                </Fieldset>
+                                <Fieldset legend="Reglas" :toggleable="true">
+                                    <p class="m-0">
+                                        {{ evento.reglas }}
+                                    </p>
+                                </Fieldset>
+                                <Fieldset :legend="`${evento.fecha_inicio} | ${evento.fecha_fin}`" :toggleable="true">
+                                    <ProgressBar style="min-width: 300px;"
+                                        :value="calcularPromdioTranscurrido(evento.fecha_inicio, evento.fecha_fin)">
+                                    </ProgressBar>
+                                </Fieldset>
+                            </div>
+                            <Carousel :value="Object.values(evento.premios)" :numVisible="3" :numScroll="3"
+                                :responsiveOptions="responsiveOptions">
+                                <template #item="slotProps">
+                                    <div class="border-1 surface-border border-round m-2  p-3">
+                                        <div class="mb-3">
+                                            <div class="relative mx-auto">
+                                                <img width="100%" style="min-width: 300px;" height="350px"
+                                                    :src="slotProps.data.imagen" :alt="slotProps.data.descripcion"
+                                                    class="border-round" />
+                                                <Tag :value="'Puesto ' + (slotProps.index + 1)" class="absolute"
+                                                    style="left:5px; top: 5px" />
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 font-medium">{{ slotProps.data.descripcion }}</div>
+
+                                    </div>
+                                </template>
+                            </Carousel>
+                        </TabPanel>
+
+                    </TabView>
+                    <DataTable :value="creadores" tableStyle="min-width: 8rem" sortField="diamantes_mes_actual"
+                        :sortOrder="-1">
+                        <template #header>
+                            <div class="flex flex-wrap align-items-center justify-content-between gap-2">
+                                <span class="text-xl text-900 font-bold">Creadores de contenido</span>
+                                <div class="flex gap-2">
+                                    <Button @click="changeCreador('A')" label="A" severity="success" />
+                                    <Button @click="changeCreador('B')" label="B" severity="info" />
+                                    <Button @click="changeCreador('C')" label="C" severity="danger" />
+                                </div>
+                            </div>
+                            <div class="containerC">
+                                <Clasificacion :nombre="top3[1].usuario" top="2" tipo="Platino" :foto="top3[1].foto" />
+                                <Clasificacion top="1" tipo="Oro" :nombre="top3[0].usuario" :foto="top3[0].foto" />
+                                <Clasificacion :nombre="top3[2].usuario" top="3" tipo="Cobre" :foto="top3[2].foto" />
+                            </div>
+                        </template>
+                        <Column header="#" headerStyle="width:3rem">
+                            <template #body="slotProps">
+                                {{ slotProps.index + 1 }}
+                            </template>
+                        </Column>
+                        <Column field="usuario" header="Creador">
+                            <template #body="slotProps">
+                                <InlineMessage v-if="slotProps.index == 0" icon="pi pi-star" severity="warn"> {{
+                                    slotProps.data.usuario }}
+                                </InlineMessage>
+                                <InlineMessage v-else-if="slotProps.index == 1" icon="pi pi-star" severity="error"> {{
+                                    slotProps.data.usuario }}
+                                </InlineMessage>
+                                <InlineMessage v-else-if="slotProps.index == 2" icon="pi pi-star" severity="info"> {{
+                                    slotProps.data.usuario }}
+                                </InlineMessage>
+                                <p v-else> {{ slotProps.data.usuario }}</p>
+                            </template>
+                        </Column>
+                        <Column field="diamantes_mes_actual" header="Puntos"></Column>
+                        <Column field="diamantes_mes_anterior" header="Puntos Mes Anterior"></Column>
+                        <Column field="grupo" header="Grupo">
+                            <template #body="slotProps">
+                                <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success">
+                                </Badge>
+                                <Badge v-if="slotProps.data.grupo == 'B'" :value="slotProps.data.grupo" severity="info">
+                                </Badge>
+                                <Badge v-if="slotProps.data.grupo == 'C'" :value="slotProps.data.grupo" severity="danger">
+                                </Badge>
+                            </template>
+                        </Column>
+                    </DataTable>
                 </template>
-                <Column header="#" headerStyle="width:3rem">
-                    <template #body="slotProps">
-                        {{ slotProps.index + 1 }}
-                    </template>
-                </Column>
-                <Column field="usuario" header="Creador"></Column>
-                <Column field="diamantes_mes_actual" header="Puntos"></Column>
-                <Column field="diamantes_mes_anterior" header="Puntos Mes Anterior"></Column>
-                <Column field="grupo" header="Grupo">
-                    <template #body="slotProps">
-                        <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success">
-                        </Badge>
-                        <Badge v-if="slotProps.data.grupo == 'B'" :value="slotProps.data.grupo" severity="info"></Badge>
-                        <Badge v-if="slotProps.data.grupo == 'C'" :value="slotProps.data.grupo" severity="danger">
-                        </Badge>
-                    </template>
-                </Column>
-            </DataTable>
+            </Card>
         </div>
     </div>
 </template>
@@ -52,6 +115,7 @@ export default {
     name: 'EventoView',
     data: () => ({
         API: import.meta.env.VITE_APP_API,
+        spiner: true,
         eventos: [],
         eventosLabel: [],
         arrayCreadores: [],
@@ -117,6 +181,22 @@ export default {
                 }
             }
         },
+        calcularPromdioTranscurrido(fechaInicio, fechaFin) {
+            let fechaI = new Date(fechaInicio);
+            let fechaF = new Date(fechaFin);
+
+            let fechaActual = new Date();
+
+            const tiempoTranscurrido = fechaActual - fechaI;
+
+            const tiempoTotal = fechaF - fechaI;
+
+            let porcentajeTranscurrido = (tiempoTranscurrido / tiempoTotal) * 100;
+
+            porcentajeTranscurrido = Math.ceil(porcentajeTranscurrido);
+            console.log(porcentajeTranscurrido);
+            return porcentajeTranscurrido;
+        }
     },
     async created() {
         await axios.get(`${this.API}/usuario/agrupados`).then((resp) => {
@@ -146,6 +226,36 @@ export default {
                 });
             });
         });
+        this.spiner = false;
     },
 };
 </script>
+<style>
+.evento {
+    margin-top: 80px;
+}
+
+.p-fieldset-legend-text {
+    color: var(--primary-color);
+}
+
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a .p-fieldset-toggler {
+    color: var(--primary-color);
+}
+
+.text-900 {
+    color: var(--primary-color) !important;
+}
+
+.p-datatable .p-column-header-content {
+    color: var(--primary-color) !important;
+}
+
+.p-fieldset {
+    border: 1px solid var(--primary-color);
+}
+
+.p-fieldset .p-fieldset-legend {
+    border: 1px solid var(--primary-color);
+}
+</style>
