@@ -230,13 +230,13 @@ export default {
     },
 };
 </script>
-<style>
+<style scoped>
 .evento {
     margin-top: 80px;
 }
 
-.p-fieldset-legend-text {
-    color: var(--primary-color);
+.evento .p-fieldset-legend-text {
+    color: var(--primary-color) !important;
 }
 
 .p-fieldset.p-fieldset-toggleable .p-fieldset-legend a .p-fieldset-toggler {
@@ -244,6 +244,10 @@ export default {
 }
 
 .text-900 {
+    color: var(--primary-color) !important;
+}
+
+.p-column-title {
     color: var(--primary-color) !important;
 }
 
@@ -257,5 +261,10 @@ export default {
 
 .p-fieldset .p-fieldset-legend {
     border: 1px solid var(--primary-color);
+}
+
+.p-tabview-nav-container {
+    display: flex;
+    justify-content: center;
 }
 </style>

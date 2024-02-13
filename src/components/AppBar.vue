@@ -24,7 +24,7 @@
         <Menubar class="appBar" :model="sinMenu">
             <template #start>
                 <div class="flex gap-2 align-items-center">
-                    <Button icon="pi pi-bars" @click="visibleSidebar = true" />
+                    <Button icon="pi pi-bars" text size="large" @click="visibleSidebar = true" />
                     <span class="text-2xl font-bold logo"><span>Samy</span>flw</span>
                 </div>
             </template>
