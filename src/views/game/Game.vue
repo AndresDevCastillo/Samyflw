@@ -21,7 +21,7 @@
             <option value="1800000">30 Minutos</option>
           </select>
         </div>
-        <button class="sign" type="button" @click="startGame()">
+        <button :disabled="btnDisable" class="sign" type="button" @click="startGame()">
           Ingresar
         </button>
       </div>
@@ -113,6 +113,7 @@ export default {
     VueCountdown,
   },
   data: () => ({
+    btnDisable: false,
     game: null,
     usuario: null,
     tiempo: null,
@@ -136,10 +137,12 @@ export default {
       if (this.usuario == null || this.usuario == "" || this.tiempo == null) {
         return;
       }
+      this.btnDisable = true;
       let exist = false;
       await axios.get(`${this.API}/user/acount/${this.usuario}`).then(resp => {
         exist = resp.data;
       })
+      this.btnDisable = false;
       if (!exist) {
         this.toast.add({ severity: 'error', summary: 'Usuario No Registrado!', detail: 'Comuniquese con la agencia samyflw', life: 5000 });
         return;

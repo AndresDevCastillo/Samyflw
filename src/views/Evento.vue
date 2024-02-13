@@ -32,9 +32,8 @@
                                     <div class="border-1 surface-border border-round m-2  p-3">
                                         <div class="mb-3">
                                             <div class="relative mx-auto">
-                                                <img width="100%" style="min-width: 300px;" height="350px"
-                                                    :src="slotProps.data.imagen" :alt="slotProps.data.descripcion"
-                                                    class="border-round" />
+                                                <img width="100%" :src="slotProps.data.imagen"
+                                                    :alt="slotProps.data.descripcion" class="border-round imgPremio" />
                                                 <Tag :value="'Puesto ' + (slotProps.index + 1)" class="absolute"
                                                     style="left:5px; top: 5px" />
                                             </div>
@@ -52,6 +51,8 @@
                         <template #header>
                             <div class="flex flex-wrap align-items-center justify-content-between gap-2">
                                 <span class="text-xl text-900 font-bold">Creadores de contenido</span>
+                                <InlineMessage icon="pi pi-verified" severity="success">GRUPO {{ creadores[0].grupo }}
+                                </InlineMessage>
                                 <div class="flex gap-2">
                                     <Button @click="changeCreador('A')" label="A" severity="success" />
                                     <Button @click="changeCreador('B')" label="B" severity="info" />
@@ -233,6 +234,17 @@ export default {
 <style scoped>
 .evento {
     margin-top: 80px;
+}
+
+.imgPremio {
+    height: 300px;
+}
+
+@media (max-width: 739px) {
+
+    .imgPremio {
+        height: 200px;
+    }
 }
 
 .evento .p-fieldset-legend-text {

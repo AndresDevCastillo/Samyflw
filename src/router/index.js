@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from '../views/Home.vue';
 import EventoView from '../views/Evento.vue';
 import LoginEvento from '../views/Login.vue'
+import Registro from '../views/Registro.vue';
 import Panel from '../views/Panel.vue'
 import Evento from '../components/Evento.vue'
 import Creadores from '../components/Creadores.vue'
@@ -15,6 +16,7 @@ const routes = [
     { path: '/', name: 'Home', component: Home },
     { path: '/evento', name: 'EventoView', component: EventoView },
     { path: '/login', name: 'LoginEvento', component: LoginEvento },
+    { path: '/registro', name: 'RegistroEvento', component: Registro },
     {
         path: '/panel',
         name: 'Panel',

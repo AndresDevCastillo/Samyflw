@@ -1,12 +1,33 @@
 <template>
     <div class="navbar">
+        <Sidebar v-model:visible="visibleSidebar">
+            <Menu :model="itemsMenu" class="w-full">
+                <!-- <template #start>
+                    <span class="inline-flex items-center gap-1 px-2 py-2 w-full sm:w-[15rem]">
+                        <span class="text-2xl font-bold logo"><span>Samy</span>flw</span>
+                    </span>
+                </template> -->
+                <template #submenuheader="{ item }">
+                    <span class="text-primary-500 dark:text-primary-400 font-bold leading-none">{{ item.label }}</span>
+                </template>
+                <template #item="{ item, props }">
+                    <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                        <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                            <span :class="item.icon" />
+                            <span class="ml-2">{{ item.label }}</span>
+                        </a>
+                    </router-link>
+                </template>
+            </Menu>
+        </Sidebar>
         <header>
             <a href="" class="logo"> <span>Samy</span>flw</a>
             <nav>
                 <a href="/duckracer">Juegos</a>
                 <a href="#footer">Redes Sociales</a>
                 <a href="/evento">Eventos</a>
-                <a href="/login">Agencia</a>
+                <a href="/login">Ingresar</a>
+                <Button icon="pi pi-bars" class="botonMenu" text size="large" @click="visibleSidebar = true" />
             </nav>
         </header>
     </div>
@@ -15,7 +36,44 @@
 
 export default {
     data: () => ({
-
+        visibleSidebar: false,
+        itemsMenu: [
+            {
+                separator: true
+            },
+            {
+                label: 'Creadores',
+                items: [
+                    {
+                        label: 'Ingresar',
+                        icon: 'pi pi-users',
+                        route: '/login',
+                    },
+                ]
+            },
+            {
+                label: 'Eventos',
+                items: [
+                    {
+                        label: 'Eventos Activos',
+                        icon: 'pi pi-desktop',
+                        route: '/evento'
+                    }
+                ]
+            },
+            {
+                separator: true
+            },
+            {
+                label: 'Juegos',
+                items: [
+                    {
+                        label: 'DuckRacer',
+                        icon: 'pi pi-caret-right',
+                        route: '/duckracer',
+                    },]
+            }
+        ]
     })
 }
 </script>
@@ -50,11 +108,18 @@ header nav {
     gap: 25px;
 }
 
-@media (max-width: 539px) {
+.botonMenu {
+    display: none;
+}
 
-    header nav {
+@media (max-width: 739px) {
+
+    header nav a {
         display: none;
-        gap: 25px;
+    }
+
+    .botonMenu {
+        display: flex;
     }
 }
 

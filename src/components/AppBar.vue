@@ -11,8 +11,8 @@
                     <span class="text-primary-500 dark:text-primary-400 font-bold leading-none">{{ item.label }}</span>
                 </template>
                 <template #item="{ item, props }">
-                    <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-                        <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                    <router-link :to="item.route" v-slot="{ href }" custom>
+                        <a v-ripple :href="href" v-bind="props.action" @click="actionMenu(item.action)">
                             <span :class="item.icon" />
                             <span class="ml-2">{{ item.label }}</span>
                         </a>
@@ -101,7 +101,10 @@ export default {
             this.$refs.menu.toggle(event);
         },
         actionMenu(action) {
-            action = action.toLowerCase();
+            this.visibleSidebar = false;
+            if (action) {
+                action = action.toLowerCase();
+            }
             switch (action) {
                 case 'perfil':
                     this.mostrarPerfil = true;
@@ -189,16 +192,20 @@ export default {
                         {
                             label: 'Mi perfil',
                             icon: 'pi pi-user',
-                            route: 'perfil',
+                            action: 'perfil',
+                            route: '#action'
+
                         },
                         {
                             label: 'Editar perfil',
                             icon: 'pi pi-user-edit',
-                            route: 'editar_perfil',
+                            action: 'editar_perfil',
+                            route: '#action'
                         }, {
                             label: 'Cerrar sesión',
                             icon: 'pi pi-sign-out',
-                            route: 'cerrar_sesión',
+                            action: 'cerrar_sesión',
+                            route: '#action'
                         }]
                 }
             ];
@@ -243,16 +250,16 @@ export default {
                         {
                             label: 'Mi perfil',
                             icon: 'pi pi-user',
-                            route: 'perfil',
+                            action: 'perfil',
                         },
                         {
                             label: 'Editar perfil',
                             icon: 'pi pi-user-edit',
-                            route: 'editar_perfil',
+                            action: 'editar_perfil',
                         }, {
                             label: 'Cerrar sesión',
                             icon: 'pi pi-sign-out',
-                            route: 'cerrar_sesión',
+                            action: 'cerrar_sesión',
                         }]
                 }
             ];
@@ -272,7 +279,7 @@ export default {
     }
 };
 </script>
-<style>
+<style >
 .appBar {
     background-color: #1f2937 !important;
     border-radius: 0 !important;
