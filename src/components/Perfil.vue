@@ -6,7 +6,7 @@
                 <Button label="Editar perfil" icon="pi pi-user-edit" @click="mostrarEditar = true" />
             </div>
         </template>
-        <div class="flex gap-8 w-full sm:flex-wrap xs:flex-wrap xs:justify-content-center md:flex-wrap lg:flex-nowrap sm:justify-content-center">
+        <div class="flex pb-7 gap-8 w-full sm:flex-wrap xs:flex-wrap xs:justify-content-center md:flex-wrap lg:flex-nowrap sm:justify-content-center">
             <div class="flex align-items-start md:ml-8 md:pl-4 mt-4">
                 <div v-if="isTop" class="top">
                     <Avatar :image="`/assets/img/cinta_${cinta}.png`" class="w-full cinta" />
