@@ -127,8 +127,18 @@ export default {
             }).then(response => {
                 this.usuarioLog.usuario = response.data.usuario;
                 this.usuarioLog.rol = response.data.rol;
-            }).catch(error => {
-                console.log('Error: ', error);
+            }).catch((error) => {
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                    default:
+                        this.$toast.add({ severity: 'error', summary: 'Datos del usuario', detail: 'Ocurrió un problema inesperado!', life: 1600 });
+                        console.log('Error: ', error);
+                        break;
+                }
             });
         },
         async getNewDatos() {
@@ -138,6 +148,14 @@ export default {
                 }
             }).then(response => {
                 this.store.newDatos(response.data);
+            }).catch((error) => {
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                }
             });
         },
         cerrarSesion() {
