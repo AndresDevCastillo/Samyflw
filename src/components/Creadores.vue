@@ -4,7 +4,10 @@
         <template #header>
             <div class="flex items-center gap-2 flex-end w-full justify-content-between">
                 <h1 class="m-0">Creadores</h1>
-                <Button label="Excel" icon="pi pi-plus" @click="modalExcel = true" />
+                <div class="botones flex gap-2">
+                    <Button label="Insignias" icon="pi pi-star" @click="modalInsignias = true" />
+                    <Button label="Excel" icon="pi pi-plus" @click="modalExcel = true" />
+                </div>
             </div>
         </template>
         <DataTable :value="creadores" sortField="diamantes_mes_actual" :sortOrder="-1" paginator :rows="5"
@@ -38,6 +41,24 @@
                 <Button label="Subir" @click="subirExcel" :disabled="btnSubirExcel" severity="success" />
             </template>
         </Dialog>
+        <!-- Modal de las insignias -->
+        <Dialog v-model:visible="modalInsignias" header="Subir Insignias" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+
+            <form ref="formInsignias" enctype="multipart/form-data">
+                <div class="flex flex-column gap-1 mb-2">
+                    <label for="excel" class="font-bold block">Insignias</label>
+                    <InputText type="file" id="insignia" accept="image/*" @change="asignarInsignia" required
+                        aria-describedby="excel-help" />
+                    <small id="excel-help">El archivo debe ser .extensiones de imagenes</small>
+                    {{ paqueteInsignias.insignia }}
+                </div>
+            </form>
+            <template #footer>
+                <Button label="Cancelar" @click="modalInsignias = false" text severity="danger" autofocus />
+                <Button label="Subir" @click="subirInsignia" :disabled="btnSubirInsignia" severity="success" />
+            </template>
+        </Dialog>
     </Panel>
 </template>
 <script>
@@ -48,15 +69,23 @@ export default {
         API: import.meta.env.VITE_APP_API,
         store: null,
         modalExcel: false,
+        modalInsignias: false,
         btnSubirExcel: false,
+        btnSubirInsignia: false,
         creadores: [],
         paquete: {
             excel: null
+        },
+        paqueteInsignias: {
+            insignia: null
         }
     }),
     methods: {
         asignarExcel(event) {
             this.paquete.excel = event.target.files[0];
+        },
+        asignarInsignia(event) {
+            this.paqueteInsignias.insignia = event.target.files[0];
         },
         async subirExcel() {
             this.btnSubirExcel = true;
@@ -95,6 +124,42 @@ export default {
             this.btnSubirExcel = false;
             console.log('valido');
 
+        },
+        async subirInsignia() {
+            this.btnSubirInsignia = true;
+            if (this.paqueteInsignias.insignia) {
+                await axios.post(`${this.API}/usuario/subirInsignia`, this.paqueteInsignias, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${this.store.getToken()}`
+                    }
+                }).then(response => {
+                    if (response.data) {
+                        this.modalInsignias = false;
+                        this.$refs.formInsignias.reset();
+                        this.$toast.add({ severity: 'success', summary: 'Subir insignias', detail: response.data.message, life: 1500 });
+                    } else {
+                        this.$toast.add({ severity: 'error', summary: 'Subir insignias', detail: response.data.message, life: 1500 });
+                    }
+                }).catch(error => {
+                    switch (error.response.data.statusCode) {
+                        case 401:
+                            //Se le termino la sesión
+                            this.store.clearUser();
+                            this.$router.push('/login');
+                            break;
+                        default:
+                            this.$toast.add({ severity: 'error', summary: 'Subir insignias', detail: 'Sucedió un error, no se pudo procesar el archivo', life: 1500 });
+                            console.log('Error: ', error);
+                            break;
+                    }
+                });
+            } else {
+                this.$toast.add({ severity: 'info', summary: 'Subir insignias', detail: 'Debes escoger un archivo', life: 1500 });
+            }
+
+            this.btnSubirInsignia = false;
+            console.log('valido');
         },
         async getCreadores() {
             await axios.get(`${this.API}/usuario`, {

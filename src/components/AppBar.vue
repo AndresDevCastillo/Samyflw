@@ -64,6 +64,7 @@
         <dialogMiPerfil :mostrarMiPerfil="mostrarPerfil" @dialogPerfilOculto="mostrarPerfil = false" />
         <dialogEditarPerfil :mostrarEditar="mostrarEditar" @dialogEditarOculto="mostrarEditar = false"
             @perfilActualizado="getNewDatos" />
+        <Insignias :mostrarInsigniasProp="mostrarInsignias" @dialogOculto="mostrarInsignias = false"></Insignias>
     </div>
 </template>
 
@@ -72,10 +73,12 @@ import axios from 'axios';
 import { useStoreEvento } from '../store';
 import dialogMiPerfil from './MiPerfil.vue';
 import dialogEditarPerfil from './EditarPerfil.vue';
+import Insignias from './Insignias.vue';
 export default {
     components: {
         dialogMiPerfil,
         dialogEditarPerfil,
+        Insignias
     },
     data: () => ({
         API: import.meta.env.VITE_APP_API,
@@ -85,6 +88,7 @@ export default {
         itemsUsuario: [
 
         ],
+        mostrarInsignias: false,
         mostrarPerfil: false,
         mostrarEditar: false,
         usuarioLog: {
@@ -116,6 +120,9 @@ export default {
 
                 case 'cerrar_sesión':
                     this.cerrarSesion();
+                    break;
+                case 'insignia_abrir':
+                    this.mostrarInsignias = true;
                     break;
             }
         },
@@ -208,6 +215,13 @@ export default {
                     label: 'Administración',
                     items: [
                         {
+                            label: 'Insignias',
+                            icon: 'pi pi-star',
+                            action: 'insignia_abrir',
+                            route: '#action'
+                        },
+
+                        {
                             label: 'Mi perfil',
                             icon: 'pi pi-user',
                             action: 'perfil',
@@ -224,7 +238,8 @@ export default {
                             icon: 'pi pi-sign-out',
                             action: 'cerrar_sesión',
                             route: '#action'
-                        }]
+                        },
+                    ]
                 }
             ];
             this.itemsUsuario = [

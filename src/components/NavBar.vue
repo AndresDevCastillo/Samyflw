@@ -23,10 +23,11 @@
         <header>
             <a href="" class="logo"> <span>Samy</span>flw</a>
             <nav>
-                <a href="/duckracer">Juegos</a>
+                <router-link to="/duckracer">Juegos</router-link>
+                <a></a>
                 <a href="#footer">Redes Sociales</a>
-                <a href="/evento">Eventos</a>
-                <a href="/login">Ingresar</a>
+                <router-link to="/evento">Eventos</router-link>
+                <router-link to="/login">Agencia</router-link>
                 <Button icon="pi pi-bars" class="botonMenu" text size="large" @click="visibleSidebar = true" />
             </nav>
         </header>

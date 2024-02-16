@@ -51,7 +51,9 @@
                         <template #header>
                             <div class="flex flex-wrap align-items-center justify-content-between gap-2">
                                 <span class="text-xl text-900 font-bold">Creadores de contenido</span>
-                                <InlineMessage icon="pi pi-verified" severity="success">GRUPO {{ creadores[0].grupo }}
+                                <InlineMessage class="text-inline-evento" icon="pi pi-vedied" severity="success">
+                                    GRUPO {{
+                                        creadores[0].grupo }}
                                 </InlineMessage>
                                 <div class="flex gap-2">
                                     <Button @click="changeCreador('A')" label="A" severity="success" />
