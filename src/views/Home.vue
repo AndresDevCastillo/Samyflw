@@ -503,7 +503,7 @@
             </div>
             <DataTable :value="clasificados" tableStyle="min-width: 100%">
 
-              <Column field="usuario" header="Creador Destacado" sortable>
+              <Column field="usuario" header="Creador Destacado">
                 <template #body="slotProps">
                   {{ `${slotProps.index + 1} - ${slotProps.data.usuario}` }}
                 </template>
@@ -511,14 +511,14 @@
               <Column header="Insignias Obtenidas ⭐">
                 <template #body="slotProps">
                   <div class="misInsignias flex w-full gap-1 flex-wrap justify-content-start">
-                    <Avatar v-for="(insignia, index) in slotProps.data.insignias" :key="index" size="large"
-                      shape="circle">
-                      <img :src="insignia" :alt="`Insignia ${index + 1}`">
+                    <Avatar v-for="(insignia, index) in slotProps.data.insignias" :key="index" size="large" shape="circle"
+                      v-tooltip="insignia.descripcion">
+                      <img :src="insignia.secure_url" :alt="`Insignia ${index + 1}`">
                     </Avatar>
                   </div>
                 </template>
               </Column>
-              <Column field="grupo" header="Grupo" sortable>
+              <Column field="grupo" header="Grupo">
                 <template #body="slotProps">
                   <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success"></Badge>
                   <Badge v-if="slotProps.data.grupo == 'B'" :value="slotProps.data.grupo" severity="info"></Badge>

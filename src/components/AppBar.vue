@@ -25,7 +25,8 @@
             <template #start>
                 <div class="flex gap-2 align-items-center">
                     <Button icon="pi pi-bars" text size="large" @click="visibleSidebar = true" />
-                    <span class="text-2xl font-bold logo"><span>Samy</span>flw</span>
+                    <a href="/" style="text-decoration: none;"><span
+                            class="text-2xl font-bold logo"><span>Samy</span>flw</span></a>
                 </div>
             </template>
             <template #end>
