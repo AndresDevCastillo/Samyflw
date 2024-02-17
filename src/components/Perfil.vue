@@ -7,8 +7,8 @@
             </div>
         </template>
         <div class="flex pb-7 gap-8 w-full sm:flex-wrap xs:flex-wrap xs:justify-content-center md:flex-wrap lg:flex-nowrap sm:justify-content-center">
-            <div class="flex align-items-start md:ml-8 md:pl-4 mt-4">
-                <div v-if="isTop" class="top">
+            <div class="flex align-items-center md:ml-8 md:pl-4 mt-4 flex-column gap-2">
+                <div v-if="isTop" class="top mb-6">
                     <Avatar :image="`/assets/img/cinta_${cinta}.png`" class="w-full cinta" />
                     <p class="text-center w-full m-0 info-grupo"><strong>Grupo {{ store.getUsuario().grupo }}</strong></p>
                     <Clasificacion class="clasificacion" :nombre="store.getUsuario().usuario" :top="infoTop.top" :tipo="infoTop.tipo" :foto="store.getUsuario().foto" />
@@ -22,6 +22,11 @@
                     <p class="text-center w-full m-0 font-bold">Grupo {{ store.getUsuario().grupo }}</p>
                     <Avatar icon="pi pi-user" size="xlarge" shape="circle" />
                     <p class="text-center w-full m-0 font-bold">{{ store.getUsuario().usuario }}</p>
+                </div>
+                <div :class="`misInsignias flex w-full gap-1 ${store.getUsuario().insignias.length > 4 ? 'flex-wrap justify-content-start' : 'justify-content-center'}`">
+                    <Avatar v-for="(insignia, index) in store.getUsuario().insignias" :key="index" size="large" shape="circle">
+                        <img :src="insignia" :alt="`Insignia ${index + 1}`">
+                    </Avatar>
                 </div>
             </div>
             <div class="w-full">

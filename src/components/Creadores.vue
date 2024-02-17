@@ -201,8 +201,9 @@ export default {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${this.store.getToken()}`
                     }
-                }).then(response => {
+                }).then(async response => {
                     if (response.data) {
+                        await this.getInsignias();
                         this.modalInsignias = false;
                         this.$refs.formInsignias.reset();
                         this.$toast.add({ severity: 'success', summary: 'Subir insignias', detail: response.data.message, life: 1500 });
