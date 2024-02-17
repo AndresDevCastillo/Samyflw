@@ -73,12 +73,12 @@
       <div class="flex gap-6 flex-wrap justify-content-center">
         <div style="width: 120px; height: 200px" v-for="insignia in insignias" :key="insignia.secure_url">
           <div class="relative flex justify-content-center" style="margin-bottom: 10px">
-            <img width="120px" height="120px" :src="insignia.secure_url" alt="Insignia"
-              class="border-round imgInsignias" />
+            <img width="120px" height="120px" :src="insignia.secure_url" alt="Insignia" class="border-round imgInsignias"
+              v-tooltip="insignia.descripcion" />
           </div>
           <div class="flex justify-content-center align-items-center">
             <Checkbox v-model="paqueteActualizarInsigniasUsuario.selectedInsignias" :inputId="insignia.secure_url"
-              :value="insignia.secure_url" />
+              :value="insignia" />
           </div>
         </div>
       </div>
