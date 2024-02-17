@@ -25,7 +25,7 @@
                     <Avatar icon="pi pi-user" size="xlarge" shape="circle" />
                     <p class="text-center w-full m-0 font-bold">{{ store.getUsuario().usuario }}</p>
                 </div>
-                <h3>Insignias Obtenidas</h3>
+                <h3 class="m-0" style="width: max-content !important;">Insignias Obtenidas</h3>
                 <div
                     :class="`misInsignias flex w-full gap-1 ${store.getUsuario().insignias.length > 4 ? 'flex-wrap justify-content-start' : 'justify-content-center'}`">
                     <Avatar v-for="(insignia, index) in store.getUsuario().insignias" :key="index" size="large"
