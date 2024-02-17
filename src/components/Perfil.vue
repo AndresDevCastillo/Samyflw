@@ -86,7 +86,7 @@
                                     <span
                                         :class="'ml-1 text-sm font-bold ' + porcentaje(store.getUsuario().porcentaje_achieved_2)">{{
                                             store.getUsuario().porcentaje_achieved_2 }}
-                                        <img :src="subioBajo(store.getUsuario().last_live_duration_mes_actual, store.getUsuario().last_live_duration_mes_anterior)"
+                                        <img :src="mayorTiempo(store.getUsuario().last_live_duration_mes_actual, store.getUsuario().last_live_duration_mes_anterior)"
                                             class="svg" />
                                     </span>
                                 </span>
@@ -95,6 +95,22 @@
                                 <span class="w-full word-break flex gap-2 align-items-center">Último LIVE <img
                                         src="../assets/img/last_hour.svg" srcset="../assets/img/last_hour.svg"></span>
                                 <span class="font-bold text-lg">{{ store.getUsuario().last_live.slice(0, 19) }}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-content-between column-gap-3 row-gap-2 mt-4 flex-wrap">
+                            <div class="dias_habiles_actual flex flex-column">
+                                <span class="w-full word-break">Días hábiles en {{ meses[iActual] }}</span>
+                                <span class="font-bold text-lg">{{ store.getUsuario().dias_validos_mes_actual }} {{ parseInt(store.getUsuario().dias_validos_mes_actual) == 1 ? 'día' : 'días' }}
+                                    <span :class="'ml-1 text-sm ' + porcentaje(store.getUsuario().porcentaje_achieved_3)">{{
+                                        store.getUsuario().porcentaje_achieved_3 }}
+                                        <img :src="subioBajo(store.getUsuario().dias_validos_mes_actual, store.getUsuario().dias_validos_mes_anterior)"
+                                            class="svg" />
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="dias_habiles_anterior flex flex-column">
+                                <span class="w-full word-break">Días hábiles en {{ meses[iAnterior] }}</span>
+                                <span class="font-bold text-lg">{{ store.getUsuario().dias_validos_mes_anterior }} {{ parseInt(store.getUsuario().dias_validos_mes_anterior) == 1 ? 'día' : 'días' }}</span>
                             </div>
                         </div>
                     </div>
@@ -200,6 +216,8 @@ export default {
             return segundos;
         },
         mayorTiempo(actual, anterior) {
+            console.log(actual, anterior);
+
             return this.subioBajo(this.getSegundos(actual), this.getSegundos(anterior));
         },
         subioBajo(actual, anterior) {
