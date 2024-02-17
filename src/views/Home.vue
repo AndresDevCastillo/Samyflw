@@ -460,8 +460,6 @@
       <section id="clasificados">
         <div>
           <Panel :unstyled="true">
-
-
             <template #header>
               <div class="containerC" style="margin-bottom: 20px;">
                 <Clasificacion :nombre="clasificados[1].usuario" top="2" tipo="Platino" :foto="clasificados[1].foto" />
@@ -544,13 +542,13 @@ export default {
     API: import.meta.env.VITE_APP_API,
     clasificados: [
       {
-        usuario: '',
+        usuario: 'x',
         foto: ''
       }, {
-        usuario: '',
+        usuario: 'x',
         foto: ''
       }, {
-        usuario: '',
+        usuario: 'x',
         foto: ''
       }
     ],
