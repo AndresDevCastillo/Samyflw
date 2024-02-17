@@ -5,7 +5,7 @@
             <div class="flex items-center gap-2 flex-end w-full justify-content-between">
                 <h1 class="m-0">Creadores</h1>
                 <div class="botones flex gap-2">
-                    <Button label="Insignias" icon="pi pi-star" @click="modalInsignias = true" />
+                    <Button label="Insignias" icon="pi pi-plus" @click="modalInsignias = true" />
                     <Button label="Excel" icon="pi pi-plus" @click="modalExcel = true" />
                 </div>
             </div>
@@ -22,6 +22,12 @@
             </Column>
             <Column field="diamantes_mes_actual" header="Diamantes en el mes" sortable />
             <Column field="diamantes_mes_anterior" header="Diamantes del mes anterior" sortable />
+            <Column header="⭐">
+                <template #body="slotProps">
+                    <Button icon="pi pi-star" severity="warning"
+                        @click="abrirModalInsigniasActualizar(slotProps.data.insignias, slotProps.data._id)" />
+                </template>
+            </Column>
         </DataTable>
         <!-- Modal agregar evento -->
         <Dialog v-model:visible="modalExcel" header="Subir excel" :style="{ width: '50rem' }"
@@ -51,12 +57,31 @@
                     <InputText type="file" id="insignia" accept="image/*" @change="asignarInsignia" required
                         aria-describedby="excel-help" />
                     <small id="excel-help">El archivo debe ser .extensiones de imagenes</small>
-                    {{ paqueteInsignias.insignia }}
                 </div>
             </form>
             <template #footer>
                 <Button label="Cancelar" @click="modalInsignias = false" text severity="danger" autofocus />
                 <Button label="Subir" @click="subirInsignia" :disabled="btnSubirInsignia" severity="success" />
+            </template>
+        </Dialog>
+        <Dialog v-model:visible="modalInsigniasUser" header="Actualizar Insignias" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+            <div class="flex gap-6 flex-wrap justify-content-center">
+                <div style="width: 120px; height: 200px" v-for="insignia in insignias" :key="insignia.secure_url">
+                    <div class="relative flex justify-content-center" style="margin-bottom: 10px;">
+                        <img width="120px" height="120px" :src="insignia.secure_url" alt="Insignia"
+                            class="border-round imgInsignias" />
+                    </div>
+                    <div class="flex justify-content-center align-items-center">
+                        <Checkbox v-model="paqueteActualizarInsigniasUsuario.selectedInsignias"
+                            :inputId="insignia.secure_url" :value="insignia.secure_url" />
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Cancelar" @click="modalInsigniasUser = false" text severity="danger" autofocus />
+                <Button label="Actualizar" @click="actualizarInsigniasUser()" :disabled="btnActualizarInsignia"
+                    severity="success" />
             </template>
         </Dialog>
     </Panel>
@@ -69,9 +94,16 @@ export default {
         API: import.meta.env.VITE_APP_API,
         store: null,
         modalExcel: false,
+        insignias: [],
+        paqueteActualizarInsigniasUsuario: {
+            selectedInsignias: [],
+            id: null,
+        },
         modalInsignias: false,
+        modalInsigniasUser: false,
         btnSubirExcel: false,
         btnSubirInsignia: false,
+        btnActualizarInsignia: false,
         creadores: [],
         paquete: {
             excel: null
@@ -86,6 +118,42 @@ export default {
         },
         asignarInsignia(event) {
             this.paqueteInsignias.insignia = event.target.files[0];
+        },
+        abrirModalInsigniasActualizar(insignias, id) {
+            this.paqueteActualizarInsigniasUsuario.selectedInsignias = insignias;
+            this.paqueteActualizarInsigniasUsuario.id = id;
+            this.modalInsigniasUser = true;
+        },
+        async actualizarInsigniasUser() {
+            this.btnActualizarInsignia = true;
+            await axios.post(`${this.API}/usuario/actualizarInsignias`, {
+                id: this.paqueteActualizarInsigniasUsuario.id,
+                insignias: this.paqueteActualizarInsigniasUsuario.selectedInsignias
+            }, {
+                headers: {
+                    Authorization: `Bearer ${this.store.getToken()}`
+                }
+            }).then(response => {
+                if (response.data) {
+                    this.$toast.add({ severity: 'success', summary: 'Actualizar insignias', detail: "Se actualizo correctamente", life: 1500 });
+                } else {
+                    this.$toast.add({ severity: 'error', summary: 'Actualizar insignias', detail: "Comuniquese con soporte", life: 1500 });
+                }
+                this.getCreadores();
+            }).catch(error => {
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                    default:
+                        this.$toast.add({ severity: 'error', summary: 'Actualizar insignias', detail: 'Sucedió un error, Comuniquese con soporte', life: 1500 });
+                        console.log('Error: ', error);
+                        break;
+                }
+            });
+            this.btnActualizarInsignia = false;
         },
         async subirExcel() {
             this.btnSubirExcel = true;
@@ -180,14 +248,24 @@ export default {
                         break;
                 }
             });
-        }
+        },
+        async getInsignias() {
+            axios.get(`${this.API}/usuario/insigniasCloud`, {
+                headers: {
+                    Authorization: `Bearer ${this.store.getToken()}`
+                }
+            }).then(resp => {
+                this.insignias = resp.data;
+            })
+        },
     },
-    created() {
+    async created() {
         this.store = useStoreEvento();
         if (!this.store.isActive()) {
             this.$router.push('/login');
         }
-        this.getCreadores();
+        await this.getCreadores();
+        await this.getInsignias()
     }
 }
 </script>
