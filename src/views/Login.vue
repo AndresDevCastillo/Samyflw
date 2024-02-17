@@ -298,7 +298,6 @@ export default {
                 password: this.password
             }
             await axios.post(`${this.API}/auth/login`, USER).then(resp => {
-                console.log(resp.data);
                 if (resp.data) {
                     this.store.saveUser(resp.data);
                     this.$router.push('/panel/bonus');
