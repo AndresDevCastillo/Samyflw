@@ -7,7 +7,7 @@
                     <div class="relative flex justify-content-center" style="margin-bottom: 10px;">
                         <img width="250px" height="250px" :src="insignia.secure_url" alt="Insignia"
                             class="border-round imgInsignias" />
-                        <Tag value="Insignia" class="absolute" style="left:5px; top: 5px" />
+                        <Tag :value="insignia.descripcion" class="absolute" style="left:5px; top: 5px" />
                     </div>
                     <div class="flex justify-content-center align-items-center">
                         <Button v-if="butonClass" @click="eliminarInsignia(insignia.public_id, insignia.secure_url)"
