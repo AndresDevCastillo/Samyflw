@@ -27,7 +27,7 @@
                 <a></a>
                 <a href="#footer">Redes Sociales</a>
                 <router-link to="/evento">Eventos</router-link>
-                <router-link to="/login">Agencia</router-link>
+                <router-link to="/login">Login Agencia</router-link>
                 <Button icon="pi pi-bars" class="botonMenu" text size="large" @click="visibleSidebar = true" />
             </nav>
         </header>
@@ -46,7 +46,7 @@ export default {
                 label: 'Creadores',
                 items: [
                     {
-                        label: 'Ingresar',
+                        label: 'Login Agencia',
                         icon: 'pi pi-users',
                         route: '/login',
                     },
