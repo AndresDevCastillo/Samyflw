@@ -29,7 +29,7 @@
                 <div
                     :class="`misInsignias flex w-full gap-1 ${store.getUsuario().insignias.length > 4 ? 'flex-wrap justify-content-start' : 'justify-content-center'}`">
                     <Avatar v-for="(insignia, index) in store.getUsuario().insignias" :key="index" size="large"
-                        shape="circle" v-tooltip="insignia.descripcion">
+                        shape="circle" v-tooltip.top="insignia.descripcion">
                         <img :src="insignia.secure_url" :alt="`Insignia ${index + 1}`">
                     </Avatar>
 
