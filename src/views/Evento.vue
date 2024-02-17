@@ -86,7 +86,11 @@
                                 <p v-else> {{ slotProps.data.usuario }}</p>
                             </template>
                         </Column>
-                        <Column field="diamantes_mes_actual" header="Puntos"></Column>
+                        <Column field="diamantes_mes_actual" header="Puntos">
+                            <template #body="slotProps">
+                                {{ slotProps.data.diamantes_mes_actual * multiplicador }}
+                            </template>
+                        </Column>
                         <Column field="diamantes_mes_anterior" header="Puntos Mes Anterior"></Column>
                         <Column field="grupo" header="Grupo">
                             <template #body="slotProps">
@@ -117,6 +121,7 @@ import axios from "axios";
 export default {
     name: 'EventoView',
     data: () => ({
+        multiplicador: 1,
         API: import.meta.env.VITE_APP_API,
         spiner: true,
         eventos: [],
@@ -229,6 +234,9 @@ export default {
                 });
             });
         });
+        await axios.get(`${this.API}/bonus/multiplicador`).then((resp) => {
+            this.multiplicador = resp.data.multiplicador;
+        })
         this.spiner = false;
     },
 };

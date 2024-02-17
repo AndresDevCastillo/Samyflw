@@ -49,7 +49,11 @@
         <template #header>
             <div class="flex items-center gap-2 flex-end w-full justify-content-between">
                 <h1 class="m-0">Bonus</h1>
-                <Button icon="pi pi-plus" label="Añadir" @click="modalBonus = true"></Button>
+                <div class="flex gap-4">
+                    <Button icon="pi pi-percentage" :label="'Multiplicador x' + multiplicador"
+                        @click="modalMultiplicador = true" />
+                    <Button icon="pi pi-plus" label="Añadir" @click="modalBonus = true"></Button>
+                </div>
             </div>
         </template>
         <DataTable :value="tablaBonus" tableStyle="min-width: 100%" sortField="nivel" :sortOrder="1">
@@ -101,6 +105,20 @@
             <Button label="Crear" @click="crearBonus()" :disabled="btnBonus" severity="success" />
         </template>
     </Dialog>
+    <Dialog v-model:visible="modalMultiplicador" header="Multiplicador" :style="{ width: '50rem' }"
+        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+        <form ref="formBonus">
+            <div class="flex flex-column gap-1 mb-2">
+                <label for="nivel" class="font-bold block">Multiplicador</label>
+                <InputText v-model="multiplicador" type="number" id="nivel" />
+            </div>
+
+        </form>
+        <template #footer>
+            <Button label="Cancelar" @click="modalMultiplicador = false" severity="danger" />
+            <Button label="Actualizar" :disabled="btnMultiplicador" @click="actualizarMultiplicador()" severity="success" />
+        </template>
+    </Dialog>
     <Dialog v-model:visible="deleteBonusDialog" :style="{ width: '450px' }" :header="headerBonusDelete" :modal="true"
         class="p-fluid ">
         <div class="d-flex">
@@ -123,6 +141,9 @@ export default {
             API: import.meta.env.VITE_APP_API,
             store: null,
             token: null,
+            multiplicador: 1,
+            btnMultiplicador: false,
+            modalMultiplicador: false,
             paqueteBonus: {
                 nivel: null,
                 dias: null,
@@ -252,6 +273,26 @@ export default {
                 }
             });
         },
+        async actualizarMultiplicador() {
+            this.btnMultiplicador = true;
+            await axios.post(`${this.API}/bonus/multiplicador/${this.multiplicador}`).then(() => {
+                this.modalMultiplicador = false;
+                this.$toast.add({ severity: 'success', summary: 'Multiplicador', detail: 'Actualizado correctamente!', life: 1600 });
+            }).catch((error) => {
+                switch (error.response.data.statusCode) {
+                    case 401:
+                        //Se le termino la sesión
+                        this.store.clearUser();
+                        this.$router.push('/login');
+                        break;
+                    default:
+                        this.$toast.add({ severity: 'error', summary: 'Multiplicador', detail: 'Ocurrio un problema inesperado!', life: 1600 });
+                        console.log('Error: ', error);
+                        break;
+                }
+            });
+            this.btnMultiplicador = false;
+        },
         comfirmDelete(id, nivel) {
             this.deleteBonusID = id;
             this.headerBonusDelete = 'Desea eliminar el nivel: ' + nivel;
@@ -277,7 +318,13 @@ export default {
                         break;
                 }
             });
+        },
+        async getMultiplicador() {
+            axios.get(`${this.API}/bonus/multiplicador`).then(resp => {
+                this.multiplicador = resp.data.multiplicador;
+            })
         }
+
 
     },
     async created() {
@@ -298,6 +345,7 @@ export default {
             this.estadisticas.diamantes = parseInt(this.usuario.diamantes_mes_actual);
         }
         await this.obtenerBonus();
+        await this.getMultiplicador();
     }
 }
 </script>

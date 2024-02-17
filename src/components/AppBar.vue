@@ -30,7 +30,8 @@
             </template>
             <template #end>
                 <div class="flex items-center gap-2">
-                    <a style="cursor: pointer !important;" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
+                    <a style="cursor: pointer !important;" @click="toggle" aria-haspopup="true"
+                        aria-controls="overlay_menu">
                         <Avatar v-if="store.isAdmin() || store.getFoto().length == 0" icon="pi pi-user" class="mr-2"
                             shape="circle" style="background-color: var(--primary-color); color: #2a1261" />
                         <Avatar v-else :image="store.getFoto()" class="mr-2" shape="circle" />
@@ -64,7 +65,8 @@
         <dialogMiPerfil :mostrarMiPerfil="mostrarPerfil" @dialogPerfilOculto="mostrarPerfil = false" />
         <dialogEditarPerfil :mostrarEditar="mostrarEditar" @dialogEditarOculto="mostrarEditar = false"
             @perfilActualizado="getNewDatos" />
-        <Insignias v-if="store.isAdmin()" :mostrarInsigniasProp="mostrarInsignias" @dialogOculto="mostrarInsignias = false"></Insignias>
+        <Insignias v-if="store.isAdmin()" :mostrarInsigniasProp="mostrarInsignias" @dialogOculto="mostrarInsignias = false">
+        </Insignias>
     </div>
 </template>
 
@@ -273,6 +275,11 @@ export default {
                     label: 'Evento',
                     icon: 'pi pi-calendar-plus',
                     route: '/evento'
+                },
+                {
+                    label: 'DuckRacer',
+                    icon: 'pi pi-dollar',
+                    route: '/duckracer'
                 },
                 {
                     separator: true

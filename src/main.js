@@ -15,7 +15,6 @@ import NavBar from './components/NavBar.vue';
 import Clasificacion from './components/Clasificacion.vue';
 import Footer from './components/Footer.vue';
 import Phone from './components/Phone.vue';
-import Informacion from './components/Informacion.vue';
 import Insignias from './components/Insignias.vue';
 
 import AutoComplete from 'primevue/autocomplete';
@@ -149,7 +148,6 @@ app.component('NavBar', NavBar);
 app.component('Clasificacion', Clasificacion);
 app.component('Footer', Footer);
 app.component('Phone', Phone);
-app.component('Informacion', Informacion);
 app.component('Insignias', Insignias);
 
 app.use(ConfirmationService);

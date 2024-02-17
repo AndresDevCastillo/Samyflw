@@ -6,12 +6,14 @@
                 <Button label="Editar perfil" icon="pi pi-user-edit" @click="mostrarEditar = true" />
             </div>
         </template>
-        <div class="flex pb-7 gap-8 w-full sm:flex-wrap xs:flex-wrap xs:justify-content-center md:flex-wrap lg:flex-nowrap sm:justify-content-center">
+        <div
+            class="flex pb-7 gap-8 w-full sm:flex-wrap xs:flex-wrap xs:justify-content-center md:flex-wrap lg:flex-nowrap sm:justify-content-center">
             <div class="flex align-items-center md:ml-8 md:pl-4 mt-4 flex-column gap-2">
                 <div v-if="isTop" class="top mb-6">
                     <Avatar :image="`/assets/img/cinta_${cinta}.png`" class="w-full cinta" />
                     <p class="text-center w-full m-0 info-grupo"><strong>Grupo {{ store.getUsuario().grupo }}</strong></p>
-                    <Clasificacion class="clasificacion" :nombre="store.getUsuario().usuario" :top="infoTop.top" :tipo="infoTop.tipo" :foto="store.getUsuario().foto" />
+                    <Clasificacion class="clasificacion" :nombre="store.getUsuario().usuario" :top="infoTop.top"
+                        :tipo="infoTop.tipo" :foto="store.getUsuario().foto" />
                 </div>
                 <div v-else-if="store.getFoto().length > 0" style="width: max-content;">
                     <p class="text-center w-full m-0 font-bold">Grupo {{ store.getUsuario().grupo }}</p>
@@ -23,8 +25,11 @@
                     <Avatar icon="pi pi-user" size="xlarge" shape="circle" />
                     <p class="text-center w-full m-0 font-bold">{{ store.getUsuario().usuario }}</p>
                 </div>
-                <div :class="`misInsignias flex w-full gap-1 ${store.getUsuario().insignias.length > 4 ? 'flex-wrap justify-content-start' : 'justify-content-center'}`">
-                    <Avatar v-for="(insignia, index) in store.getUsuario().insignias" :key="index" size="large" shape="circle">
+                <h3>Insignias Obtenidas</h3>
+                <div
+                    :class="`misInsignias flex w-full gap-1 ${store.getUsuario().insignias.length > 4 ? 'flex-wrap justify-content-start' : 'justify-content-center'}`">
+                    <Avatar v-for="(insignia, index) in store.getUsuario().insignias" :key="index" size="large"
+                        shape="circle">
                         <img :src="insignia" :alt="`Insignia ${index + 1}`">
                     </Avatar>
                 </div>
@@ -36,42 +41,58 @@
                         <div class="flex justify-content-between flex-wrap column-gap-3 row-gap-2">
                             <div class="seguidores flex flex-column">
                                 <span class="w-full word-break">Seguidores</span>
-                                <span class="font-bold text-lg">{{ parseInt(store.getUsuario().seguidores).toLocaleString() }}</span>
+                                <span class="font-bold text-lg">{{ parseInt(store.getUsuario().seguidores).toLocaleString()
+                                }}</span>
                             </div>
                             <div class="fans flex flex-column">
                                 <span class="w-full word-break">Fans nuevos {{ meses[iActual] }}</span>
-                                <span :class="'font-bold text-lg ' + (parseInt(store.getUsuario().new_fans_mes_actual) > parseInt(store.getUsuario().new_fans_mes_anterior) ? 'text-green-500' : 'text-red-500')">{{ parseInt(store.getUsuario().new_fans_mes_actual).toLocaleString() }}</span>
-                                <span class="text-sm">En {{ meses[iAnterior] }}: <span class="font-bold text-sm">{{ parseInt(store.getUsuario().new_fans_mes_anterior).toLocaleString() }}</span>
-                                    <img :src="subioBajo(store.getUsuario().new_fans_mes_actual, store.getUsuario().new_fans_mes_anterior)" class="svg" />
+                                <span
+                                    :class="'font-bold text-lg ' + (parseInt(store.getUsuario().new_fans_mes_actual) > parseInt(store.getUsuario().new_fans_mes_anterior) ? 'text-green-500' : 'text-red-500')">{{
+                                        parseInt(store.getUsuario().new_fans_mes_actual).toLocaleString() }}</span>
+                                <span class="text-sm">En {{ meses[iAnterior] }}: <span class="font-bold text-sm">{{
+                                    parseInt(store.getUsuario().new_fans_mes_anterior).toLocaleString() }}</span>
+                                    <img :src="subioBajo(store.getUsuario().new_fans_mes_actual, store.getUsuario().new_fans_mes_anterior)"
+                                        class="svg" />
                                 </span>
                             </div>
                         </div>
                         <div class="flex justify-content-between column-gap-3 row-gap-2 mt-4 flex-wrap">
                             <div class="diamante-actual flex flex-column">
                                 <span class="w-full word-break">Diamantes en {{ meses[iActual] }} 💎</span>
-                                <span class="font-bold text-lg">{{ parseInt(store.getUsuario().diamantes_mes_actual).toLocaleString() }}
-                                    <span :class="'ml-1 text-sm ' + porcentaje(store.getUsuario().porcentaje_achieved)">{{ store.getUsuario().porcentaje_achieved }}
-                                        <img :src="subioBajo(store.getUsuario().diamantes_mes_actual, store.getUsuario().diamantes_mes_anterior)" class="svg" />
+                                <span class="font-bold text-lg">{{
+                                    parseInt(store.getUsuario().diamantes_mes_actual).toLocaleString() }}
+                                    <span :class="'ml-1 text-sm ' + porcentaje(store.getUsuario().porcentaje_achieved)">{{
+                                        store.getUsuario().porcentaje_achieved }}
+                                        <img :src="subioBajo(store.getUsuario().diamantes_mes_actual, store.getUsuario().diamantes_mes_anterior)"
+                                            class="svg" />
                                     </span>
                                 </span>
                             </div>
                             <div class="diamante-anterior flex flex-column">
                                 <span class="w-full word-break">Diamantes en {{ meses[iAnterior] }} 💎</span>
-                                <span class="font-bold text-lg">{{ parseInt(store.getUsuario().diamantes_mes_anterior).toLocaleString() }}</span>
+                                <span class="font-bold text-lg">{{
+                                    parseInt(store.getUsuario().diamantes_mes_anterior).toLocaleString() }}</span>
                             </div>
                         </div>
                         <div class="flex justify-content-between column-gap-3 row-gap-2 mt-3 flex-wrap">
                             <div class="live flex flex-column">
-                                <span class="w-full word-break flex gap-2 flex-wrap">Duración LIVE en {{ meses[iActual] }} <img src="../assets/img/live.png" alt="live" srcset="../assets/img/live.png"></span>
-                                <span class="font-bold text-lg">{{ formatHoras(store.getUsuario().last_live_duration_mes_actual) }}</span>
-                                <span>En {{ meses[iAnterior] }}: <span class="font-bold"> {{ formatHoras(store.getUsuario().last_live_duration_mes_anterior) }}</span>
-                                    <span :class="'ml-1 text-sm font-bold ' + porcentaje(store.getUsuario().porcentaje_achieved_2)">{{ store.getUsuario().porcentaje_achieved_2 }}
-                                        <img :src="subioBajo(store.getUsuario().last_live_duration_mes_actual, store.getUsuario().last_live_duration_mes_anterior)" class="svg" />
+                                <span class="w-full word-break flex gap-2 flex-wrap">Duración LIVE en {{ meses[iActual] }}
+                                    <img src="../assets/img/live.png" alt="live" srcset="../assets/img/live.png"></span>
+                                <span class="font-bold text-lg">{{
+                                    formatHoras(store.getUsuario().last_live_duration_mes_actual) }}</span>
+                                <span>En {{ meses[iAnterior] }}: <span class="font-bold"> {{
+                                    formatHoras(store.getUsuario().last_live_duration_mes_anterior) }}</span>
+                                    <span
+                                        :class="'ml-1 text-sm font-bold ' + porcentaje(store.getUsuario().porcentaje_achieved_2)">{{
+                                            store.getUsuario().porcentaje_achieved_2 }}
+                                        <img :src="subioBajo(store.getUsuario().last_live_duration_mes_actual, store.getUsuario().last_live_duration_mes_anterior)"
+                                            class="svg" />
                                     </span>
                                 </span>
                             </div>
                             <div class="last_live flex flex-column">
-                                <span class="w-full word-break flex gap-2 align-items-center">Último LIVE <img src="../assets/img/last_hour.svg" srcset="../assets/img/last_hour.svg"></span>
+                                <span class="w-full word-break flex gap-2 align-items-center">Último LIVE <img
+                                        src="../assets/img/last_hour.svg" srcset="../assets/img/last_hour.svg"></span>
                                 <span class="font-bold text-lg">{{ store.getUsuario().last_live.slice(0, 19) }}</span>
                             </div>
                         </div>
@@ -79,7 +100,11 @@
                     <div class="row flex align-items-center flex-column  gap-3 flex-wrap">
                         <div class="incorporacion flex flex-column">
                             <span class="w-full word-break">Días de incorporación</span>
-                            <span class="font-bold text-lg">{{ store.getUsuario().dias_since_joining_agency.slice(0, (store.getUsuario().dias_since_joining_agency.length) - 1) + (parseInt(store.getUsuario().dias_since_joining_agency.slice(0, (store.getUsuario().dias_since_joining_agency.length) - 1)) == 1 ? ' día' : ' días') }}</span>
+                            <span class="font-bold text-lg">{{ store.getUsuario().dias_since_joining_agency.slice(0,
+                                (store.getUsuario().dias_since_joining_agency.length) - 1) +
+                                (parseInt(store.getUsuario().dias_since_joining_agency.slice(0,
+                                    (store.getUsuario().dias_since_joining_agency.length) - 1)) == 1 ? ' día' : ' días')
+                            }}</span>
                         </div>
                         <div class="fecha_incorporacion flex flex-column md:mt-2 xl:mt-5">
                             <span class="w-full word-break">Fecha de incorporación</span>
