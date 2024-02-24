@@ -134,6 +134,7 @@ export default {
   }),
   methods: {
     async startGame() {
+
       if (this.usuario == null || this.usuario == "" || this.tiempo == null) {
         return;
       }
@@ -172,6 +173,7 @@ export default {
         width: 1000,
         height: 556,
       };
+      let posicionY = 1;
 
       // Clase para el pato
       class Duck extends Phaser.GameObjects.Container {
@@ -310,6 +312,70 @@ export default {
       class GameScene extends Phaser.Scene {
         constructor() {
           super("scene-game");
+          this.gameActive = true;
+          this.coins = 0;
+          this.espera = true;
+          this.ganador = [];
+          this.players = [];
+          this.gifts = {
+            5655: 50, // Rose
+            7934: 50, // Heart Me
+            5827: 50, // Ice Cream Cone
+            6064: 50, // GG
+            9139: 100, //  Team Bracelet
+            5487: 250, // Finger Heart
+            6483: 500, // Spinning Top
+            5879: 1500, // Doughnut
+            5585: 5000, // Confetti
+            5660: 5000, // Hand Heart
+            6671: 10000, //Love You
+            6267: 15000, // Corgi
+            7168: 25000, // Money Gun
+            5978: 45000, // Train
+            6233: 50000, // Travel With You
+            6646: 245000, // Leon the Kitten
+            8916: 485000, // Leon and Lili
+            8912: 750000, // Rosa Nebula
+            6369: 1500000, // Lion
+            7312: 2000000, // TikTok Universe+
+          };
+          this.skin = [
+            'patitoceleste',
+            'patitomorado',
+            'patitorojo',
+            'patitoblanco',
+            'patitochicle',
+            'patitonegro',
+            'patitorosa',
+            'patitoblue',
+            'patitogris',
+            'patito',
+            'patitoverde',
+          ];
+
+          this.giftsMoney = {
+            5655: 1, // Rose
+            7934: 1, // Heart Me
+            5827: 1, // Ice Cream Cone
+            6064: 1, // GG
+            9139: 2, //  Team Bracelet
+            5487: 5, // Finger Heart
+            6483: 10, // Spinning Top
+            5879: 30, // Doughnut
+            5585: 100, // Confetti
+            5660: 100, // Hand Heart
+            6671: 199, //Love You
+            6267: 299, // Corgi
+            7168: 500, // Money Gun
+            5978: 899, // Train
+            6233: 999, // Travel With You
+            6646: 4888, // Leon the Kitten
+            8916: 9699, // Leon and Lili
+            8912: 15000, // Rosa Nebula
+            6369: 29900, // Lion
+            7312: 34999, // TikTok Universe+
+          };
+
         }
 
         preload() {
@@ -344,58 +410,79 @@ export default {
           this.backgroundMusic.play();
           this.ducks = [];
 
-          let posicionY = 1;
 
-
-
-          vueDataInstance.$data.socket.on("newPlayer", (duckApi) => {
-            vueDataInstance.$data.players = duckApi;
-            vueDataInstance.$data.patos += 1;
-            const duck = new Duck(
-              this,
-              200,
-              size.height - posicionY * 30,
-              duckApi[duckApi.length - 1].name,
-              duckApi[duckApi.length - 1].skin,
-              duckApi[duckApi.length - 1].id
+          vueDataInstance.$data.socket.on('gift', (user) => {
+            if (!this.gameActive) {
+              return;
+            }
+            if (this.espera) {
+              this.handleEventoApiEspera(
+                {
+                  userId: user.userId,
+                  nickname: user.nickname,
+                },
+              );
+              return;
+            }
+            const puntosExiste = this.gifts[user.giftId];
+            // Se verifica que el regalo exista en this.gifts
+            if (puntosExiste == undefined && puntosExiste == null) {
+              return;
+            }
+            this.coins = this.coins + this.giftsMoney[user.giftId];
+            this.handleEventoApi(
+              {
+                userId: user.userId,
+                nickname: user.nickname,
+              },
+              puntosExiste,
             );
-            if (this.muteNot) {
-              this.quackMusic.play();
+          })
+
+          vueDataInstance.$data.socket.on('chat', (user) => {
+            if (!this.gameActive) {
+              return;
             }
-            this.ducks.push(duck);
-            if (posicionY == 10) {
-              posicionY = 0;
+            if (this.espera) {
+              this.handleEventoApiEspera(
+                {
+                  userId: user.userId,
+                  nickname: user.nickname,
+                },
+              );
+              return;
             }
-            posicionY++;
-            this.ducks.forEach((duck, index) => {
-              duck.move(duckApi[index].x);
-            });
-          });
+            this.handleEventoApi(
+              {
+                userId: user.userId,
+                nickname: user.nickname,
+              },
+              5,
+            );
+          })
 
-          vueDataInstance.$data.socket.on("cisne", (OneduckApi) => {
-            this.ducks.forEach((duck) => {
-              duck.cisne(OneduckApi.id, OneduckApi.skin);
-            });
-          });
+          vueDataInstance.$data.socket.on('like', (user) => {
+            if (!this.gameActive) {
+              return;
+            }
+            if (this.espera) {
+              this.handleEventoApiEspera(
+                {
+                  userId: user.userId,
+                  nickname: user.nickname,
+                },
+              );
+              return;
+            }
+            this.handleEventoApi(
+              {
+                userId: user.userId,
+                nickname: user.nickname,
+              },
+              user.likeCount,
+            );
+          })
 
-          vueDataInstance.$data.socket.on("move", (duckApi) => {
-            vueDataInstance.$data.players = duckApi;
-            this.ducks.forEach((duck, index) => {
-              duck.move(duckApi[index].x);
-            });
-          });
-
-          vueDataInstance.$data.socket.on("ganadores", (ducksWins) => {
-            vueDataInstance.$data.socket.disconnect();
-            this.ducks.forEach((duck) => {
-              duck.destruir(ducksWins);
-            });
-            this.ducks.forEach((duck) => {
-              duck.alinear(ducksWins);
-            });
-            this.backgroundMusic.stop();
-            setTimeout(this.winMusic.play(), 1000);
-          });
 
           // const background = this.add.image(size.width / 2, size.height / 2, "bg").setOrigin(0.5, 0.5);
           // background.setScale(size.width / background.width, size.height / background.height);
@@ -405,6 +492,169 @@ export default {
           this.quackMusic.setVolume(volumen);
           this.winMusic.setVolume(volumen);
         }
+
+        handleEventoApi(
+          user,
+          puntos,
+        ) {
+          const players = this.players;
+          const playerIndex = players.findIndex(
+            (player) => player.id === user.userId,
+          );
+
+          if (playerIndex !== -1) {
+            const player = players[playerIndex];
+            player.point += puntos;
+
+            if (puntos >= 250) {
+              this.cisne(player);
+            }
+          } else {
+            let skin = this.skin[Math.floor(Math.random() * this.skin.length)];
+            this.players.push({
+              id: user.userId,
+              name: user.nickname,
+              point: puntos,
+              x: 1,
+              skin: skin,
+            });
+          }
+
+          const pointMax = this.mayorPuntaje();
+          this.calcularPuntosPatos(pointMax);
+          if (playerIndex !== -1) {
+            this.move(players)
+          }
+          else {
+            this.newPlayer(players);
+          }
+        }
+
+        handleEventoApiEspera(user) {
+          const siExiste = this.players.some((player) => {
+            if (player.id == user.userId) {
+              return true;
+            }
+          });
+          if (siExiste) {
+            return;
+          }
+          let skin = this.skin[Math.floor(Math.random() * this.skin.length)];
+          this.players.push({
+            id: user.userId,
+            name: user.nickname,
+            point: 1,
+            x: 100,
+            skin: skin,
+          });
+          this.newPlayer(this.players)
+        }
+
+        calcularPuntosPatos(pointMax) {
+          this.players.forEach((player) => {
+            const x =
+              (100 - (Math.abs(pointMax - player.point) / pointMax) * 100) * 8;
+
+            player.x = Math.ceil(x); // Redondear a un número entero
+          });
+        }
+
+        calcularGanadores() {
+          const players = this.players;
+          const top6Players = players
+            .slice()
+            .sort((a, b) => b.point - a.point)
+            .slice(0, 6);
+          this.ganador = top6Players;
+        }
+
+        mayorPuntaje() {
+          const players = this.players;
+          if (typeof players == 'undefined') {
+            return;
+          }
+          let maxPoint = -Infinity;
+          for (const player of players) {
+            if (player.point > maxPoint) {
+              maxPoint = player.point;
+            }
+          }
+
+          return maxPoint;
+        }
+
+        cisne(OneduckApi) {
+          this.ducks.forEach((duck) => {
+            duck.cisne(OneduckApi.id, OneduckApi.skin);
+          });
+        }
+
+        newPlayer(duckApi) {
+          vueDataInstance.$data.players = duckApi;
+          vueDataInstance.$data.patos += 1;
+          const duck = new Duck(
+            this,
+            200,
+            size.height - posicionY * 30,
+            duckApi[duckApi.length - 1].name,
+            duckApi[duckApi.length - 1].skin,
+            duckApi[duckApi.length - 1].id
+          );
+          if (this.muteNot) {
+            this.quackMusic.play();
+          }
+          this.ducks.push(duck);
+          if (posicionY == 10) {
+            posicionY = 0;
+          }
+          posicionY++;
+          this.ducks.forEach((duck, index) => {
+            duck.move(duckApi[index].x);
+          });
+        };
+
+        move(duckApi) {
+          vueDataInstance.$data.players = duckApi;
+          this.ducks.forEach((duck, index) => {
+            duck.move(duckApi[index].x);
+          });
+        };
+
+        ganadores(ducksWins) {
+          vueDataInstance.$data.socket.disconnect();
+          this.ducks.forEach((duck) => {
+            duck.destruir(ducksWins);
+          });
+          this.ducks.forEach((duck) => {
+            duck.alinear(ducksWins);
+          });
+          this.backgroundMusic.stop();
+          setTimeout(this.winMusic.play(), 1000);
+        };
+
+        empezarGame() {
+          this.espera = false;
+          // Los calculos cuando termina el juego y se fija la duracion de la partida
+          setTimeout(async () => {
+            this.gameActive = false;
+            const pointMax = this.mayorPuntaje();
+            this.calcularPuntosPatos(pointMax);
+            this.move(this.players);
+            this.calcularGanadores();
+            this.ganadores(this.ganador);
+            const history = {
+              date: new Date(),
+              playerTotal: this.players.length,
+              coinTotal: this.coins,
+              timeTotal: tiempo,
+            };
+            await axios.post(`${urlSocket}/user/gamePoints/${usuario}`, history);
+            // emitir socket 
+          }, tiempo);
+        }
+
+
+
 
         update() { }
 
@@ -458,7 +708,8 @@ export default {
       this.tiempo = parseInt(this.tiempo);
       this.buttonStart = false;
       this.timerShow = true;
-      this.socket.emit("empezar");
+      let instanciaPhaser = this.game.scene.getScene("scene-game");
+      instanciaPhaser.empezarGame();
     },
   },
   mounted() {
