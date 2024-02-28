@@ -193,6 +193,11 @@ export default {
                             label: 'Configuración Bonus',
                             icon: 'pi pi-money-bill',
                             route: '/panel/bonus',
+                        },
+                        {
+                            label: 'Gestionar Promocion',
+                            icon: 'pi pi-thumbs-up-fill',
+                            route: '/panel/promocion',
                         }
                     ]
                 },
@@ -268,9 +273,14 @@ export default {
                     separator: true
                 },
                 {
-                    label: 'Bonus',
-                    icon: 'pi pi-money-bill',
+                    label: 'Principal',
+                    icon: 'pi pi-user',
                     route: '/panel/bonus',
+                },
+                {
+                    label: 'Promocion',
+                    icon: 'pi pi-thumbs-up-fill ',
+                    route: '/panel/promouser'
                 },
                 {
                     label: 'Evento',

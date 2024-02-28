@@ -7,6 +7,8 @@ import Panel from '../views/Panel.vue'
 import Evento from '../components/Evento.vue'
 import Creadores from '../components/Creadores.vue'
 import Bonus from '../components/Bonus.vue'
+import Promocion from '../components/Promocion.vue'
+import Promouser from '../components/Promouser.vue'
 import Game from '../views/game/Game.vue'
 import Logingame from '../views/game/Login.vue'
 import Admingame from '../views/game/Admin.vue'
@@ -22,38 +24,56 @@ const routes = [
         name: 'Panel',
         component: Panel,
         children: [{
-                path: '/panel/evento',
-                name: 'Evento',
-                component: Evento,
-                beforeEnter: (to, from, next) => {
-                    const store = useStoreEvento();
-                    if (store.isActive()) {
-                        return store.isAdmin() ? next() : next(from);
-                    }
-                    return next('/login');
+            path: '/panel/evento',
+            name: 'Evento',
+            component: Evento,
+            beforeEnter: (to, from, next) => {
+                const store = useStoreEvento();
+                if (store.isActive()) {
+                    return store.isAdmin() ? next() : next(from);
                 }
-            },
-            {
-                path: '/panel/creadores',
-                name: 'Creadores',
-                component: Creadores,
-                beforeEnter: (to, from, next) => {
-                    const store = useStoreEvento();
-                    if (store.isActive()) {
-                        return store.isAdmin() ? next() : next(from);
-                    }
-                    return next('/login');
-                }
-            },
-            {
-                path: '/panel/bonus',
-                name: 'Bonus',
-                component: Bonus,
-                beforeEnter: (to, from, next) => {
-                    const store = useStoreEvento();
-                    return store.isActive() ? next() : next('/login');
-                }
+                return next('/login');
             }
+        },
+        {
+            path: '/panel/creadores',
+            name: 'Creadores',
+            component: Creadores,
+            beforeEnter: (to, from, next) => {
+                const store = useStoreEvento();
+                if (store.isActive()) {
+                    return store.isAdmin() ? next() : next(from);
+                }
+                return next('/login');
+            }
+        },
+        {
+            path: '/panel/bonus',
+            name: 'Bonus',
+            component: Bonus,
+            beforeEnter: (to, from, next) => {
+                const store = useStoreEvento();
+                return store.isActive() ? next() : next('/login');
+            }
+        },
+        {
+            path: '/panel/promocion',
+            name: 'Promocion',
+            component: Promocion,
+            beforeEnter: (to, from, next) => {
+                const store = useStoreEvento();
+                return store.isActive() ? next() : next('/login');
+            }
+        },
+        {
+            path: '/panel/promouser',
+            name: 'Promouser',
+            component: Promouser,
+            beforeEnter: (to, from, next) => {
+                const store = useStoreEvento();
+                return store.isActive() ? next() : next('/login');
+            }
+        }
         ]
     },
     { path: '/duckracer', name: 'Game', component: Game },
