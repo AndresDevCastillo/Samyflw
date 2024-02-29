@@ -9,7 +9,11 @@
             </div>
         </template>
         <DataTable :value="tablaBonus" tableStyle="min-width: 100%">
-            <Column field="nivel" header="Nivel 👑"></Column>
+            <Column field="nivel" header="Nivel 👑">
+                <template #body="slotProps">
+                    {{ slotProps.data.exclusivo ? 'Exclusivo' : slotProps.data.nivel }}
+                </template>
+            </Column>
             <Column field="dias" header="Dias">
                 <template #body="slotProps">
                     <Knob :valueColor="validarCompletoColor(estadisticas.dias, slotProps.data.dias)"
@@ -26,9 +30,12 @@
             </Column>
             <Column field="meta" header="Diamantes">
                 <template #body="slotProps">
-                    {{ slotProps.data.meta.toLocaleString() }}
-                    <ProgressBar :pt="validarCompletoColorBar(slotProps.data.meta, estadisticas.diamantes)"
+                    {{ slotProps.data.meta == 0 ? '' : slotProps.data.meta.toLocaleString() }}
+                    <ProgressBar v-if="slotProps.data.meta > 0" :pt="validarCompletoColorBar(slotProps.data.meta, estadisticas.diamantes)"
                         :value="calcularProgresoDiamantes(slotProps.data.meta, estadisticas.diamantes)">
+                    </ProgressBar>
+                    <ProgressBar v-else :pt="validarCompletoColorBar(slotProps.data.meta, estadisticas.diamantes)"
+                        :value="100">
                     </ProgressBar>
                 </template>
             </Column>
@@ -57,10 +64,18 @@
             </div>
         </template>
         <DataTable :value="tablaBonus" tableStyle="min-width: 100%" sortField="nivel" :sortOrder="1">
-            <Column field="nivel" header="Nivel 👑"></Column>
+            <Column field="nivel" header="Nivel 👑">
+                <template #body="slotProps">
+                    {{ slotProps.data.exclusivo ? 'Exclusivo' : slotProps.data.nivel }}
+                </template>
+            </Column>
             <Column field="dias" header="Dias"></Column>
             <Column field="horas" header="Horas"> </Column>
-            <Column field="meta" header="Diamantes"></Column>
+            <Column field="meta" header="Diamantes">
+                <template #body="slotProps">
+                    {{ slotProps.data.meta == 0 ? 'X' : slotProps.data.meta }}
+                </template>
+            </Column>
             <Column field="ganancia" header="Ganancia"></Column>
             <Column field="bonificacion" header="Bonificacion"></Column>
             <Column style="max-width:5rem">
@@ -75,9 +90,13 @@
     <Dialog v-model:visible="modalBonus" header="Crear Bonus" :style="{ width: '50rem' }"
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
         <form ref="formBonus">
+            <div class="flex gap-1 mb-2">
+                <Checkbox v-model="paqueteBonus.exclusivo" inputId="exclusivo" name="exclusivo" value="exclusivo" :binary="true" />
+                <label for="exclusivo">Exclusivo</label>
+            </div>
             <div class="flex flex-column gap-1 mb-2">
                 <label for="nivel" class="font-bold block">Nivel</label>
-                <InputText v-model="paqueteBonus.nivel" type="number" id="nivel" />
+                <InputText v-model="paqueteBonus.nivel" type="text" id="nivel" />
             </div>
             <div class="flex flex-column gap-1 mb-2">
                 <label for="dias" class="font-bold block">Días</label>
@@ -151,6 +170,7 @@ export default {
                 meta: null,
                 ganancia: null,
                 bonificacion: null,
+                exclusivo: false
             },
             btnBonus: false,
             headerBonusDelete: null,
@@ -222,6 +242,14 @@ export default {
             return valid;
         },
         async crearBonus() {
+            if (this.paqueteBonus.exclusivo) {
+                this.paqueteBonus.nivel = 0;
+                if (this.paqueteBonus.meta == null) {
+                    this.paqueteBonus.meta = 0;
+                }
+            } else {
+                delete this.paqueteBonus.exclusivo;
+            }
             const valid = this.formValid();
             if (valid) {
                 this.btnBonus = true;
@@ -229,6 +257,7 @@ export default {
                 this.paqueteBonus.horas = parseInt(this.paqueteBonus.horas);
                 this.paqueteBonus.meta = parseInt(this.paqueteBonus.meta);
                 this.paqueteBonus.dias = parseInt(this.paqueteBonus.dias);
+                console.log('PAso');
                 await axios.post(`${this.API}/bonus/crear`, this.paqueteBonus, this.token).then(resp => {
                     this.obtenerBonus();
                     this.paqueteBonus = {

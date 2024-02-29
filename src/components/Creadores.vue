@@ -32,6 +32,11 @@
             " />
         </template>
       </Column>
+      <Column header="Estado" field="isConectado">
+        <template #body="slotProps">
+          <Tag :severity="slotProps.data.isConectado ? 'success' : 'danger'" :value="`${slotProps.data.isConectado ? 'Conectado' : 'Sin conexión'} ${slotProps.data.ultimaConexion.length == 0 ? '' : (' | ' + slotProps.data.ultimaConexion.slice(0, 10) + ' ' + slotProps.data.ultimaConexion.slice(11, 19))}`" />
+        </template>
+      </Column>
     </DataTable>
     <!-- Modal agregar evento -->
     <Dialog v-model:visible="modalExcel" header="Subir excel" :style="{ width: '50rem' }"
