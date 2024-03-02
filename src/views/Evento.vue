@@ -51,11 +51,15 @@
                         <template #header>
                             <div class="flex flex-wrap align-items-center justify-content-between gap-2">
                                 <span class="text-xl text-900 font-bold">Creadores de contenido</span>
-                                <InlineMessage class="text-inline-evento" icon="pi pi-vedied" severity="success">
+                                <InlineMessage v-if="all != true" class="text-inline-evento" icon="pi pi-vedied" severity="success">
                                     GRUPO {{
                                         creadores[0].grupo }}
                                 </InlineMessage>
+                                <InlineMessage v-else class="text-inline-evento" icon="pi pi-vedied" severity="success">
+                                    Todos
+                                </InlineMessage>
                                 <div class="flex gap-2">
+                                    <Button @click="changeCreador('Todos')" label="Todos" severity="warning" />
                                     <Button @click="changeCreador('A')" label="A" severity="success" />
                                     <Button @click="changeCreador('B')" label="B" severity="info" />
                                     <Button @click="changeCreador('C')" label="C" severity="danger" />
@@ -173,20 +177,27 @@ export default {
             usuario: '',
             foto: ''
         }],
+        all: false
     }),
     methods: {
         changeCreador(grupo) {
-            for (let i = 0; i < this.arrayCreadores.length; i++) {
-                if (this.arrayCreadores[i]._id === grupo) {
-                    this.creadores = [];
-                    this.creadores = this.arrayCreadores[i].usuarios;
+            if (grupo != 'Todos') {
+                for (let i = 0; i < this.arrayCreadores.length; i++) {
+                    if (this.arrayCreadores[i]._id === grupo) {
+                        this.creadores = [];
+                        this.creadores = this.arrayCreadores[i].usuarios;
+                    }
                 }
-            }
-            for (let i = 0; i < this.arrayTop3.length; i++) {
-                if (this.arrayTop3[i].grupo === grupo) {
-                    this.top3 = [];
-                    this.top3 = this.arrayTop3[i].usuarios;
+                for (let i = 0; i < this.arrayTop3.length; i++) {
+                    if (this.arrayTop3[i].grupo === grupo) {
+                        this.top3 = [];
+                        this.top3 = this.arrayTop3[i].usuarios;
+                    }
                 }
+                this.all = false;
+            } else {
+                this.creadores = [...this.arrayCreadores[0].usuarios, ...this.arrayCreadores[1].usuarios, ...this.arrayCreadores[2].usuarios];
+                this.all = true;
             }
         },
         calcularPromdioTranscurrido(fechaInicio, fechaFin) {
