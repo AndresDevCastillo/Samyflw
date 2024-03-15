@@ -20,17 +20,22 @@
                 </template>
             </Menu>
         </Sidebar>
-        <header>
-            <a href="" class="logo"> <span>Samy</span>flw</a>
-            <nav>
-                <router-link to="/duckracer">Juegos</router-link>
-                <a></a>
-                <a href="#footer">Redes Sociales</a>
-                <router-link to="/evento">Eventos</router-link>
-                <router-link to="/login">Login Agencia</router-link>
-                <Button icon="pi pi-bars" class="botonMenu" text size="large" @click="visibleSidebar = true" />
-            </nav>
+        <header class="w-full m-0">
+            <div class="opciones flex justify-content-between align-items-center w-full">
+                <a href="" class="logo"> <span>Samy</span>flw</a>
+                <nav>
+                    <router-link to="/duckracer">Juegos</router-link>
+                    <a></a>
+                    <a href="#footer">Redes Sociales</a>
+                    <router-link to="/evento">Eventos</router-link>
+                    <router-link to="/login">Login Agencia</router-link>
+                    <Button icon="pi pi-bars" class="botonMenu" text size="large" @click="visibleSidebar = true" />
+                </nav>
+            </div>
         </header>
+        <div class="container-linea flex sm:justify-content-start md:justify-content-end w-full">
+            <div class="linea xs:w-full sm:w-full md:w-6"></div>
+        </div>
     </div>
 </template>
 <script>
@@ -82,15 +87,26 @@ export default {
 header {
     position: absolute;
     top: 0;
-    width: 100%;
-    height: 80px;
+    height: 60px;
     padding: 0 80px;
+    padding-top: 10px;
     z-index: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'planet-gamers' !important;
+    background-image: url('/assets/img/header/header-bg.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+}
+
+.container-linea {
+    position: absolute;
+}
+
+.linea {
+    background-image: url('/assets/img/header/header-line.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    z-index: 12;
+    height: 4px;
 }
 
 header .logo {

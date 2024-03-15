@@ -7,9 +7,11 @@
                         <span class="text-2xl font-bold logo"><span>Samy</span>flw</span>
                     </span>
                 </template> -->
+
                 <template #submenuheader="{ item }">
                     <span class="text-primary-500 dark:text-primary-400 font-bold leading-none">{{ item.label }}</span>
                 </template>
+
                 <template #item="{ item, props }">
                     <router-link :to="item.route" v-slot="{ href }" custom>
                         <a v-ripple :href="href" v-bind="props.action" @click="actionMenu(item.action)">
@@ -22,6 +24,7 @@
             </Menu>
         </Sidebar>
         <Menubar class="appBar" :model="sinMenu">
+
             <template #start>
                 <div class="flex gap-2 align-items-center">
                     <Button icon="pi pi-bars" text size="large" @click="visibleSidebar = true" />
@@ -29,6 +32,7 @@
                             class="text-2xl font-bold logo"><span>Samy</span>flw</span></a>
                 </div>
             </template>
+
             <template #end>
                 <div class="flex items-center gap-2">
                     <a style="cursor: pointer !important;" @click="toggle" aria-haspopup="true"
@@ -52,6 +56,7 @@
                                 </span>
                             </button>
                         </template>
+
                         <template #item="{ item, props }">
                             <a v-ripple class="flex items-center" @click="actionMenu(item.action)" v-bind="props.action">
                                 <span :class="item.icon" />
@@ -195,7 +200,12 @@ export default {
                             route: '/panel/bonus',
                         },
                         {
-                            label: 'Gestionar Promocion',
+                            label: 'Premios Aleatorios',
+                            icon: 'pi pi-wallet',
+                            route: '/panel/aleatorios',
+                        },
+                        {
+                            label: 'Gestionar Promoción',
                             icon: 'pi pi-thumbs-up-fill',
                             route: '/panel/promocion',
                         }
@@ -278,7 +288,7 @@ export default {
                     route: '/panel/bonus',
                 },
                 {
-                    label: 'Promocion',
+                    label: 'Promoción',
                     icon: 'pi pi-thumbs-up-fill ',
                     route: '/panel/promouser'
                 },
@@ -332,7 +342,8 @@ export default {
     }
 };
 </script>
-<style >
+
+<style>
 .appBar {
     background-color: #1f2937 !important;
     border-radius: 0 !important;

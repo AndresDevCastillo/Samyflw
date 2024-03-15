@@ -43,15 +43,15 @@
                             <div class="seguidores flex flex-column">
                                 <span class="w-full word-break">Seguidores</span>
                                 <span class="font-bold text-lg">{{ parseInt(store.getUsuario().seguidores).toLocaleString()
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="fans flex flex-column">
                                 <span class="w-full word-break">Fans nuevos {{ meses[iActual] }}</span>
                                 <span
                                     :class="'font-bold text-lg ' + (parseInt(store.getUsuario().new_fans_mes_actual) > parseInt(store.getUsuario().new_fans_mes_anterior) ? 'text-green-500' : 'text-red-500')">{{
-                                        parseInt(store.getUsuario().new_fans_mes_actual).toLocaleString() }}</span>
+                    parseInt(store.getUsuario().new_fans_mes_actual).toLocaleString() }}</span>
                                 <span class="text-sm">En {{ meses[iAnterior] }}: <span class="font-bold text-sm">{{
-                                    parseInt(store.getUsuario().new_fans_mes_anterior).toLocaleString() }}</span>
+                    parseInt(store.getUsuario().new_fans_mes_anterior).toLocaleString() }}</span>
                                     <img :src="subioBajo(store.getUsuario().new_fans_mes_actual, store.getUsuario().new_fans_mes_anterior)"
                                         class="svg" />
                                 </span>
@@ -61,9 +61,9 @@
                             <div class="diamante-actual flex flex-column">
                                 <span class="w-full word-break">Diamantes en {{ meses[iActual] }} 💎</span>
                                 <span class="font-bold text-lg">{{
-                                    parseInt(store.getUsuario().diamantes_mes_actual).toLocaleString() }}
+                    parseInt(store.getUsuario().diamantes_mes_actual).toLocaleString() }}
                                     <span :class="'ml-1 text-sm ' + porcentaje(store.getUsuario().porcentaje_achieved)">{{
-                                        store.getUsuario().porcentaje_achieved }}
+                    store.getUsuario().porcentaje_achieved }}
                                         <img :src="subioBajo(store.getUsuario().diamantes_mes_actual, store.getUsuario().diamantes_mes_anterior)"
                                             class="svg" />
                                     </span>
@@ -72,7 +72,7 @@
                             <div class="diamante-anterior flex flex-column">
                                 <span class="w-full word-break">Diamantes en {{ meses[iAnterior] }} 💎</span>
                                 <span class="font-bold text-lg">{{
-                                    parseInt(store.getUsuario().diamantes_mes_anterior).toLocaleString() }}</span>
+                    parseInt(store.getUsuario().diamantes_mes_anterior).toLocaleString() }}</span>
                             </div>
                         </div>
                         <div class="flex justify-content-between column-gap-3 row-gap-2 mt-3 flex-wrap">
@@ -80,12 +80,12 @@
                                 <span class="w-full word-break flex gap-2 flex-wrap">Duración LIVE en {{ meses[iActual] }}
                                     <img src="../assets/img/live.png" alt="live" srcset="../assets/img/live.png"></span>
                                 <span class="font-bold text-lg">{{
-                                    formatHoras(store.getUsuario().last_live_duration_mes_actual) }}</span>
+                    formatHoras(store.getUsuario().last_live_duration_mes_actual) }}</span>
                                 <span>En {{ meses[iAnterior] }}: <span class="font-bold"> {{
-                                    formatHoras(store.getUsuario().last_live_duration_mes_anterior) }}</span>
+                    formatHoras(store.getUsuario().last_live_duration_mes_anterior) }}</span>
                                     <span
                                         :class="'ml-1 text-sm font-bold ' + porcentaje(store.getUsuario().porcentaje_achieved_2)">{{
-                                            store.getUsuario().porcentaje_achieved_2 }}
+                    store.getUsuario().porcentaje_achieved_2 }}
                                         <img :src="mayorTiempo(store.getUsuario().last_live_duration_mes_actual, store.getUsuario().last_live_duration_mes_anterior)"
                                             class="svg" />
                                     </span>
@@ -102,7 +102,7 @@
                                 <span class="w-full word-break">Días hábiles en {{ meses[iActual] }}</span>
                                 <span class="font-bold text-lg">{{ store.getUsuario().dias_validos_mes_actual }} {{ parseInt(store.getUsuario().dias_validos_mes_actual) == 1 ? 'día' : 'días' }}
                                     <span :class="'ml-1 text-sm ' + porcentaje(store.getUsuario().porcentaje_achieved_3)">{{
-                                        store.getUsuario().porcentaje_achieved_3 }}
+                    store.getUsuario().porcentaje_achieved_3 }}
                                         <img :src="subioBajo(store.getUsuario().dias_validos_mes_actual, store.getUsuario().dias_validos_mes_anterior)"
                                             class="svg" />
                                     </span>
@@ -118,10 +118,10 @@
                         <div class="incorporacion flex flex-column">
                             <span class="w-full word-break">Días de incorporación</span>
                             <span class="font-bold text-lg">{{ store.getUsuario().dias_since_joining_agency.slice(0,
-                                (store.getUsuario().dias_since_joining_agency.length) - 1) +
-                                (parseInt(store.getUsuario().dias_since_joining_agency.slice(0,
-                                    (store.getUsuario().dias_since_joining_agency.length) - 1)) == 1 ? ' día' : ' días')
-                            }}</span>
+                    (store.getUsuario().dias_since_joining_agency.length) - 1) +
+                    (parseInt(store.getUsuario().dias_since_joining_agency.slice(0,
+                        (store.getUsuario().dias_since_joining_agency.length) - 1)) == 1 ? ' día' : ' días')
+                                }}</span>
                         </div>
                         <div class="fecha_incorporacion flex flex-column md:mt-2 xl:mt-5">
                             <span class="w-full word-break">Fecha de incorporación</span>
@@ -135,6 +135,7 @@
             @perfilActualizado="getNewDatos" />
     </Panel>
 </template>
+
 <script>
 import axios from 'axios';
 import { useStoreEvento } from '../store'
@@ -165,7 +166,7 @@ export default {
                 response.data.forEach((top, index) => {
                     const i = top.usuarios.findIndex(usuario => usuario._id == this.store.getId());
                     if (i != -1) {
-                        top.usuarios.sort((us1, us2) => us2.diamantes_mes_anterior - us1.diamantes_mes_anterior);
+                        top.usuarios.sort((us1, us2) => us2.diamantes_mes_actual - us1.diamantes_mes_actual);
                         //Top 1 - Oro
 
                         if (top.usuarios[0]._id == this.store.getId()) {
@@ -244,6 +245,7 @@ export default {
     }
 }
 </script>
+
 <style scoped>
 .cinta {
     height: 100px !important;
@@ -266,6 +268,7 @@ export default {
     color: red !important;
 }
 </style>
+
 <style>
 @media screen and (min-width:576px) and (max-width: 768px) {
 
@@ -292,6 +295,10 @@ export default {
 
     .xs\:flex-column {
         flex-direction: column !important;
+    }
+
+    .xs\:w-full {
+        width: 100% !important;
     }
 
     .xs\:flex-wrap {

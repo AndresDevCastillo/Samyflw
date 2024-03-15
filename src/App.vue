@@ -2,7 +2,19 @@
   <router-view></router-view>
 </template>
 <style>
-html {
+@font-face {
+  font-family: 'planet-gamers';
+  src: url('/assets/fonts/Planet-Gamers/Planet-Gamers.otf');
+  src: url('/assets/fonts/Planet-Gamers/Planet-Gamers.woff');
+}
+
+.font-gamers {
+  font-family: 'planet-gamers' !important;
+}
+
+html,
+body,
+* {
   scroll-behavior: smooth;
 }
 
@@ -10,4 +22,3 @@ html {
   font-size: 3rem;
 }
 </style>
-

@@ -57,8 +57,8 @@ export const useStoreEvento = defineStore('evento', {
 
         },
         newDatos(user) {
-            localStorage.user = JSON.stringify({ ...user, access_token: this.getToken() });
-            this.user = { ...user, access_token: this.getToken() };
+            localStorage.user = JSON.stringify({...user, access_token: this.getToken() });
+            this.user = {...user, access_token: this.getToken() };
         },
         getToken() {
             const u = JSON.parse(localStorage.user);
@@ -80,4 +80,28 @@ export const useStoreEvento = defineStore('evento', {
             localStorage.user = null;
         },
     },
+});
+
+export const useStoreMezcla = defineStore('mezcla', {
+    state: () => ({
+        grupos: null
+    }),
+    actions: {
+        getGrupo() {
+            try {
+                this.grupos = JSON.parse(localStorage.grupos);
+            } catch (error) {
+                this.grupos = null;
+            }
+            return this.grupos;
+        },
+        saveMezcla(grupos = "A-B") {
+            localStorage.grupos = JSON.stringify(grupos);
+            this.grupos = grupos;
+        },
+        reiniciarMezcla() {
+            localStorage.grupos = null;
+            this.grupos = null;
+        }
+    }
 });

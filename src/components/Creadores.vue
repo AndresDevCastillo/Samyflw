@@ -5,6 +5,7 @@
       <div class="flex items-center gap-2 flex-end w-full justify-content-between">
         <h1 class="m-0">Creadores</h1>
         <div class="botones flex gap-2">
+          <Button severity="warning" label="Mezclar" icon="pi pi-plus" @click="modalMezclar = true" />
           <Button label="Insignias" icon="pi pi-plus" @click="modalInsignias = true" />
           <Button label="Excel" icon="pi pi-plus" @click="modalExcel = true" />
         </div>
@@ -93,16 +94,59 @@
           severity="success" />
       </template>
     </Dialog>
+
+    <Dialog v-model:visible="modalMezclar" header="Mezclar grupos" :style="{ width: '30rem' }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="top" :modal="true" :draggable="false">
+      <form>
+        <div class="flex flex-column gap-2">
+          <div class="flex flex-wrap gap-3">
+            <div class="flex align-items-center">
+              <RadioButton v-model="mezcla.grupo1" inputId="grupoA" name="grupo1" value="A" />
+              <label for="grupoA" class="ml-2 cursor-pointer">A</label>
+            </div>
+            <div class="flex align-items-center">
+              <RadioButton v-model="mezcla.grupo1" inputId="grupoB" name="grupo1" value="B" />
+              <label for="grupoB" class="ml-2 cursor-pointer">B</label>
+            </div>
+            <div class="flex align-items-center">
+              <RadioButton v-model="mezcla.grupo1" inputId="grupoC" name="grupo1" value="C" />
+              <label for="grupoC" class="ml-2 cursor-pointer">C</label>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <div class="flex align-items-center" v-if="mezcla.grupo1 != 'A'">
+              <RadioButton :disabled="mezcla.grupo1 == null" v-model="mezcla.grupo2" inputId="grupoA2" name="grupo1" value="A" />
+              <label for="grupoA2" class="ml-2 cursor-pointer">A</label>
+            </div>
+            <div class="flex align-items-center" v-if="mezcla.grupo1 != 'B'">
+              <RadioButton :disabled="mezcla.grupo1 == null" v-model="mezcla.grupo2" inputId="grupoB2" name="grupo1" value="B" />
+              <label for="grupoB2" class="ml-2 cursor-pointer">B</label>
+            </div>
+            <div class="flex align-items-center" v-if="mezcla.grupo1 != 'C'">
+              <RadioButton :disabled="mezcla.grupo1 == null" v-model="mezcla.grupo2" inputId="grupoC2" name="grupo1" value="C" />
+              <label for="grupoC2" class="ml-2 cursor-pointer">C</label>
+            </div>
+          </div>
+        </div>
+      </form>
+      <template #footer>
+        <Button label="Cancelar" @click="modalMezclar = false" text severity="danger" autofocus />
+        <Button label="Reiniciar" @click="reiniciarMezcla" severity="warning" />
+        <Button label="Mezclar" @click="mezclar" severity="success" />
+      </template>
+    </Dialog>
   </Panel>
 </template>
 <script>
 import axios from "axios";
-import { useStoreEvento } from "../store";
+import { useStoreEvento, useStoreMezcla } from "../store";
 export default {
   data: () => ({
     API: import.meta.env.VITE_APP_API,
     store: null,
     modalExcel: false,
+    modalMezclar: false,
+    storeMezcla: null,
     insignias: [],
     paqueteActualizarInsigniasUsuario: {
       selectedInsignias: [],
@@ -121,6 +165,10 @@ export default {
     paqueteInsignias: {
       insignia: null,
     },
+    mezcla: {
+      grupo1: null,
+      grupo2: null
+    }
   }),
   methods: {
     asignarExcel(event) {
@@ -128,6 +176,60 @@ export default {
     },
     asignarInsignia(event) {
       this.paqueteInsignias.insignia = event.target.files[0];
+    },
+    async reiniciarMezcla() {
+      this.storeMezcla.reiniciarMezcla();
+      await axios
+        .post(
+          `${this.API}/bonus/mezclarGrupos`,
+          { grupos: '' },
+          {
+            headers: {
+              Authorization: `Bearer ${this.store.getToken()}`,
+            },
+          }
+        ).then(() => {
+          this.$toast.add({
+            severity: "success",
+            summary: "Reiniciar mezcla",
+            detail: "Mezcla reiniciada",
+            life: 1500,
+          });
+        });
+      this.mezcla = {
+        grupo1: null,
+        grupo2: null
+      }
+    },
+    async mezclar() {
+      if (this.mezcla.grupo1 != null && this.mezcla.grupo2 != null) {
+        await axios
+          .post(
+            `${this.API}/bonus/mezclarGrupos`,
+            { grupos: `${this.mezcla.grupo1}-${this.mezcla.grupo2}` },
+            {
+              headers: {
+                Authorization: `Bearer ${this.store.getToken()}`,
+              },
+            }
+          ).then(() => {
+            this.storeMezcla.saveMezcla(`${this.mezcla.grupo1}-${this.mezcla.grupo2}`);
+            this.$toast.add({
+              severity: "success",
+              summary: "Mezclar grupos",
+              detail: "Grupos mezclados",
+              life: 1500,
+            });
+          });
+        this.modalMezclar = false;
+      } else {
+        this.$toast.add({
+          severity: "error",
+          summary: "Mezclar grupos",
+          detail: "Debes seleccionar los 2 grupos",
+          life: 1500,
+        });
+      }
     },
     abrirModalInsigniasActualizar(insignias, id) {
       this.paqueteActualizarInsigniasUsuario.selectedInsignias = insignias;
@@ -346,8 +448,28 @@ export default {
   },
   async created() {
     this.store = useStoreEvento();
+    this.storeMezcla = useStoreMezcla();
     if (!this.store.isActive()) {
       this.$router.push("/login");
+    }
+    await axios
+      .get(
+        `${this.API}/bonus/gruposMezclados`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.store.getToken()}`,
+          },
+        }
+      ).then(response => {
+        if (response.data != '' && response.data != null) {
+          this.storeMezcla.saveMezcla(response.data.grupos);
+        }
+      });
+    const grupos = this.storeMezcla.getGrupo();
+    if (grupos) {
+      const sep = grupos.split('-');
+      this.mezcla.grupo1 = sep[0];
+      this.mezcla.grupo2 = sep[1];
     }
     await this.getCreadores();
     await this.getInsignias();
