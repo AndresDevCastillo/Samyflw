@@ -1,13 +1,9 @@
 <template>
-    <div class="clasificacion">
+    <div :class="`clasificacion pos-${tipo}`">
         <img class="imgFondo" :src="`/assets/img/fondo${tipo}.png`" alt="">
         <img :src="foto" class="imgProfile" alt="" />
-        <div class="labelTag">
-            <Tag :class="tipo" :value="nombre">
-            </Tag>
-        </div>
-        <div class="badgeDiv">
-            <Badge :value="top" size="large" :class="tipo" />
+        <div class="labelNombre">
+            <p class="m-0 font-gamers">{{ nombre }}</p>
         </div>
     </div>
 </template>
@@ -26,22 +22,24 @@ export default {
 .clasificacion {
     width: 270px;
     height: 300px;
-}
-
-.clasificacion>.imgEtiqueta {
-    position: relative;
-    z-index: 3;
-}
-
-.clasificacion>.imgProfile {
-    position: relative;
-    left: 50%;
-    transform: translateX(-51%);
-    top: 109px;
-    width: 95px;
-    height: 95px;
-    border-radius: 200px;
+    display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .clasificacion>.imgEtiqueta {
+        position: relative;
+        z-index: 3;
+    }
+    
+    .clasificacion>.imgProfile {
+        position: relative;
+        width: 135px;
+        height: 135px;
+        border-radius: 50%;
     z-index: 2;
+    top: 13px;
 }
 
 
@@ -62,8 +60,8 @@ export default {
     background-color: #9B5E13;
 }
 
-.clasificacion>.labelTag {
-    top: 135px;
+.clasificacion>.labelNombre {
+    top: 68px;
     position: relative;
     z-index: 5;
     display: flex;

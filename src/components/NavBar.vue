@@ -84,13 +84,19 @@ export default {
 }
 </script>
 <style scoped>
-header {
-    position: absolute;
+.navbar {
+    position: fixed !important;
+    display: flex;
     top: 0;
-    height: 60px;
-    padding: 0 80px;
-    padding-top: 10px;
-    z-index: 1;
+    width: 100%;
+    max-width: 100vw;
+    flex-direction: column;
+    z-index: 3;
+}
+
+header {
+    height: 67px;
+    padding: 10px 80px 10px 80px;
     font-family: 'planet-gamers' !important;
     background-image: url('/assets/img/header/header-bg.png') !important;
     background-repeat: no-repeat !important;
@@ -98,7 +104,8 @@ header {
 }
 
 .container-linea {
-    position: absolute;
+    position: relative;
+    top: -4px;
 }
 
 .linea {

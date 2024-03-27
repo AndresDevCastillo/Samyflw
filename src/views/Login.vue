@@ -221,60 +221,57 @@
             </div>
         </div>
         <Toast />
-        <div class="form-container">
-            <div class="w-full flex justify-content-center">
-                <Avatar image="/assets/img/logo-samyflw.png" size="xlarge" shape="circle" />
-            </div>
-            <p class="title mt-0">SAMYFLW</p>
-            <div class="form">
-                <div class="input-group">
-                    <label for="username">Usuario</label>
-                    <input v-model="user" type="text" name="username" id="username" placeholder="">
+        <div class="flex justify-content-center fondo">
+            <div class="linea1"></div>
+            <div class="form-container">
+                <div class="w-full flex justify-content-center">
+                    <Avatar image="/assets/img/logo-samyflw.png" size="xlarge" shape="circle" />
                 </div>
-                <div class="input-group">
-                    <label for="password">Contraseña</label>
-                    <input v-model="password" type="password" name="password" id="password" placeholder="">
+                <p class="title m-0"><span class="verde">SAMY</span>FLW</p>
+                <div class="form">
+                    <div class="input-group">
+                        <!-- <input v-model="user" class="input" type="text" name="username" id="username" placeholder="USUARIO">
+                         -->
+                        <InputGroup>
+                            <InputGroupAddon>
+                                <img src="/assets/img/login/user.png" alt="Usuario" class="img-input">
+                            </InputGroupAddon>
+                            <InputText v-model="user" type="text" class="input" name="username" id="username" placeholder="USUARIO" />
+                        </InputGroup>
+                    </div>
+                    <div class="input-group">
+                        <InputGroup>
+                            <!-- <input v-model="password" class="input" type="password" name="password" id="password" placeholder="CONTRASEÑA">
+                          -->
+                            <InputGroupAddon>
+                                <img src="/assets/img/login/pass.png" alt="Contraseña" class="img-input">
+                            </InputGroupAddon>
+                            <InputText v-model="password" class="input" type="password" name="password" id="password" placeholder="CONTRASEÑA" />
+                        </InputGroup>
+                    </div>
+                    <div class="flex gap-2 w-full">
+                        <img src="/assets/img/login/ingresa.png" alt="Ingresar" width="64" height="32">
+                        <button type="button" @click="signSAMYFLW()" class="sign">{{ loginTxt }}</button>
+                    </div>
                 </div>
-                <button type="button" @click="signSAMYFLW()" class="sign">{{ loginTxt }}</button>
+                <div class="social-message">
+                    <div class="line1"></div>
+                    <p class="message mb-0">Agencia Latam</p>
+                    <div class="line2"></div>
+                </div>
+                <div class="social-icons">
+                    <a aria-label="Log in with Whatsapp" class="icon" href="https://api.whatsapp.com/send?phone=573176205370">
+                        <img src="/assets/img/login/wsp.png" alt="WhatsApp" width="42" height="34">
+                    </a>
+                    <a aria-label="Log in with Instagram" class="icon" href="https://www.instagram.com/samyflw1/">
+                        <img src="/assets/img/login/ins.png" alt="Instagram" width="42" height="34">
+                    </a>
+                    <a aria-label="Log in with GitHub" class="icon" href="https://www.tiktok.com/@samyflw">
+                        <img src="/assets/img/login/tkk.png" alt="TikTok" width="42" height="34">
+                    </a>
+                </div>
             </div>
-            <div class="social-message">
-                <div class="line"></div>
-                <p class="message">Agencia Latam</p>
-                <div class="line"></div>
-            </div>
-            <div class="social-icons">
-                <a aria-label="Log in with Whatsapp" class="icon" href="https://api.whatsapp.com/send?phone=573176205370">
-                    <!-- Nuevo código SVG para Instagram -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path
-                            d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                    </svg>
-                </a>
-
-                <a aria-label="Log in with Instagram" class="icon" href="https://www.instagram.com/samyflw1/">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                    </svg>
-                </a>
-                <a aria-label="Log in with GitHub" class="icon" href="https://www.tiktok.com/@samyflw">
-                    <svg fill="#000000" width="800px" height="800px" viewBox="0 0 512 512" id="icons"
-                        xmlns="http://www.w3.org/2000/svg">
-
-                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
-
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-
-                        <g id="SVGRepo_iconCarrier">
-
-                            <path
-                                d="M412.19,118.66a109.27,109.27,0,0,1-9.45-5.5,132.87,132.87,0,0,1-24.27-20.62c-18.1-20.71-24.86-41.72-27.35-56.43h.1C349.14,23.9,350,16,350.13,16H267.69V334.78c0,4.28,0,8.51-.18,12.69,0,.52-.05,1-.08,1.56,0,.23,0,.47-.05.71,0,.06,0,.12,0,.18a70,70,0,0,1-35.22,55.56,68.8,68.8,0,0,1-34.11,9c-38.41,0-69.54-31.32-69.54-70s31.13-70,69.54-70a68.9,68.9,0,0,1,21.41,3.39l.1-83.94a153.14,153.14,0,0,0-118,34.52,161.79,161.79,0,0,0-35.3,43.53c-3.48,6-16.61,30.11-18.2,69.24-1,22.21,5.67,45.22,8.85,54.73v.2c2,5.6,9.75,24.71,22.38,40.82A167.53,167.53,0,0,0,115,470.66v-.2l.2.2C155.11,497.78,199.36,496,199.36,496c7.66-.31,33.32,0,62.46-13.81,32.32-15.31,50.72-38.12,50.72-38.12a158.46,158.46,0,0,0,27.64-45.93c7.46-19.61,9.95-43.13,9.95-52.53V176.49c1,.6,14.32,9.41,14.32,9.41s19.19,12.3,49.13,20.31c21.48,5.7,50.42,6.9,50.42,6.9V131.27C453.86,132.37,433.27,129.17,412.19,118.66Z" />
-
-                        </g>
-
-                    </svg>
-                </a>
-            </div>
+            <div class="linea2"></div>
         </div>
     </div>
 </template>
@@ -327,6 +324,15 @@ export default {
     overflow: hidden;
 }
 
+.title>.verde {
+    color: #84DC16;
+}
+
+.title {
+    font-family: 'planet-gamers' !important;
+}
+
+
 .bubbles {
     position: relative;
     display: flex;
@@ -375,7 +381,7 @@ export default {
 
 .login {
     margin: 0;
-    padding: 0;
+    padding: 15px;
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -383,13 +389,44 @@ export default {
     justify-content: center;
 }
 
+.img-input {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.linea1,
+.linea2 {
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height: 473px;
+    position: relative;
+    z-index: 9999999999;
+    width: 10px;
+}
+
+.linea1 {
+    background-image: url('/assets/img/login/barra-izquierda.png') !important;
+    left: 1px;
+}
+
+.linea2 {
+    background-image: url('/assets/img/login/barra-derecha.png') !important;
+    left: -1px;
+}
+
 .form-container {
-    width: 320px;
-    border-radius: 0.75rem;
-    background-color: rgba(17, 24, 39, 1);
-    padding: 2rem;
+    width: 400px;
+    padding: 56px;
     color: rgba(243, 244, 246, 1);
-    z-index: 99;
+    z-index: 9999 !important;
+}
+
+.fondo {
+    background-image: url('/assets/img/login/fondo.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    max-width: 400px;
 }
 
 .title {
@@ -400,34 +437,77 @@ export default {
 }
 
 .form {
-    margin-top: 1.5rem;
+    margin-top: 10px;
+}
+
+@media (max-width:400px) {
+    .form-container {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 56px;
+        width: 100%;
+    }
 }
 
 .input-group {
-    margin-top: 0.25rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-}
-
-.input-group label {
-    display: block;
-    color: rgba(156, 163, 175, 1);
-    margin-bottom: 4px;
-}
-
-.input-group input {
     width: 100%;
     border-radius: 0.375rem;
-    border: 1px solid rgba(55, 65, 81, 1);
+    border: none !important;
+    background-color: transparent !important;
+    background: transparent !important;
+    background-blend-mode: screen;
     outline: 0;
-    background-color: rgba(17, 24, 39, 1);
-    padding: 0.75rem 1rem;
+    padding: 10px 11px 19px 10px;
     color: rgba(243, 244, 246, 1);
+    background-image: url('/assets/img/login/input.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: 100% 75% !important;
+    margin-bottom: 20px;
 }
 
-.input-group input:focus {
-    border-color: rgba(167, 139, 250);
+.input-group>.p-inputgroup {
+    border: none !important;
+    outline: none !important;
+
 }
+
+.input-group>.p-inputgroup>.p-inputgroup-addon {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+}
+
+.input-group>.p-inputgroup>.p-inputtext {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    height: 100% !important;
+}
+
+.input-group>.p-inputgroup>.p-inputtext:focus {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.input-group>* {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* .input-group input:valid:not(:placeholder-shown),
+.input-group input:valid {
+    border: none;
+    outline: 0;
+    background: transparent;
+    background-color: transparent;
+    background-image: url('/assets/img/login/input.png') !important;
+    background-repeat: no-repeat;
+    background-size: contain;
+} */
+
 
 .forgot {
     display: flex;
@@ -451,15 +531,18 @@ export default {
 }
 
 .sign {
-    margin-top: 20px;
-    display: block;
     width: 100%;
-    background-color: rgba(167, 139, 250, 1);
-    padding: 0.75rem;
+    height: 37px;
+    margin: 0;
+    padding: 0;
     text-align: center;
-    color: rgba(17, 24, 39, 1);
+    color: white;
     border: none;
-    border-radius: 0.375rem;
+    font-size: 16px;
+    background: none;
+    background-image: url('/assets/img/login/btn-iniciar.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     font-weight: 600;
     cursor: pointer;
 }
@@ -470,18 +553,28 @@ export default {
     padding-top: 1rem;
 }
 
-.line {
+.line1 {
     height: 1px;
     flex: 1 1 0%;
-    background-color: rgba(55, 65, 81, 1);
+    background-image: url('/assets/img/login/separador-izquierda.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.line2 {
+    height: 1px;
+    flex: 1 1 0%;
+    background-image: url('/assets/img/login/separador-derecha.png');
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 .social-message .message {
     padding-left: 0.75rem;
-    padding-right: 0.75rem;
     font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: rgba(156, 163, 175, 1);
+    color: white;
+    font-family: 'planet-gamers';
+    margin-top: 3px !important;
 }
 
 .social-icons {

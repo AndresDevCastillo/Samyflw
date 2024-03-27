@@ -1,22 +1,43 @@
 <template>
     <div class="app">
         <NavBar></NavBar>
-        <!-- <div class="video-container">
-            <video autoplay muted loop>
-                <source src="/assets/video/eventos/fondo-eventos.mp4" type="video/mp4">
-                Tu navegador no soporta esta funcionalidad video
-            </video>
-        </div> -->
         <div class="evento">
+            <div class="video-container">
+                <video autoplay muted loop>
+                    <source src="/assets/video/eventos/fondo-eventos.mp4" type="video/mp4">
+                    Tu navegador no soporta esta funcionalidad video
+                </video>
+            </div>
             <div v-if="spiner" class="flex w-full justify-content-center align-items-center" style="min-height: 100vh;">
                 <ProgressSpinner />
             </div>
-            <Card v-else>
+            <Card v-else class="px-0">
                 <template #content>
                     <TabView class="font-gamers">
-                        <TabPanel v-for="evento in  eventos " :header="evento.titulo">
-                            <div class="flex justify-content-around m-3  flex-wrap gap-6">
-                                <Fieldset legend="Descripción" :toggleable="true">
+                        <TabPanel v-for="evento in   eventos " :key="evento" :header="evento.titulo">
+                            <div class="flex justify-content-between md:justify-content-center sm:justify-content-center flex-wrap gap-4">
+                                <div class="descripcion">
+                                    <div class="container">
+                                        <p class="m-0">{{ evento.descripcion }}</p>
+                                    </div>
+                                </div>
+                                <div class="reglas">
+                                    <h2 class="mb-0">REGLAS</h2>
+                                    <div class="container">
+                                        <div class="flex gap-2">
+                                            <div class="item-regla" />
+                                            <p class="m-0">{{ evento.reglas }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="progreso">
+                                    <h2 class="mb-0">PROGRESO</h2>
+                                    <div class="container flex flex-column gap-2">
+                                        <p class="fechas m-0">{{ evento.fecha_inicio }} | {{ evento.fecha_fin }}</p>
+                                        <div :class="'barra-progreso barra-' + calcularPromdioTranscurrido(evento.fecha_inicio, evento.fecha_fin)[0]" :style="`width: ${(calcularPromdioTranscurrido(evento.fecha_inicio, evento.fecha_fin)[1]) > 100 ? 100 : calcularPromdioTranscurrido(evento.fecha_inicio, evento.fecha_fin)[1]}%`">{{ calcularPromdioTranscurrido(evento.fecha_inicio, evento.fecha_fin)[1] }}%</div>
+                                    </div>
+                                </div>
+                                <!-- <Fieldset legend="Descripción" :toggleable="true">
                                     <p class="m-0">
                                         {{ evento.descripcion }}
                                     </p>
@@ -30,9 +51,44 @@
                                     <ProgressBar style="min-width: 300px;"
                                         :value="calcularPromdioTranscurrido(evento.fecha_inicio, evento.fecha_fin)">
                                     </ProgressBar>
-                                </Fieldset>
+                                </Fieldset> -->
                             </div>
-                            <Carousel :value="Object.values(evento.premios)" :numVisible="3" :numScroll="3"
+                            <div class="flex justify-content-around flex-wrap mt-5" style="row-gap: 25px;">
+                                <div v-for="(premio, index) in Object.values(evento.premios)" :key="index" :class="`puesto${index + 1}`">
+                                    <div class="titulo flex flex-column w-full">
+                                        <div class="fondo">
+                                            <p class="m-0">Puesto {{ index + 1 }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="imagen">
+                                        <img :src="premio.imagen"
+                                            :alt="premio.descripcion" class="border-round imgPremio" />
+                                    </div>
+                                    <div class="descripcion-premio w-full text-center mt-5 p-3">
+                                        <p class="m-0">{{ premio.descripcion }}</p>
+                                    </div>
+                                </div>
+                                <!-- <div class="puesto2">
+                                    <div class="titulo">
+                                        <p class="m-0">Puesto 2</p>
+                                    </div>
+                                    <div class="imagen">
+                                        <img width="100%" :src="evento.premios.top2.imagen"
+                                            :alt="evento.premios.top2.descripcion" class="border-round imgPremio" />
+                                    </div>
+                                    <div class="descripcion">{{ Object.values(evento.premios) }}</div>
+                                </div>
+                                <div class="puesto3">
+                                    <div class="titulo">
+                                        <p class="m-0">Puesto 3</p>
+                                    </div>
+                                    <div class="imagen">
+                                        <img width="100%" :src="evento.premios.top3.imagen"
+                                            :alt="evento.premios.top3.descripcion" class="border-round imgPremio" />
+                                    </div>
+                                </div> -->
+                            </div>
+                            <!-- <Carousel :value="Object.values(evento.premios)" :numVisible="3" :numScroll="3"
                                 :responsiveOptions="responsiveOptions">
                                 <template #item="slotProps">
                                     <div class="border-1 surface-border border-round m-2  p-3">
@@ -48,22 +104,43 @@
 
                                     </div>
                                 </template>
-                            </Carousel>
+</Carousel> -->
                         </TabPanel>
 
                     </TabView>
-                    <DataTable :value="creadores" tableStyle="min-width: 8rem" sortField="diamantes_mes_actual"
+                    <DataTable :value="creadores" class="tablaCreadoresEvento" tableStyle="min-width: 8rem" sortField="diamantes_mes_actual"
                         :sortOrder="-1">
                         <template #header>
-                            <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                                <span class="text-xl text-900 font-bold">Creadores de contenido</span>
-                                <InlineMessage v-if="all != true" class="text-inline-evento" icon="pi pi-vedied" severity="success">
-                                    GRUPO {{ grupoMostrado }}
+                            <span class="text-xl text-900 font-bold font-gamers text-center" style="z-index: 1;">CREADORES DE CONTENIDO</span>
+                            <img src="/assets/img/eventos/divisor-titulo.png" alt="Divisor" class="w-full mb-3" style="z-index: 1;">
+                            <div class="text-center uppercase font-gamers" style="z-index: 1;">
+                                <p class="m-0 text-inline-evento text-6xl color-blue" v-if="all != true">GRUPO {{ grupoMostrado }}</p>
+                                <p class="m-0 text-inline-evento text-6xl color-blue" v-else>TODOS</p>
+                            </div>
+                            <!-- <InlineMessage v-if="all != true" class="text-inline-evento" icon="pi pi-vedied" severity="success">
+
                                 </InlineMessage>
                                 <InlineMessage v-else class="text-inline-evento" icon="pi pi-vedied" severity="success">
                                     Todos
-                                </InlineMessage>
-                                <div class="flex gap-2">
+                                </InlineMessage> -->
+                            <div class="grupos mt-3 mb-5 uppercase font-gamers color-blue" style="z-index: 1;" v-if="gruposMezcla == null || gruposMezcla == ''">
+                                <span class="todos" @click="changeCreador('Todos')">Todos</span>
+                                <span class="A" @click="changeCreador('A')">A</span>
+                                <span class="B" @click="changeCreador('B')">B</span>
+                                <span class="C" @click="changeCreador('C')">C</span>
+                            </div>
+                            <div class="grupos grupos3 mt-3 mb-5 uppercase font-gamers color-blue" style="z-index: 1;" v-else>
+                                <span class="todos" @click="changeCreador('Todos')">Todos</span>
+                                <span v-if="gruposMezcla == 'A-B' || gruposMezcla == 'B-A'" class="A-B" @click="changeCreador('A-B')">A-B</span>
+                                <span v-if="gruposMezcla == 'A-B' || gruposMezcla == 'B-A'" class="C" @click="changeCreador('C')">C</span>
+
+                                <span v-if="gruposMezcla == 'A-C' || gruposMezcla == 'C-A'" class="A-C" @click="changeCreador('A-C')">A-C</span>
+                                <span v-if="gruposMezcla == 'A-C' || gruposMezcla == 'C-A'" class="B" @click="changeCreador('B')">B</span>
+
+                                <span v-if="gruposMezcla == 'C-B' || gruposMezcla == 'B-C'" class="A" @click="changeCreador('A')">A</span>
+                                <span v-if="gruposMezcla == 'C-B' || gruposMezcla == 'B-C'" class="B-C" @click="changeCreador('B-C')">B-C</span>
+                            </div>
+                            <!-- <div class="flex gap-2">
                                     <Button @click="changeCreador('Todos')" label="Todos" severity="warning" />
                                     <div class="flex gap-2" v-if="gruposMezcla == 'A-B' || gruposMezcla == 'B-A'">
                                         <Button @click="changeCreador('A-B')" label="A-B" severity="success" />
@@ -82,47 +159,54 @@
                                         <Button @click="changeCreador('B')" label="B" severity="info" />
                                         <Button @click="changeCreador('C')" label="C" severity="danger" />
                                     </div>
-                                </div>
-                            </div>
+                                </div> -->
+
                             <div class="containerC">
+                                <!-- <div class="video-container2"> -->
+                                <video autoplay muted loop class="tabla-fondo-header">
+                                    <source src="/assets/video/eventos/tabla-fondo-header.mp4" type="video/mp4">
+                                    Tu navegador no soporta esta funcionalidad video
+                                </video>
+                                <!--  </div> -->
                                 <Clasificacion :nombre="top3[1].usuario" top="2" tipo="Platino" :foto="top3[1].foto" />
                                 <Clasificacion top="1" tipo="Oro" :nombre="top3[0].usuario" :foto="top3[0].foto" />
                                 <Clasificacion :nombre="top3[2].usuario" top="3" tipo="Cobre" :foto="top3[2].foto" />
                             </div>
                         </template>
-                        <Column header="#" headerStyle="width:3rem">
+                        <Column header="#" class="font-gamers" headerStyle="width:3rem">
                             <template #body="slotProps">
                                 {{ slotProps.index + 1 }}
                             </template>
                         </Column>
-                        <Column field="usuario" header="Creador">
+                        <Column field="usuario" header="Creador" class="font-gamers">
                             <template #body="slotProps">
-                                <InlineMessage v-if="slotProps.index == 0" icon="pi pi-star" severity="warn"> {{
-                slotProps.data.usuario }}
+                                <InlineMessage v-if="slotProps.index == 0" class="font-gamers" icon="pi pi-star" severity="warn">
+                                    {{ slotProps.data.usuario }}
                                 </InlineMessage>
-                                <InlineMessage v-else-if="slotProps.index == 1" icon="pi pi-star" severity="error"> {{
-                slotProps.data.usuario }}
+                                <InlineMessage v-else-if="slotProps.index == 1" class="font-gamers" icon="pi pi-star" severity="error">
+                                    {{ slotProps.data.usuario }}
                                 </InlineMessage>
-                                <InlineMessage v-else-if="slotProps.index == 2" icon="pi pi-star" severity="info"> {{
-                slotProps.data.usuario }}
+                                <InlineMessage v-else-if="slotProps.index == 2" class="font-gamers" icon="pi pi-star" severity="info">
+                                    {{ slotProps.data.usuario }}
                                 </InlineMessage>
                                 <p v-else> {{ slotProps.data.usuario }}</p>
                             </template>
                         </Column>
-                        <Column field="diamantes_mes_actual" header="Puntos">
+                        <Column field="diamantes_mes_actual" class="font-gamers" header="Puntos">
                             <template #body="slotProps">
                                 {{ slotProps.data.diamantes_mes_actual * multiplicador }}
                             </template>
                         </Column>
-                        <Column field="diamantes_mes_anterior" header="Puntos Mes Anterior"></Column>
-                        <Column field="grupo" header="Grupo">
-                            <template #body="slotProps">
-                                <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success">
+                        <Column field="diamantes_mes_anterior" class="font-gamers" header="Puntos Mes Anterior"></Column>
+                        <Column field="grupo" class="font-gamers" header="Grupo">
+                            <template #body="props">
+                                <img :src="`/assets/img/grupos/${props.data.grupo}.png`" :alt="`Grupo ${props.data.grupo}`" class="img-grupo">
+                                <!-- <Badge v-if="slotProps.data.grupo == 'A'" :value="slotProps.data.grupo" severity="success">
                                 </Badge>
                                 <Badge v-if="slotProps.data.grupo == 'B'" :value="slotProps.data.grupo" severity="info">
                                 </Badge>
                                 <Badge v-if="slotProps.data.grupo == 'C'" :value="slotProps.data.grupo" severity="danger">
-                                </Badge>
+                                </Badge> -->
                             </template>
                         </Column>
                     </DataTable>
@@ -131,38 +215,6 @@
         </div>
     </div>
 </template>
-<style>
-.containerC {
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/*.p-tabview .p-tabview-nav {
-    border: 0 !important;
-    border-width: 0 !important;
-}
-
-.p-tabview-nav-content::after {
-    content: '';
-    display: block;
-    height: 2px;
-    background-image: url('/assets/img/eventos/linea.png');
-    width: 100%;
-}
-
-.p-tabview .p-tabview-nav li .p-tabview-nav-link {
-    z-index: 2 !important;
-    border: 0 !important;
-}
-
-.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-    border: solid !important;
-    border-width: 0 0 2px 0 !important;
-}*/
-</style>
-
 <script>
 import axios from "axios";
 import { useStoreMezcla } from "../store";
@@ -170,6 +222,7 @@ import { useStoreMezcla } from "../store";
 export default {
     name: 'EventoView',
     data: () => ({
+        img: null,
         multiplicador: 1,
         API: import.meta.env.VITE_APP_API,
         gruposMezcla: null,
@@ -281,12 +334,13 @@ export default {
 
             porcentajeTranscurrido = Math.ceil(porcentajeTranscurrido);
             console.log(porcentajeTranscurrido);
-            return porcentajeTranscurrido;
+            return [porcentajeTranscurrido < 70 ? 'roja' : 'verde', porcentajeTranscurrido];
         }
     },
     async created() {
         this.storeMezcla = useStoreMezcla();
         this.gruposMezcla = this.storeMezcla.getGrupo();
+        this.gruposMezcla = this.gruposMezcla == '' ? null : this.gruposMezcla;
         await axios.get(`${this.API}/usuario/agrupados`).then((resp) => {
             this.arrayCreadores = resp.data;
             if (this.gruposMezcla == null) {
@@ -343,23 +397,290 @@ export default {
     },
 };
 </script>
+
+<style>
+.containerC {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: end;
+    row-gap: 70px;
+    justify-content: center;
+}
+
+.img-grupo {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+.marco-tabla {
+    position: absolute;
+    top: 20%;
+    width: 100%;
+    height: 80%;
+    z-index: 4;
+    background-size: contain;
+}
+
+.clasificacion.pos-Oro {
+    width: 400px !important;
+    height: 400px !important;
+}
+
+.clasificacion.pos-Oro>.imgProfile {
+    width: 190px !important;
+    top: 6px !important;
+    height: 191px !important;
+}
+
+.clasificacion.pos-Oro>.labelNombre {
+    top: 105px !important;
+}
+
+.p-tabview .p-tabview-nav {
+    border: 0 !important;
+    border-width: 0 !important;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    background: transparent !important;
+}
+
+.p-tabview-nav-content::after {
+    content: '';
+    display: block;
+    height: 3px;
+    background-image: url('/assets/img/eventos/linea.png');
+    width: 100%;
+}
+
+.p-tabview-nav>.p-tabview-header:not(.p-highlight)>.p-tabview-nav-link {
+    border: 0 !important;
+    border-width: 0 !important;
+    background: transparent !important;
+}
+
+.p-tabview-nav>.p-tabview-header.p-highlight>.p-tabview-nav-link {
+    border: solid #84DC16 !important;
+    border-width: 0 0 2px 0 !important;
+    border-color: transparent transparent #84DC16 transparent !important;
+    color: #84DC16 !important;
+}
+
+/*
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    z-index: 2 !important;
+    border: 0 !important;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    border: solid !important;
+    border-width: 0 0 2px 0 !important;
+}*/
+.p-card {
+    position: relative;
+    z-index: 2;
+}
+
+.p-card .p-card-content,
+.p-card .p-card-body {
+    padding-bottom: 0 !important;
+}
+
+.p-tabview .p-tabview-panels,
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table>.p-datatable-tbody>tr,
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table>.p-datatable-thead>tr>th {
+    background: transparent !important;
+}
+
+.tablaCreadoresEvento>.p-datatable-wrapper {
+    /* background-image: url('/assets/img/eventos/marco-tabla.png'); */
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding-bottom: 100px;
+}
+
+.tablaCreadoresEvento {
+    mix-blend-mode: screen;
+    position: relative;
+    z-index: 1;
+    background-image: url('/assets/img/eventos/footer-tabla.jpg') !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    background-position: bottom !important;
+    display: flex;
+    justify-content: center !important;
+    flex-direction: column;
+}
+
+.tablaCreadoresEvento>.p-datatable-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #000000 !important;
+    border: none !important;
+    padding-bottom: 160px !important;
+}
+
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table>.p-datatable-tbody,
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table>.p-datatable-thead>tr>th {
+    background-color: #000000 !important;
+}
+
+
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table>.p-datatable-tbody>tr>td,
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table>.p-datatable-thead>tr>th {
+    border: none !important;
+}
+
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table>.p-datatable-tbody>tr {
+    background-image: url('/assets/img/eventos/divisor-fila.png') !important;
+    background-repeat: repeat-x !important;
+    background-size: contain !important;
+}
+
+.p-progress-spinner {
+    z-index: 3 !important;
+}
+
+.tablaCreadoresEvento>.p-datatable-wrapper>.p-datatable-table {
+    mix-blend-mode: screen !important;
+    width: 90%;
+    margin: 0 auto;
+    /* background-image: url('/assets/img/eventos/marco-tabla.png'); */
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.p-card-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+@media (max-width:500px) {
+
+    .descripcion>.container {
+        justify-content: start !important;
+        padding: 10px 10px 48px 10px !important;
+    }
+}
+
+@media (max-width: 450px) {
+    .clasificacion>.imgFondo {
+        width: 95%;
+    }
+
+    .descripcion,
+    .reglas,
+    .progreso {
+        background-size: contain !important;
+        min-width: 100% !important;
+        padding: 10px 10px 48px 10px !important;
+    }
+
+    header {
+        padding: 10px 0 10px 20px !important;
+    }
+}
+
+@media (max-width:300px) {
+    .clasificacion>.imgFondo {
+        width: 99%;
+    }
+
+    .descripcion {
+        padding: 6px 10px 48px 10px !important;
+    }
+
+    .reglas>h2,
+    .progreso>h2 {
+        margin-top: 0 !important;
+    }
+}
+
+@media (max-width:895px) {
+
+    .containerC>.tabla-fondo-header {
+        margin-top: 500px !important;
+    }
+
+    .containerC>.clasificacion>.imgFondo {
+        height: 318px;
+    }
+
+    .containerC>.clasificacion.pos-Oro>.imgFondo {
+        height: 464px;
+    }
+}
+
+@media (max-width:450px) {
+    .containerC>.clasificacion>.imgFondo {
+        width: 250px;
+        height: 250px !important;
+    }
+
+    .containerC>.clasificacion>.imgProfile {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .containerC>.clasificacion>.labelNombre {
+        top: 55px !important;
+    }
+
+    .containerC>.clasificacion.pos-Oro {
+        position: relative;
+        top: -125px;
+    }
+
+    .containerC>.clasificacion.pos-Oro>.labelNombre {
+        top: 57px !important;
+    }
+
+    .containerC>.clasificacion.pos-Cobre {
+        position: relative;
+        top: -255px;
+    }
+}
+</style>
+
 <style scoped>
 .video-container {
     position: fixed;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: -1;
+    z-index: 1;
+}
+
+.video-container2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0 !important;
+    background-size: cover;
+    left: 0 !important;
+}
+
+.tabla-fondo-header {
+    top: 0 !important;
+    left: 0 !important;
+    width: max-content !important;
+    height: max-content !important;
+    transform: none !important;
+    z-index: 0;
+    background-size: cover;
+    margin-top: 100px;
 }
 
 video {
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    width: 800px;
+    height: 800px;
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 50vw;
     transform: translate(-50%, -50%);
 }
 
@@ -367,23 +688,447 @@ video {
     margin-top: 55px;
 }
 
-/* .evento>* {
+.evento>* {
     background: transparent !important;
-    font-family: 'planet-gamers';
-} */
+    /* font-family: 'planet-gamers'; */
+}
 
+.descripcion {
+    background-image: url('/assets/img/eventos/descripcion.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 400px;
+    height: 200px;
+    padding: 41px 16px 47px 25px;
+}
 
+.descripcion>.container {
+    font-size: 19px;
+    overflow-x: auto;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.reglas,
+.progreso {
+    background-image: url('/assets/img/eventos/reglas.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+    max-height: 200px;
+    min-height: 200px;
+    min-width: 400px;
+    padding: 12px;
+}
+
+.item-regla {
+    background-image: url('/assets/img/eventos/punto-lista.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 60px;
+    height: 30px;
+}
+
+.barra-progreso {
+    text-align: center;
+}
+
+.barra-roja {
+    background-image: url('/assets/img/eventos/fluido-rojo.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-bottom-left-radius: 12px;
+    border-top-left-radius: 12px;
+}
+
+.barra-verde {
+    background-image: url('/assets/img/eventos/fluido-verde.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 12px;
+}
+
+[class*="puesto"] {
+    width: 300px;
+    height: 453px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: end;
+}
+
+.imagen {
+    height: 167px;
+}
+
+.puesto1 {
+    background-image: url('/assets/img/eventos/premio1-fondo.png');
+}
+
+.puesto1>.titulo>.fondo {
+    background-image: url('/assets/img/eventos/premio1-titulo.png');
+}
+
+.puesto2 {
+    background-image: url('/assets/img/eventos/premio2-fondo.png');
+}
+
+.puesto2>.titulo>.fondo {
+    background-image: url('/assets/img/eventos/premio2-titulo.png')
+}
+
+.puesto3 {
+    background-image: url('/assets/img/eventos/premio3-fondo.png');
+}
+
+.puesto3>.titulo>.fondo {
+    background-image: url('/assets/img/eventos/premio3-titulo.png')
+}
+
+.titulo {
+    justify-items: end;
+    align-items: end;
+}
+
+[class*="puesto"]>.titulo>.fondo {
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: max-content;
+    padding: 19px 44px 12px 44px;
+    top: -13px;
+    float: right;
+    position: relative;
+}
+
+.descripcion-premio {
+    background-image: url('/assets/img/eventos/descripcion-premio.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
+    overflow: auto;
+}
+
+.grupos {
+    background-image: url('/assets/img/eventos/grupos.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 60px;
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 25px;
+    padding-right: 35px;
+}
+
+.grupos.grupos3 {
+    background-image: url('/assets/img/eventos/grupos3.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    height: 60px;
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 25px;
+}
+.grupos.grupos3>.todos {
+    padding-left: 25px;
+}
+.grupos>* {
+    position: relative;
+    cursor: pointer;
+}
+
+.grupos>.todos {
+    padding-left: 10px;
+}
+
+.grupos>.A {
+    left: -9px;
+}
+
+.grupos>.B {
+    left: -2px;
+}
 
 .imgPremio {
-    height: 300px;
+    height: 167px !important;
+    width: 167px !important;
 }
 
 @media (max-width: 739px) {
 
     .imgPremio {
-        height: 200px;
+        height: 100%;
     }
 }
+
+@media (max-width:988px) {
+    .containerC>.clasificacion {
+        width: 32% !important;
+    }
+
+    .containerC>.tabla-fondo-header {
+        margin-top: 180px;
+    }
+}
+
+@media (max-width:895px) {
+    .containerC {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width:600px) {
+    .grupos {
+        width: 100%;
+        align-items: start !important;
+        padding-top: 10px !important;
+        font-size: 20px !important;
+        padding-left: 2%;
+        padding-right: 16px;
+        /* gap: 23.3%; */
+    }
+
+    .grupos.grupos3 {
+        width: 100%;
+        align-items: center !important;
+        padding-top: 0 !important;
+        font-size: 25px !important;
+        padding-left: 2.4%;
+        padding-right: 26.6px;
+    }
+
+    .grupos>.todos {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .grupos>* {
+        left: 0 !important;
+    }
+
+    .grupos>.A {
+        left: -3px !important;
+    }
+}
+
+@media (max-width:470px) {
+    .grupos {
+        width: 100%;
+        align-items: start !important;
+        padding-top: 7px !important;
+        font-size: 18px !important;
+        padding-left: 2%;
+        padding-right: 16px;
+        /* gap: 23.3%; */
+    }
+
+    .grupos>.todos {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .grupos.grupos3 {
+        font-size: 18px !important;
+        padding-left: 4%;
+        padding-right: 20px;
+    }
+
+    .grupos>* {
+        left: 0 !important;
+    }
+
+    .grupos>.A {
+        padding-left: 3px;
+        padding-right: 5px;
+    }
+}
+
+@media (max-width:400px) {
+    .grupos {
+        width: 100%;
+        align-items: start !important;
+        padding-top: 6px !important;
+        font-size: 16px !important;
+        padding-left: 2%;
+        padding-right: 13px;
+        /* gap: 23.3%; */
+    }
+
+    .grupos>* {
+        left: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+@media (max-width:365px) {
+    .grupos {
+        width: 100%;
+        align-items: start !important;
+        padding-top: 6px !important;
+        font-size: 14px !important;
+        padding-left: 2%;
+        padding-right: 13px;
+        /* gap: 23.3%; */
+    }
+
+    .grupos>* {
+        left: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+@media (max-width:310px) {
+    .grupos {
+        width: 100%;
+        align-items: start !important;
+        padding-top: 3px !important;
+        font-size: 14px !important;
+        padding-left: 0;
+        padding-right: 10px;
+        /* gap: 23.3%; */
+    }
+
+    .grupos.grupos3 {
+        font-size: 15px !important;
+        padding-left: 2%;
+        background-size: contain !important;
+        align-items: start !important;
+        padding-right: 11px;
+        padding-top: 6px !important;
+    }
+
+    .grupos>* {
+        left: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+/* @media (max-width:550px) {
+    .grupos>.A {
+        left: -0.4rem;
+    }
+}
+
+@media (max-width:510px) {
+    .grupos {
+        font-size: 1.2rem;
+    }
+
+    .grupos>.A {
+        left: 0;
+    }
+
+}
+
+@media (max-width:485px) {
+    .grupos>.todos {
+        padding-left: 8px;
+    }
+
+    .grupos>* {
+        padding-bottom: 1rem;
+    }
+
+    .grupos>.A {
+        left: -0.2rem;
+    }
+}
+
+@media (max-width:450px) {
+
+    .grupos>.A {
+        left: -0.4rem;
+    }
+}
+
+@media (max-width:410px) {
+
+    .grupos>.A {
+        left: -9px;
+    }
+}
+
+@media (max-width:400px) {
+
+    .grupos>.A {
+        left: -5px;
+    }
+
+    .grupos {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width:380px) {
+
+    .grupos>.A {
+        left: -6px;
+    }
+
+    .grupos>* {
+        padding-bottom: 1.5rem;
+    }
+}
+
+@media (max-width:350px) {
+
+    .grupos>.todos {
+        padding-left: 5px;
+    }
+
+    .grupos>* {
+        padding-bottom: 1.6rem;
+    }
+}
+
+@media (max-width:310px) {
+
+    .grupos>.todos {
+        padding-left: 3px;
+    }
+
+    .grupos>.A {
+        left: -10px;
+    }
+} */
+
+@media (max-width:290px) {
+    .grupos {
+        width: 100%;
+        align-items: start !important;
+        padding-top: 3px !important;
+        font-size: 14px !important;
+        padding-left: 0;
+        padding-right: 8px;
+    }
+
+    .grupos>* {
+        left: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .grupos>.A {
+        padding-right: 5px;
+    }
+}
+
 
 .evento .p-fieldset-legend-text {
     color: var(--primary-color) !important;
@@ -394,7 +1139,7 @@ video {
 }
 
 .text-900 {
-    color: var(--primary-color) !important;
+    color: white !important;
 }
 
 .p-column-title {

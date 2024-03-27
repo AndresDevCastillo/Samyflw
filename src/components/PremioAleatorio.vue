@@ -528,11 +528,11 @@ export default {
         this.getSorpresas();
         this.getConcursos();
         this.getCreadores();
-        await axios.get(`${this.API}/sorpresa/ganador`).then(response => {
+        /* await axios.get(`${this.API}/sorpresa/ganador`).then(response => {
             console.log(response.data);
         }).catch(error => {
             console.log(error.response.data);
-        });
+        }); */
     }
 
 }
